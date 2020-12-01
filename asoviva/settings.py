@@ -76,8 +76,8 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',
     'allauth',
+    'allauth.account',
     'accounts.apps.AccountsConfig',
-
 ]
 
 MIDDLEWARE = [
@@ -166,6 +166,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SITE_ID = 1
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 try:
     from .local_settings import *
