@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'accounts.apps.AccountsConfig',
 ]
 
@@ -168,6 +169,11 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_REQUIRED = True
+# メールはとりあえずコンソールに表示
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 try:
     from .local_settings import *
