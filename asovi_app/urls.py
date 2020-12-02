@@ -4,5 +4,5 @@ from . import views
 
 app_name = 'asovi_app'
 urlpatterns = [
-    path('',views.IndexView.as_View(),name="index")
+    path('',views.IndexView.as_View(),name="index"),
 ]
