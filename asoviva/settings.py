@@ -188,3 +188,8 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+
+LOCATION_FIELD={
+    'map.provider': 'google',
+}
