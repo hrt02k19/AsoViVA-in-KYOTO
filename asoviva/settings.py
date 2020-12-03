@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'asovi_app.apps.AsoviAppConfig',
+    
 ]
 
 MIDDLEWARE = [
@@ -158,3 +159,8 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+
+LOCATION_FIELD={
+    'map.provider': 'google',
+}
