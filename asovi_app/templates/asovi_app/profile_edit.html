@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>プロフィール編集|遊ViVA in KYOTO</title>
+    </head>
+    <body>
+        <form method='POST' action="{% url 'asovi_app:profile-edit' %}">
+            {% csrf_token %}
+            <table class="table">
+                {{ form.as_table }}
+                <tr><th><td>
+                <button type="submit" class="btn btn-secondary">変更</button>
+                </td></th></tr>
+            </table>
+        </form>
+    </body>
+</html>
