@@ -59,8 +59,7 @@ def post_view(request):
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
             posted=post(image=image,body=body,time=now,latitude=lat,longitude=lng)
-        
-            posted.save()
-        
-    return render(request,'asovi_app/post.html',params)
 
+            posted.save()
+
+    return render(request,'asovi_app/post.html',params)

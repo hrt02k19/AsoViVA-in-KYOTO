@@ -98,7 +98,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def username(self):
         return self.email
 
-    
+
 class Genre(models.Model):
     name = models.CharField(max_length=60)
 
@@ -138,4 +138,3 @@ class post(models.Model):
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
     longitude=models.FloatField(null=True,blank=True)
-
