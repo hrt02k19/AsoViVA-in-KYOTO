@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .forms import ProfileForm
+from .models import Profile
 
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.account import app_settings
