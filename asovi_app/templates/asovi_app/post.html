@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>Test Map</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      height: 80%;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <ul>
+    <li>lat: <span id="lat"></span></li>
+    <li>lng: <span id="lng"></span></li>
+  </ul>
+
+  <form action="{%url 'post' %}" method="POST" id='latlng'>
+      {{form.image}}
+      {{form.body}}
+      {{form.latitude}}
+      {{form.longitude}}
+
+  </form>
+    <script>
+    function initMap() {
+
+      
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: {lat: 36.38992, lng: 139.06065}
+      });
+
+      
+      map.addListener('click', function(e) {
+        getClickLatLng(e.latLng, map);
+      });
+    }
+
+    function getClickLatLng(lat_lng, map) {
+      var lat1=lat_lng.lat()
+      var lng1=lat_lng.lng()
+      
+      document.getElementById('lat').textContent = lat1
+      document.getElementById('lng').textContent = lng1
+
+      var form= document.getElementById('latlng')
+      form.latitude.value=lat1
+      form.longitude.value=lng1
+
+
+      
+      var marker = new google.maps.Marker({
+        position: lat_lng,
+        map: map
+      });
+
+      
+      map.panTo(lat_lng);
+    }
+    
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
+</body>
+</html>
