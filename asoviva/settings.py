@@ -74,12 +74,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'asovi_app.apps.AsoviAppConfig',
+<<<<<<< HEAD
+    
+=======
 
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'accounts.apps.AccountsConfig',
+>>>>>>> a7e87619b64dda87adf9f25b7252d9c09c146f55
 ]
 
 MIDDLEWARE = [
@@ -189,3 +193,8 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+
+LOCATION_FIELD={
+    'map.provider': 'google',
+}

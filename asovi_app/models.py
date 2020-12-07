@@ -2,6 +2,17 @@ from django.db.models.deletion import CASCADE, get_candidate_relations_to_delete
 from accounts.models import CustomUser
 from django.db import models
 
+
+
+
+# Create y
+class post(models.Model):
+    image=models.ImageField(upload_to="images")
+    time=models.DateTimeField(null=True)
+    body=models.CharField(max_length=300,unique=True)
+    latitude=models.FloatField(null=True,blank=True)
+    longitude=models.FloatField(null=True,blank=True)
+
 # Create your models here.
 
 class Genre(models.Model):
@@ -33,3 +44,4 @@ class Profile(models.Model):
     
     def __str__(self):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
+
