@@ -5,7 +5,7 @@
         <title>プロフィール編集|遊ViVA in KYOTO</title>
     </head>
     <body>
-        <form method='POST' action="{% url 'asovi_app:profile-edit' %}">
+        <form method='POST' action="{% url 'asovi_app:profile_edit' %}" enctype='multipart/form-data'>
             {% csrf_token %}
             <table class="table">
                 {{ form.as_table }}
