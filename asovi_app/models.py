@@ -11,23 +11,17 @@ import re, random, string
 class CustomUserManager(UserManager):
     use_in_migrations = True
 
-    def get_user_id(self, num):
+    def generate_user_id(self, num):
         # <num>文字のランダムな文字列を生成
         return ''.join(random.choices(string.ascii_letters + string.digits, k=num))
 
-    def _create_user(self, email, password, user_id, **extra_fields):
+    def _create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
 
-        def isHalf(value):
-            """
-            半角文字(半角カナ以外）かチェック
-            user_idが全て半角文字の場合、True
-            """
-            return re.match(r"^[\x20-\x7E]+$", value) is not None
 
-        user = self.model(email=email, user_id=user_id, **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -46,15 +40,16 @@ class CustomUserManager(UserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        extra_fields.setdefault('user_id', self.get_user_id(10))
+        extra_fields.setdefault('user_id', self.generate_user_id(10))
         return self._create_user(email, password, **extra_fields)
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    user_id = models.CharField(_('user id'), max_length=50, blank=False, unique=True)
+    user_id = models.CharField(_('user id'), max_length=50, unique=True)
 
     is_staff = models.BooleanField(
         _('staff status'),
@@ -84,8 +79,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
+    def isHalf(value):
+        """
+        半角文字(半角カナ以外）かチェック
+        user_idが全て半角文字の場合、True
+        """
+        return re.match(r"^[\x20-\x7E]+$", value) is not None
+
     def get_full_name(self):
-        full_name = '%s %s' % (self.first_name, selef.last_name)
+        full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self):
