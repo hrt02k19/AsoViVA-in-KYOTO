@@ -44,6 +44,7 @@ class Migration(migrations.Migration):
                 ('objects', asovi_app.models.CustomUserManager()),
             ],
         ),
+        migrations.CreateModel(
             name='Genre',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -52,6 +53,17 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'genre',
             },
+        ),
+        migrations.CreateModel(
+            name='post',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('image', models.ImageField(upload_to='images')),
+                ('time', models.DateTimeField(null=True)),
+                ('body', models.CharField(max_length=300, unique=True)),
+                ('latitude', models.FloatField(blank=True, null=True)),
+                ('longitude', models.FloatField(blank=True, null=True)),
+            ],
         ),
         migrations.CreateModel(
             name='Profile',
@@ -67,14 +79,5 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'Profile',
             },
-            name='post',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='images')),
-                ('time', models.DateTimeField(null=True)),
-                ('body', models.CharField(max_length=300, unique=True)),
-                ('latitude', models.FloatField(blank=True, null=True)),
-                ('longitude', models.FloatField(blank=True, null=True)),
-            ],
-        ),
+        )
     ]

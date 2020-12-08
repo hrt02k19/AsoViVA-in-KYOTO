@@ -24,4 +24,3 @@ class PostForm(forms.ModelForm):
     class Meta:
         model=post
         fields=['image','body','latitude','longitude']
-
