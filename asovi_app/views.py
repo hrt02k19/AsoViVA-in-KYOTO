@@ -1,6 +1,4 @@
 from django.shortcuts import render
-from .forms import ProfileForm
-from .models import Profile
 
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.account import app_settings
@@ -8,7 +6,7 @@ from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
 from .forms import CustomSignupForm, ProfileForm, PostForm
-from .models import Profile, post, CustomUserManager
+from .models import Profile, post, CustomUserManager, Friend, CustomUser
 import datetime, random, string
 
 
@@ -59,3 +57,26 @@ def post_view(request):
             posted.save()
 
     return render(request,'asovi_app/post.html',params)
+
+def user_profile(request, pk):
+    params = {
+        'user': CustomUser.objects.get(pk=pk)
+    }
+    return render(request, 'asovi_app/user_profile.html', params)
+
+
+def friend_request(request, pk):
+    if request.method == 'POST':
+        requestor=CustomUser.objects.get(pk=request.user.pk)
+        requestee=CustomUser.objects.get(pk=pk)
+        new_request = Friend(
+            requestor=requestor,
+            requestee=requestee,
+        )
+        new_request.save()
+
+        params = {
+            'requestor': requestor,
+            'requestee': requestee,
+        }
+    return render(request, 'asovi_app/friend_request.html', params)
