@@ -80,3 +80,20 @@ def friend_request(request, pk):
             'requestee': requestee,
         }
     return render(request, 'asovi_app/friend_request.html', params)
+
+def friend_request_accept(request):
+    params = {
+        'new_requests': Friend.objects.filter(friended=False, requestee=request.user)
+    }
+    if request.method == 'POST':
+        new_request_pk = request.POST['friend_request_pk']
+        new_request = Friend.objects.get(pk=new_request_pk)
+        if 'accept' in request.POST:
+            new_request.friended = True
+            new_request.friended_date = datetime.datetime.now()
+            new_request.save()
+
+        elif 'reject' in request.POST:
+            new_request.delete()
+
+    return render(request, 'asovi_app/friend_request_accept.html', params)

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>友達申請許可｜遊ViVA in KYOTO</title>
+</head>
+
+<body>
+    {% if new_requests %}
+        <p>以下のユーザーから友達申請されました。申請を許可して友達になりますか？</p>
+        {% for request in new_requests %}
+            {{request.requestor}}
+            <form action="{% url 'asovi_app:friend_request_accept' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="friend_request_pk" value="{{request.pk}}">
+                <input type="submit" name="accept" value="友達になる">
+                <input type="submit" name="reject" value="申請を拒否">
+            </form>
+        {% endfor %}
+        
+    {% else %}
+        <p>現在、あなたへの友達申請はありません。</p>
+    {% endif%}
+</body>
+
+</html>
