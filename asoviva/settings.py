@@ -97,7 +97,12 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+<<<<<<< HEAD
             os.path.join(BASE_DIR, 'asovi_app', 'templates', 'asovi_app'),
+=======
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'accounts', 'templates', 'account'),
+>>>>>>> プロフィールページの見た目調
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -162,6 +167,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -183,6 +191,10 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_REDIRECT_URL = 'asovi_app:profile-edit'  # 本登録後Profile設定ページに遷移
+<<<<<<< HEAD
+=======
+ACCOUNT_SESSION_REMEMBER = True
+>>>>>>> プロフィールページの見た目調
 
 try:
     from .local_settings import *
