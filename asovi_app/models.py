@@ -140,3 +140,11 @@ class post(models.Model):
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
     longitude=models.FloatField(null=True,blank=True)
+
+
+class Friend(models.Model):
+    requestor = models.ForeignKey(CustomUser, related_name='requestor', on_delete=CASCADE)
+    requestee = models.ForeignKey(CustomUser, related_name='requestee', on_delete=CASCADE)
+    friended = models.BooleanField(default=False)
+    requested_date = models.DateTimeField(default=timezone.now)
+    friended_date = models.DateTimeField(blank=True, null=True)

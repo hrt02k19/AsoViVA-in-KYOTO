@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>{{user.username}}｜遊ViVA in KYOTO</title>
+    </head>
+    <body>
+        <p>{{user.username}}</p>
+        <p>{{user.user_id}}</p>
+        <form action="{% url 'asovi_app:friend_request' user.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">友達申請</button>
+        </form>
+    </body>
+</html>
