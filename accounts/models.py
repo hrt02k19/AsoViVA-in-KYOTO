@@ -23,7 +23,8 @@ class CustomUserManager(UserManager):
             """
             return re.match(r"^[\x20-\x7E]+$", value) is not None
 
-        user = self.model(email=email, user_id=user_id, **extra_fields)
+        # user = self.model(email=email, user_id=user_id, **extra_fields)
+        user = self.model(email=email, user_id="harooon", **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
