@@ -21,7 +21,12 @@ class CustomUserManager(UserManager):
         email = self.normalize_email(email)
 
 
+<<<<<<< HEAD:asovi_app/models.py
         user = self.model(email=email, **extra_fields)
+=======
+        # user = self.model(email=email, user_id=user_id, **extra_fields)
+        user = self.model(email=email, user_id=user_id, **extra_fields)
+>>>>>>> user_idの追加:accounts/models.py
         user.set_password(password)
         user.save(using=self._db)
         return user
