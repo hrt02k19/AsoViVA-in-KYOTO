@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="/static/asovi_app/css/style.css">
     </head>
     <body>
-        <form method='POST' action="{% url 'asovi_app:profile-edit' %}">
+        <form method='POST' action="{% url 'asovi_app:profile_edit' %}" enctype='multipart/form-data'>
             {% csrf_token %}
             <table class="table" style="background-color: aquamarine;">
                 {{ form.as_table }}
