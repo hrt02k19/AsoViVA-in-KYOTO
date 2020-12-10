@@ -66,6 +66,7 @@ def user_profile(request, pk):
 
 
 def friend_request(request, pk):
+    params = {}
     if request.method == 'POST':
         requestor=CustomUser.objects.get(pk=request.user.pk)
         requestee=CustomUser.objects.get(pk=pk)

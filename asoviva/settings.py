@@ -97,15 +97,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-<<<<<<< HEAD
-<<<<<<< HEAD
-            os.path.join(BASE_DIR, 'asovi_app', 'templates', 'asovi_app'),
-=======
-=======
->>>>>>> 90403a10718d0e6e2c1f66503d2d9b5e4b589fc7
             os.path.join(BASE_DIR, 'templates'),
             os.path.join(BASE_DIR, 'accounts', 'templates', 'account'),
->>>>>>> プロフィールページの見た目調
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -190,7 +183,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_FORMS = {'signup': 'asovi_app.forms.CustomSignupForm'}
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = Falsein
+ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_REDIRECT_URL = 'asovi_app:profile-edit'  # 本登録後Profile設定ページに遷移
