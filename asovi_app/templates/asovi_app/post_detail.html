@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="{% static 'asovi_app/css/style.css' %}">
     </head>
     <body>
+        <img src="{{ post.image.url }}">
         {{ post.time }}
         <br>
         {{ post.body|linebreaksbr }}

@@ -127,7 +127,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(CustomUser,related_name="user_profile",on_delete=CASCADE)
     username = models.CharField(max_length=50)
-    icon = models.ImageField(upload_to="static/img/",null=True,blank=True)
+    icon = models.ImageField(upload_to="static/asovi_app/img/",null=True,blank=True)
     introduction = models.TextField(null=True,blank=True)
     interested_genre = models.ManyToManyField(Genre)
     gender = models.IntegerField(choices=GENDER_CHOICES,default=0,null=True,blank=True)
@@ -140,7 +140,7 @@ class Profile(models.Model):
 
 # Create y
 class Post(models.Model):
-    image=models.ImageField(upload_to="images")
+    image=models.ImageField(upload_to="static/asovi_app/img")
     time=models.DateTimeField(null=True)
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
