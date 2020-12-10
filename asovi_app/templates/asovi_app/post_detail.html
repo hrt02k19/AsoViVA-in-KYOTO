@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>投稿詳細|遊ViVA in KYOTO</title>
+        <link rel="stylesheet" href="{% static 'asovi_app/css/style.css' %}">
+    </head>
+    <body>
+        <img src="{{ post.image.url }}">
+        {{ post.time }}
+        <br>
+        {{ post.body|linebreaksbr }}
+        <br>
+        <hr>
+        {% for reply in replies %}
+            {{ reply.pub_date }}
+            <br>
+            {{ reply.body }}
+            <br>
+        {% endfor %}
+    </body>
+</html>

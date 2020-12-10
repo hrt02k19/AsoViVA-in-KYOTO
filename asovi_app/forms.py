@@ -1,6 +1,6 @@
 from django import forms
 from allauth.account.forms import SignupForm
-from .models import CustomUser, Profile, post
+from .models import CustomUser, Profile, Post
 
 
 class CustomSignupForm(SignupForm):
@@ -22,5 +22,5 @@ class ProfileForm(forms.ModelForm):
 
 class PostForm(forms.ModelForm):
     class Meta:
-        model=post
+        model=Post
         fields=['image','body','latitude','longitude']

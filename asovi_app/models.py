@@ -1,4 +1,4 @@
-from django.db.models.deletion import CASCADE, get_candidate_relations_to_delete
+from django.db.models.deletion import CASCADE, SET_NULL, get_candidate_relations_to_delete
 from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin, UserManager
@@ -127,7 +127,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(CustomUser,related_name="user_profile",on_delete=CASCADE)
     username = models.CharField(max_length=50)
-    icon = models.ImageField(upload_to="static/img/",null=True,blank=True)
+    icon = models.ImageField(upload_to="static/asovi_app/img/",null=True,blank=True)
     introduction = models.TextField(null=True,blank=True)
     interested_genre = models.ManyToManyField(Genre)
     gender = models.IntegerField(choices=GENDER_CHOICES,default=0,null=True,blank=True)
@@ -138,14 +138,19 @@ class Profile(models.Model):
     def __str__(self):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
 
-
 # Create y
-class post(models.Model):
-    image=models.ImageField(upload_to="images")
+class Post(models.Model):
+    image=models.ImageField(upload_to="static/asovi_app/img")
     time=models.DateTimeField(null=True)
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
     longitude=models.FloatField(null=True,blank=True)
+
+class Reply(models.Model):
+    post = models.ForeignKey(Post,related_name="post_reply",on_delete=CASCADE)
+    posted_by = models.ForeignKey(CustomUser,related_name="user_reply",null=True,on_delete=SET_NULL)
+    body = models.TextField(max_length=300)
+    pub_date = models.DateTimeField(auto_now=True)
 
 
 class Friend(models.Model):
