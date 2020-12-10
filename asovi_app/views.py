@@ -6,7 +6,7 @@ from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
 from .forms import CustomSignupForm, ProfileForm, PostForm
-from .models import Profile, post, CustomUserManager, Friend, CustomUser
+from .models import Profile, CustomUserManager, Friend, CustomUser, Post
 import datetime, random, string
 
 
@@ -52,11 +52,20 @@ def post_view(request):
             body=form.cleaned_data.get('body')
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
-            posted=post(image=image,body=body,time=now,latitude=lat,longitude=lng)
+            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng)
 
             posted.save()
 
     return render(request,'asovi_app/post.html',params)
+
+def post_detail(request,pk):
+    post = Post.objects.get(pk=pk)
+    replies = post.post_reply.all().order_by("-pub_date")
+    params = {
+        'post': post,
+        'replies': replies
+    }
+    return render(request,'asovi_app/post_detail.html',params)
 
 def user_profile(request, pk):
     params = {

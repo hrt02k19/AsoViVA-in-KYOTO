@@ -1,4 +1,4 @@
-from django.db.models.deletion import CASCADE, get_candidate_relations_to_delete
+from django.db.models.deletion import CASCADE, SET_NULL, get_candidate_relations_to_delete
 from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin, UserManager
@@ -138,14 +138,19 @@ class Profile(models.Model):
     def __str__(self):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
 
-
 # Create y
-class post(models.Model):
+class Post(models.Model):
     image=models.ImageField(upload_to="images")
     time=models.DateTimeField(null=True)
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
     longitude=models.FloatField(null=True,blank=True)
+
+class Reply(models.Model):
+    post = models.ForeignKey(Post,related_name="post_reply",on_delete=CASCADE)
+    posted_by = models.ForeignKey(CustomUser,related_name="user_reply",null=True,on_delete=SET_NULL)
+    body = models.TextField(max_length=300)
+    pub_date = models.DateTimeField(auto_now=True)
 
 
 class Friend(models.Model):
