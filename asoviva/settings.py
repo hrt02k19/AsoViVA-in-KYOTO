@@ -187,14 +187,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_FORMS = {'signup': 'asovi_app.forms.CustomSignupForm'}
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = Falsein
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_REDIRECT_URL = 'asovi_app:profile-edit'  # 本登録後Profile設定ページに遷移
-<<<<<<< HEAD
-=======
 ACCOUNT_SESSION_REMEMBER = True
->>>>>>> プロフィールページの見た目調
 
 try:
     from .local_settings import *
