@@ -20,6 +20,13 @@ class CustomUserManager(UserManager):
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
 
+        def isHalf(value):
+            """
+            半角文字(半角カナ以外）かチェック
+            user_idが全て半角文字の場合、True
+            """
+            return re.match(r"^[\x20-\x7E]+$", value) is not None
+
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
