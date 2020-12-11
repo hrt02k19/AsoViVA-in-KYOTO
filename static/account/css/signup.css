@@ -83,9 +83,7 @@ p {
 label {
   display: none;
 }
-#id_password1, #id_password2 {
-  display: none;
-}
+
 .igotit {
   font-weight: 100;
 }
