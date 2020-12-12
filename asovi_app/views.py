@@ -5,8 +5,8 @@ from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-from .forms import CustomSignupForm, ProfileForm, PostForm
 from .models import Profile, CustomUserManager, Friend, CustomUser, Post
+from .forms import CustomSignupForm, ProfileForm, PostForm, FindForm
 import datetime, random, string
 
 
@@ -107,3 +107,20 @@ def friend_request_accept(request):
             new_request.delete()
 
     return render(request, 'asovi_app/friend_request_accept.html', params)
+
+def find_user(request):
+    params = {}
+    if request.method=='POST':
+        form = FindForm(request.POST)
+        find = request.POST['find']
+        found_users = CustomUser.objects.filter(user_id__icontains=find)
+        params = {
+            'form': form,
+            'found_users': found_users,
+        }
+    else:
+        form = FindForm()
+        params = {
+            'form': form,
+        }
+    return render(request, 'asovi_app/find_user.html', params)
