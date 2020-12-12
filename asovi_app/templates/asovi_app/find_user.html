@@ -10,6 +10,8 @@
     </style>
 </head>
 <body>
+    <h1>ユーザー検索</h1>
+    <p>検索したいＩＤを入力してください。</p>
     <form method='POST' action="{% url 'asovi_app:find_user' %}">
         {% csrf_token %}
         <table class="table">
