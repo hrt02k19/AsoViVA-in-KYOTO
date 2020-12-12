@@ -1,12 +1,16 @@
-{% extends "account/base.html" %}
+{% extends "account/verification_sent_base.html" %}
 
 {% load i18n %}
 
 {% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
 
 {% block content %}
-    <h1>{% trans "Verify Your E-mail Address" %}</h1>
+    <h1>認証コードを入力</h1>
 
-    <p>{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
+    <p>メールアドレスに送信された認証コードを<br>
+        入力してください。</p>
+    <p class="again"><a href="http://127.0.0.1:8000/accounts/signup/?next=%2Faccounts%2Femail%2F#login">コードを再送信</a></p>
+    <input type="text" name="verifycode" placeholder='認証コード' id='verify'>
+    <a href="#ユーザーネームパスワード設定"><div class="next">次へ</div></a>
 
 {% endblock %}
