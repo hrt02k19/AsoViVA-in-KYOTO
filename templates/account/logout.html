@@ -1,4 +1,4 @@
-{% extends "account/base.html" %}
+{% extends "account/logout_base.html" %}
 
 {% load i18n %}
 
@@ -14,8 +14,10 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
   {% endif %}
-  <button type="submit">{% trans 'Sign Out' %}</button>
+  <a href="#"><button type="submit" class="logout">{% trans 'Sign Out' %}</button></a>
 </form>
+
+<p class="return"><a href="#">ホームに戻る</a></p>
 
 
 {% endblock %}
