@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>友達一覧|遊ViVA in KYOTO</title>
+        <link rel="stylesheet" href="{% static 'asovi_app/css/style.css' %}">
+    </head>
+    <body>
+        フレンドリクエスト:
+        <br>
+        現在{{my_friend_requested_num}}件のフレンドリクエストが来ています。
+        <a href="{% url 'asovi_app:friend_request_accept' %}">一覧を見る</a>
+        <br>
+        リクエスト中:
+        {% for friendship in friend_requesting %}
+            {{ friendship.requestee }}
+        {% endfor %}
+        <br>
+        友達一覧:
+        <br>
+        {% for friendship in friend %}
+            {% if friendship.requestor == me %}
+                {{ friendship.requestee }}
+                <form action="{% url 'asovi_app:friend_block' friendship.requestee.pk %}" method='POST'>
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">ブロック</button>
+                </form>
+            {% else %}
+                {{ friendship.requestor }}
+                <form action="{% url 'asovi_app:friend_block' friendship.requestor.pk %}" method='POST'>
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">ブロック</button>
+                </form>
+            {% endif %}
+        {% endfor %}
+    </body>
+</html>
