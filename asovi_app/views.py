@@ -145,7 +145,7 @@ def friend_list(request,*args):
     params = {
         'me': me,
         'friend': my_friend,
-        'my_friend_requesting_num': len(my_friend_requesting),
+        'my_friend_requesting': my_friend_requesting,
         'my_friend_requested_num': len(my_friend_requested)
     }
     return render(request, 'asovi_app/friend_list.html', params)
