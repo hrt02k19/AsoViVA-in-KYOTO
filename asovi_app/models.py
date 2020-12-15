@@ -159,3 +159,8 @@ class Friend(models.Model):
     friended = models.BooleanField(default=False)
     requested_date = models.DateTimeField(default=timezone.now)
     friended_date = models.DateTimeField(blank=True, null=True)
+
+class Block(models.Model):
+    blocker = models.ForeignKey(CustomUser,related_name="blocker",on_delete=CASCADE)
+    blocked = models.ForeignKey(CustomUser,related_name="blocked",on_delete=CASCADE)
+    block_date = models.DateTimeField(auto_now=True)

@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from typing import Counter
+from django.db.models.query_utils import Q
+from django.shortcuts import redirect, render
 
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-from .models import Profile, CustomUserManager, Friend, CustomUser, Post
+from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post
 from .forms import CustomSignupForm, ProfileForm, PostForm, FindForm
 import datetime, random, string
 
@@ -124,3 +126,26 @@ def find_user(request):
             'form': form,
         }
     return render(request, 'asovi_app/find_user.html', params)
+
+def friend_block(request,pk):
+    print(request.POST)
+    me = request.user
+    blocked_friend = CustomUser.objects.get(pk=pk)
+    block = Block(blocker=me,blocked=blocked_friend)
+    block.save()
+    friend = Friend.objects.get(Q(requestor=me,requestee=blocked_friend)|Q(requestor=blocked_friend,requestee=me))
+    friend.delete()
+    return redirect('asovi_app:friend_list')
+
+def friend_list(request,*args):
+    me = request.user
+    my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).order_by("-friended_date")
+    my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).order_by("-requested_date")
+    my_friend_requested = Friend.objects.filter(requestee=me,friended=False).order_by("-requested_date")
+    params = {
+        'me': me,
+        'friend': my_friend,
+        'my_friend_requesting_num': len(my_friend_requesting),
+        'my_friend_requested_num': len(my_friend_requested)
+    }
+    return render(request, 'asovi_app/friend_list.html', params)
