@@ -71,11 +71,6 @@ def post_detail(request,pk):
     }
     return render(request,'asovi_app/post_detail.html',params)
 
-def user_profile(request, pk):
-    params = {
-        'user': CustomUser.objects.get(pk=pk)
-    }
-    return render(request, 'asovi_app/user_profile.html', params)
 
 
 def friend_request(request, pk):
@@ -169,3 +164,17 @@ class FindUserView(generic.ListView):
         else:
             object_list = []
         return object_list
+
+
+def user_profile(request, pk):
+    me = CustomUser.objects.get(pk=request.user.pk)
+    user = CustomUser.objects.get(pk=pk)
+    profile = Profile.objects.get(user=user.pk)
+    interested_genres = profile.interested_genre.all()
+    params = {
+        'me': me,
+        'user': user,
+        'profile': profile,
+        'interested_genres': interested_genres,
+    }
+    return render(request, 'asovi_app/user_profile.html', params)

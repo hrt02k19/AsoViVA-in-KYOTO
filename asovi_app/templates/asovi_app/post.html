@@ -35,13 +35,13 @@
     <script>
     function initMap() {
 
-      
+
       var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: {lat: 35.0030, lng: 135.7674}
       });
 
-      
+
       map.addListener('click', function(e) {
         getClickLatLng(e.latLng, map);
       });
@@ -50,7 +50,7 @@
     function getClickLatLng(lat_lng, map) {
       var lat1=lat_lng.lat()
       var lng1=lat_lng.lng()
-      
+
       document.getElementById('lat').textContent = lat1
       document.getElementById('lng').textContent = lng1
 
@@ -59,16 +59,16 @@
       form.longitude.value=lng1
 
 
-      
+
       var marker = new google.maps.Marker({
         position: lat_lng,
         map: map
       });
 
-      
+
       map.panTo(lat_lng);
     }
-    
+
   </script>
   <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
 </body>
