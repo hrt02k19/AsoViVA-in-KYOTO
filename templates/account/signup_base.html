@@ -14,13 +14,13 @@
     {% block body %}
 
     <div class="logo">
-     <p><a href="#login"><i class="fas fa-arrow-left left"></i></a><strong>新規登録</strong></p> 
+     <p><a href="{% url 'account_login' %}"></a><strong>新規登録</strong></p> 
     </div>
     {% block content %}
     {% endblock %}
     {% endblock %}
     {% block extra_body %}
     {% endblock %}
-    <script src="{% static 'account/js/login.js'%}"></script>
+    <script src="{% static 'account/js/signup.js'%}"></script>
   </body>
 </html>
