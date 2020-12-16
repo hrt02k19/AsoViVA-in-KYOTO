@@ -18,7 +18,9 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['username','icon','introduction','interested_genre','gender']
-
+        labels = {
+            'username': "名前", 
+        }
 
 class PostForm(forms.ModelForm):
     class Meta:
