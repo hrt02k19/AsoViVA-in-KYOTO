@@ -98,6 +98,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates', 'account'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -186,6 +187,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_REDIRECT_URL = 'asovi_app:profile-edit'  # 本登録後Profile設定ページに遷移
+LOGIN_REDIRECT_URL = 'asovi_app:profile_edit'
 ACCOUNT_SESSION_REMEMBER = True
 
 try:

@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from typing import Counter
+from django.db.models.query_utils import Q
+from django.shortcuts import redirect, render
 
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-from .forms import CustomSignupForm, ProfileForm, PostForm
-from .models import Profile, CustomUserManager, Friend, CustomUser, Post
+from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post
+from .forms import CustomSignupForm, ProfileForm, PostForm, FindForm
 import datetime, random, string
 
 
@@ -107,3 +109,43 @@ def friend_request_accept(request):
             new_request.delete()
 
     return render(request, 'asovi_app/friend_request_accept.html', params)
+
+def find_user(request):
+    params = {}
+    if request.method=='POST':
+        form = FindForm(request.POST)
+        find = request.POST['find']
+        found_users = CustomUser.objects.filter(user_id__icontains=find)
+        params = {
+            'form': form,
+            'found_users': found_users,
+        }
+    else:
+        form = FindForm()
+        params = {
+            'form': form,
+        }
+    return render(request, 'asovi_app/find_user.html', params)
+
+def friend_block(request,pk):
+    print(request.POST)
+    me = request.user
+    blocked_friend = CustomUser.objects.get(pk=pk)
+    block = Block(blocker=me,blocked=blocked_friend)
+    block.save()
+    friend = Friend.objects.get(Q(requestor=me,requestee=blocked_friend)|Q(requestor=blocked_friend,requestee=me))
+    friend.delete()
+    return redirect('asovi_app:friend_list')
+
+def friend_list(request,*args):
+    me = request.user
+    my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).order_by("-friended_date")
+    my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).order_by("-requested_date")
+    my_friend_requested = Friend.objects.filter(requestee=me,friended=False).order_by("-requested_date")
+    params = {
+        'me': me,
+        'friend': my_friend,
+        'my_friend_requesting': my_friend_requesting,
+        'my_friend_requested_num': len(my_friend_requested)
+    }
+    return render(request, 'asovi_app/friend_list.html', params)
