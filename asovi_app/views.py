@@ -178,3 +178,13 @@ def user_profile(request, pk):
         'interested_genres': interested_genres,
     }
     return render(request, 'asovi_app/user_profile.html', params)
+
+
+class PostListView(generic.ListView):
+    model = Post
+    template_name = 'asovi_app/post_list.html'
+
+    def get_queryset(self, *args, **kwargs):
+        me = self.request.user
+        post_list = Post.objects.filter(posted_by=me).order_by("-time")
+        return post_list
