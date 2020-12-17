@@ -18,8 +18,8 @@ border: solid #707070 1px;
 }
 .logo p strong {
   margin-right: 103px;
-    margin-left:106px;
-    width: 135px;
+  margin-left: 54px;
+  width: 135px;
   }
 .left {
   width: 18px;
@@ -34,10 +34,13 @@ h1{
       margin-top: 62px;
       margin-bottom: 0;
 }
+
 p {
   color: #909090;
   font-size: 15px;
-  font-weight: 900;
+  margin-left: 43px;
+   margin-bottom: 8px;
+  /* font-weight: 900; */
 }
 .letter {
   margin-top: -35px;
@@ -57,13 +60,11 @@ p {
 }
 
 /* form部分 */
-
 .signup {
   font-size: 15px;
-    color: #707070;
-    margin-left: 45px;
-    font-family: "Meiryo", sans-serif;
-    margin-top: 43px;
+  color: #707070;
+  font-family: "Meiryo", sans-serif;
+  margin-top: 43px;
 }
 .signup a {
   margin-left: -4px;
@@ -86,6 +87,18 @@ label {
   display: none;
 }
 input[type="password" i] {
+  background-color: #EDEDED;
+  height: 44px;
+  width: 274px;
+  border: solid #707070 1px;
+  padding: 0;
+  padding-left: 9px;
+  margin-bottom: 0;
+  font-size: 15px;
+  color: #909090;
+}
+/* 利用規約欄は今のとこ消す */
+.hidden {
   display: none;
 }
 .igotit {
@@ -104,4 +117,5 @@ input[type="password" i] {
   padding: 0;
   font-family: "Meiryo", sans-serif;
   margin-top: 29px;
+   margin-left: 43px;
 }
