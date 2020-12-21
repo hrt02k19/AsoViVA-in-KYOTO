@@ -126,11 +126,11 @@ class Profile(models.Model):
     ]
 
     user = models.OneToOneField(CustomUser,related_name="user_profile",on_delete=CASCADE)
-    username = models.CharField(max_length=50)
-    icon = models.ImageField(upload_to="static/asovi_app/img/",null=True,blank=True)
-    introduction = models.TextField(null=True,blank=True)
-    interested_genre = models.ManyToManyField(Genre)
-    gender = models.IntegerField(choices=GENDER_CHOICES,default=0,null=True,blank=True)
+    username = models.CharField(verbose_name='ユーザーネーム',max_length=50)
+    icon = models.ImageField(verbose_name='アイコン',upload_to="static/asovi_app/img/",null=True,blank=True)
+    introduction = models.TextField(verbose_name='紹介文',null=True,blank=True)
+    interested_genre = models.ManyToManyField(Genre,verbose_name='興味のあるジャンル')
+    gender = models.IntegerField(verbose_name='性別',choices=GENDER_CHOICES,default=0,null=True,blank=True)
 
     class Meta:
         verbose_name_plural = 'Profile'
@@ -140,8 +140,10 @@ class Profile(models.Model):
 
 # Create y
 class Post(models.Model):
+    posted_by=models.ForeignKey(CustomUser,related_name='posted_by',on_delete=SET_NULL,null=True)
     image=models.ImageField(upload_to="static/asovi_app/img")
-    time=models.DateTimeField(null=True)
+    genre=models.ForeignKey(Genre,related_name='post_genre',on_delete=SET_NULL,null=True,blank=True)
+    time=models.DateTimeField(auto_now_add=True,null=True)
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
     longitude=models.FloatField(null=True,blank=True)
