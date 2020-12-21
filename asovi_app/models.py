@@ -5,13 +5,6 @@ from django.db import models
 
 
 
-# Create y
-class post(models.Model):
-    image=models.ImageField(upload_to="images")
-    time=models.DateTimeField(null=True)
-    body=models.CharField(max_length=300,unique=True)
-    latitude=models.FloatField(null=True,blank=True)
-    longitude=models.FloatField(null=True,blank=True)
 
 # Create your models here.
 
@@ -44,4 +37,30 @@ class Profile(models.Model):
     
     def __str__(self):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
+
+
+
+    
+class post(models.Model):
+    image=models.ImageField(upload_to="images",null=True)
+    time=models.DateTimeField(null=True)
+    body=models.CharField(max_length=300,unique=True)
+    latitude=models.FloatField(null=True,blank=True)
+    longitude=models.FloatField(null=True,blank=True)
+    like=models.IntegerField(default=0)
+    genre=models.ManyToManyField(Genre)
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)
+
+
+
+
+class Good(models.Model):
+    article=models.ForeignKey(post,on_delete=models.CASCADE)
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    good=models.BooleanField(default=False)
+
+class Save(models.Model):
+    item=models.ForeignKey(post,on_delete=models.CASCADE)
+    person=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
 
