@@ -1,4 +1,5 @@
 from typing import Counter
+from django.core import serializers
 from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render
 
@@ -149,3 +150,23 @@ def friend_list(request,*args):
         'my_friend_requested_num': len(my_friend_requested)
     }
     return render(request, 'asovi_app/friend_list.html', params)
+
+def post_map(request):
+    user = request.user
+    involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
+    blocked_users = []
+    for block_obj in involved_blocks:
+        if block_obj.blocker == user:
+            blocked_users.append(block_obj.blocked)
+        else:
+            blocked_users.append(block_obj.blocker)
+    profile = user.user_profile
+    username = profile.username
+    posts = Post.objects.all().exclude(posted_by__in=blocked_users)
+    posts_json = serializers.serialize('json',posts)
+    params = {
+        'username': username,
+        'posts': posts,
+        'posts_json': posts_json,
+    }
+    return render(request,'asovi_app/post_map.html', params)

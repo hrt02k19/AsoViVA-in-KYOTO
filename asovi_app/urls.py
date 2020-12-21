@@ -13,5 +13,6 @@ urlpatterns = [
     path('friend_request_accept/', views.friend_request_accept, name='friend_request_accept'),
     path('find_user/', views.find_user, name='find_user'),
     path('friend_list/',views.friend_list, name='friend_list'),
-    path('friend_block/<int:pk>',views.friend_block, name='friend_block')
+    path('friend_block/<int:pk>/',views.friend_block, name='friend_block'),
+    path('post_map/',views.post_map,name='post_map')
 ]
