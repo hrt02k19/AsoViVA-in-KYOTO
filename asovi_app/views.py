@@ -1,5 +1,6 @@
 from typing import Counter
 from django.core import serializers
+from django.db.models import Subquery, OuterRef
 from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render
 from django.views import generic
@@ -91,8 +92,19 @@ def friend_request(request, pk):
     return render(request, 'asovi_app/friend_request.html', params)
 
 def friend_request_accept(request):
+    new_requests = Friend.objects.filter(friended=False, requestee=request.user)
+    new_requests = Friend.objects.filter(
+        friended=False, requestee=request.user
+        ).annotate(
+        requestor_username = Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values('username')
+        ),
+        requestor_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+        ),
+    )
     params = {
-        'new_requests': Friend.objects.filter(friended=False, requestee=request.user)
+        'new_requests': new_requests,
     }
     if request.method == 'POST':
         new_request_pk = request.POST['friend_request_pk']

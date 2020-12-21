@@ -13,17 +13,19 @@
 <body>
     <!-- ここから -->
     <div class="logo">
-        <p><strong>フォローリクエスト一覧</strong></p> 
-    </div>     
+        <p><strong>フォローリクエスト一覧</strong></p>
+    </div>
  <!-- ここまで共通 -->
 
     {% if new_requests %}
         <p class="hidden"><label for="username"></label><input type="search" placeholder="検索" name="username" id="username"><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></p>
         <p class="follow">フォローリクエスト</p>
         {% for request in new_requests %}
-        <div class="list"> 
-            <div class="icon"></div>     
-            {{request.requestor}}
+        <div class="list">
+            <img class="icon" src="/{{request.requestor_icon}}">
+            {{request.requestor.user_id}}
+            {{request.requestor_username}}
+
             <form action="{% url 'asovi_app:friend_request_accept' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="friend_request_pk" value="{{request.pk}}">
@@ -32,7 +34,6 @@
             </form>
         </div>
         {% endfor %}
-        
     {% else %}
         <p class="none">現在、あなたへの友達申請はありません。</p>
     {% endif%}
