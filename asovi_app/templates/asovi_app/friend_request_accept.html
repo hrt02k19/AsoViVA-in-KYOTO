@@ -1,28 +1,42 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="utf-8">
-    <title>友達申請許可｜遊ViVA in KYOTO</title>
+    <title>フォローリクエスト一覧｜遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/friend_request_accept.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 
 <body>
+    <!-- ここから -->
+    <div class="logo">
+        <p><strong>フォローリクエスト一覧</strong></p> 
+    </div>     
+ <!-- ここまで共通 -->
+
     {% if new_requests %}
-        <p>以下のユーザーから友達申請されました。申請を許可して友達になりますか？</p>
+        <p class="hidden"><label for="username"></label><input type="search" placeholder="検索" name="username" id="username"><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></p>
+        <p class="follow">フォローリクエスト</p>
         {% for request in new_requests %}
+        <div class="list"> 
+            <div class="icon"></div>     
             {{request.requestor}}
             <form action="{% url 'asovi_app:friend_request_accept' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="friend_request_pk" value="{{request.pk}}">
-                <input type="submit" name="accept" value="友達になる">
-                <input type="submit" name="reject" value="申請を拒否">
+                <input type="submit" name="accept" value="追加" class="accept">
+                <input type="submit" name="reject" value="削除" class="reject">
             </form>
+        </div>
         {% endfor %}
         
     {% else %}
-        <p>現在、あなたへの友達申請はありません。</p>
+        <p class="none">現在、あなたへの友達申請はありません。</p>
     {% endif%}
-    <a href="{% url 'asovi_app:friend_list' %}">友達一覧に戻る</a>
+    <a href="{% url 'asovi_app:friend_list' %}" class="back">友達一覧に戻る</a>
 </body>
 
 </html>
