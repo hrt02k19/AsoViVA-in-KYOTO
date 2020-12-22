@@ -1,7 +1,9 @@
 from typing import Counter
 from django.core import serializers
+from django.db.models import Subquery, OuterRef
 from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render
+from django.views import generic
 
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.account import app_settings
@@ -9,7 +11,7 @@ from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
 from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post
-from .forms import CustomSignupForm, ProfileForm, PostForm, FindForm
+from .forms import CustomSignupForm, ProfileForm, PostForm
 import datetime, random, string
 
 
@@ -70,11 +72,6 @@ def post_detail(request,pk):
     }
     return render(request,'asovi_app/post_detail.html',params)
 
-def user_profile(request, pk):
-    params = {
-        'user': CustomUser.objects.get(pk=pk)
-    }
-    return render(request, 'asovi_app/user_profile.html', params)
 
 
 def friend_request(request, pk):
@@ -95,8 +92,19 @@ def friend_request(request, pk):
     return render(request, 'asovi_app/friend_request.html', params)
 
 def friend_request_accept(request):
+    new_requests = Friend.objects.filter(friended=False, requestee=request.user)
+    new_requests = Friend.objects.filter(
+        friended=False, requestee=request.user
+        ).annotate(
+        requestor_username = Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values('username')
+        ),
+        requestor_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+        ),
+    )
     params = {
-        'new_requests': Friend.objects.filter(friended=False, requestee=request.user)
+        'new_requests': new_requests,
     }
     if request.method == 'POST':
         new_request_pk = request.POST['friend_request_pk']
@@ -111,22 +119,6 @@ def friend_request_accept(request):
 
     return render(request, 'asovi_app/friend_request_accept.html', params)
 
-def find_user(request):
-    params = {}
-    if request.method=='POST':
-        form = FindForm(request.POST)
-        find = request.POST['find']
-        found_users = CustomUser.objects.filter(user_id__icontains=find)
-        params = {
-            'form': form,
-            'found_users': found_users,
-        }
-    else:
-        form = FindForm()
-        params = {
-            'form': form,
-        }
-    return render(request, 'asovi_app/find_user.html', params)
 
 def friend_block(request,pk):
     print(request.POST)
@@ -170,3 +162,57 @@ def post_map(request):
         'posts_json': posts_json,
     }
     return render(request,'asovi_app/post_map.html', params)
+
+class FindUserView(generic.ListView):
+    template_name = 'asovi_app/find_user.html'
+    paginate_by = 10
+    model = CustomUser
+
+    def get_queryset(self):
+        query = self.request.GET.get('search_id')
+
+        if query:
+            object_list = CustomUser.objects.filter(user_id__icontains=query)
+        else:
+            object_list = []
+        return object_list
+
+
+def user_profile(request, pk):
+    me = CustomUser.objects.get(pk=request.user.pk)
+    user = CustomUser.objects.get(pk=pk)
+    profile = Profile.objects.get(user=user.pk)
+    interested_genres = profile.interested_genre.all()
+    params = {
+        'me': me,
+        'user': user,
+        'profile': profile,
+        'interested_genres': interested_genres,
+    }
+    return render(request, 'asovi_app/user_profile.html', params)
+
+
+def post_list(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    post_list = Post.objects.filter(posted_by=user).order_by("-time")
+    params = {
+        'post_list': post_list,
+    }
+    return render(request, 'asovi_app/post_list.html', params)
+
+
+def my_page(request):
+    me = request.user
+    friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
+    params = {
+        'me': me,
+        'friend_num': friend_num,
+    }
+    return render(request, 'asovi_app/mypage.html', params)
+
+
+def signout(request):
+    me = CustomUser.objects.get(email=request.user)
+    me.is_active = False
+    me.save()
+    return redirect(to='asovi_app:account_signup')
