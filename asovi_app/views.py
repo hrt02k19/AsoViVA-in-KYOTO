@@ -8,8 +8,8 @@ from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post
-from .forms import CustomSignupForm, ProfileForm, PostForm, FindForm
+from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm
 import datetime, random, string
 
 
@@ -160,13 +160,53 @@ def post_map(request):
             blocked_users.append(block_obj.blocked)
         else:
             blocked_users.append(block_obj.blocker)
-    profile = user.user_profile
-    username = profile.username
     posts = Post.objects.all().exclude(posted_by__in=blocked_users)
+    loc_form = LocationSearchForm()
+    genre_form = GenreSearchForm()
+    word_form = WordSearchForm()
+    radius = 0
+    if request.method == 'POST':
+        if 'location_search' in request.POST :
+            loc_form = LocationSearchForm(request.POST)
+            radius = request.POST.get('choice')
+            print(radius)
+        elif 'genre_search' in request.POST :
+            genre_form = GenreSearchForm(request.POST)
+            selected_genre = []
+            if 'food' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=1))
+            if 'music' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=2))
+            if 'nature' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=3))
+            if 'art' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=4))
+            if 'temple' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=5))
+            if 'shopping' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=6))
+            if 'indoor' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=7))
+            if 'outdoor' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=8))
+            if 'exercise' in request.POST :
+                selected_genre.append(Genre.objects.get(pk=9))
+            posts = posts.filter(genre__in=selected_genre)
+        elif 'word_search' in request.POST :
+            word_form = WordSearchForm(request.POST)
+            kw = request.POST.get('key_word')
+            posts = posts.filter(body__contains=kw)
+
     posts_json = serializers.serialize('json',posts)
+    genre_json = serializers.serialize('json',Genre.objects.all().order_by('pk'))
+
     params = {
-        'username': username,
         'posts': posts,
         'posts_json': posts_json,
+        'genre_json': genre_json,
+        'loc_form': loc_form,
+        'genre_form': genre_form,
+        'word_form': word_form,
+        'radius': radius
     }
     return render(request,'asovi_app/post_map.html', params)
