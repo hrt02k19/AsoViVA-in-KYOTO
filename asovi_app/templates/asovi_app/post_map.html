@@ -4,7 +4,7 @@
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
-        <title>{{ username }}さんの投稿一覧|遊ViVA in KYOTO</title>
+        <title>投稿一覧|遊ViVA in KYOTO</title>
         <link rel="stylesheet" href="{% static 'asovi_app/css/style.css' %}">
         <style>
             html, body {
@@ -17,6 +17,41 @@
               width: 80%;
             }
         </style>
+        <script>
+            if(!navigator.geolocation){
+                alert("この端末では位置情報が取得できません");
+            }
+            var curLat;
+            var curLng;
+            function getPosition(){
+                navigator.geolocation.getCurrentPosition(
+
+                    function(position){
+                        curLat = position.coords.latitude;
+                        curLng = position.coords.longitude;
+                        //curLat = 35.0;
+                        //curLng = 135.75;
+                    },
+
+                    function(error) {
+                        switch(error.code) {
+                            case 1: //PERMISSION_DENIED
+                            alert("位置情報の利用が許可されていません");
+                            break;
+                            case 2: //POSITION_UNAVAILABLE
+                            alert("現在位置が取得できませんでした");
+                            break;
+                            case 3: //TIMEOUT
+                            alert("タイムアウトになりました");
+                            break;
+                            default:
+                            alert("その他のエラー(エラーコード:"+error.code+")");
+                            break;
+                        }
+                    }
+                );
+            }
+        </script>
     </head>
     <body>
         <!-- {% for post in posts %}
@@ -28,15 +63,29 @@
             <!-- {{ post.latitude }}
             {{ post.longitude }}
         {% endfor %} -->
-        {{ post.posted_by }}
-        {{ post.body }}
+        <form action="{% url 'asovi_app:post_map' %}" method="POST">
+            {% csrf_token %}
+            {{ loc_form.as_p }}
+            <button type="submit" name="location_search" onclick="getPosition();">検索</button>
+            <br>
+            {{ genre_form.as_p }}
+            <button type="submit" name="genre_search">検索</button>
+            <br>
+            {{ word_form.as_table }}
+            <button type="submit" name="word_search">検索</button>
+        </form>
         <div id="map"></div>
         <script>
             var map;
             var markers = [];
             var infoWindows = [];
             var posts = JSON.parse('{{ posts_json|escapejs }}');
-            console.log(posts);
+            var genre_list = JSON.parse('{{ genre_json|escapejs }}');
+            var radius = {{ radius }};
+            //curLat=34.70;
+            //curLng=135.50;
+            //console.log(radius);
+            //console.log(posts);
             var center = {
                 lat: 35,
                 lng: 136
@@ -47,7 +96,26 @@
                     zoom: 13
                 });
                 for( var post of posts ){
-                    //console.log(post.fields.latitude)
+                    //console.log(post.fields.genre)
+                    var postLat = post.fields.latitude;
+                    var postLng = post.fields.longitude;
+                    if( radius>0 ){
+                        var sqDist = Math.pow((postLat-curLat)*110940.5844,2.0)+Math.pow((postLng-curLng)*91287.7885,2.0)
+                        switch(radius){
+                            case 1:
+                                if(sqDist>40000.0) continue;
+                                break;
+                            case 2:
+                                if(sqDist>250000.0) continue;
+                                break;
+                            case 3:
+                                if(sqDist>1000000.0) continue;
+                                break;
+                            case 4:
+                                if(sqDist>4000000.0) continue;
+                                break;
+                        }
+                    }
                     markers.push(new google.maps.Marker({
                         position: {
                             lat: post.fields.latitude,
@@ -56,7 +124,7 @@
                         map: map
                     }));
                     infoWindows.push(new google.maps.InfoWindow({
-                        content : "<div id='content'>" + post.fields.genre + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
+                        content : "<div id='content'>" + genre_list[post.fields.genre-1].fields.name + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
                     }));
                     // marker.addListener('click', function() { // マーカーをクリックしたとき
                     //     infoWindow.open(map, marker); // 吹き出しの表示

@@ -24,6 +24,7 @@
         {% for friendship in friend %}
             {% if friendship.requestor == me %}
                 {{ friendship.requestee }}
+
                 <a href="{% url 'asovi_app:post_list' friendship.requestee.pk %}">投稿を見る</a>
                 <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a>
                 <form action="{% url 'asovi_app:friend_block' friendship.requestee.pk %}" method='POST'>
@@ -32,6 +33,7 @@
                 </form>
             {% else %}
                 {{ friendship.requestor }}
+      
                 <a href="{% url 'asovi_app:post_list' friendship.requestor.pk %}">投稿を見る</a>
                 <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}">プロフィールを見る</a>
                 <form action="{% url 'asovi_app:friend_block' friendship.requestor.pk %}" method='POST'>
