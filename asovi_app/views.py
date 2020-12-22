@@ -209,3 +209,10 @@ def my_page(request):
         'friend_num': friend_num,
     }
     return render(request, 'asovi_app/mypage.html', params)
+
+
+def signout(request):
+    me = CustomUser.objects.get(email=request.user)
+    me.is_active = False
+    me.save()
+    return redirect(to='asovi_app:account_signup')

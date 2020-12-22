@@ -13,11 +13,11 @@
     <a href="{% url 'asovi_app:user_profile' me.pk %}">プロフィール表示</a>
     <br>
     <a href="{% url 'asovi_app:post_list' me.pk %}">投稿一覧</a>
-    <p>友達数：{{friend_num}}</p>
+    <p>友達数：{{friend_num}}人</p>
     <a href="{% url 'asovi_app:friend_list' %}">友達一覧</a>
     <br>
 
-    <a href="{#% url 'signout' %#}">サインアウト</a>
+    <a href="{% url 'asovi_app:signout' %}">サインアウト</a>
 
 </body>
 

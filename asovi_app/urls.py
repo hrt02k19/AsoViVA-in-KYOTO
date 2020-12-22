@@ -17,4 +17,5 @@ urlpatterns = [
     path('post_map/',views.post_map,name='post_map'),
     path('find_user/', views.FindUserView.as_view(), name='find_user'),
     path('my_page/', views.my_page, name='my_page'),
+    path('signout/', views.signout, name='signout')
 ]
