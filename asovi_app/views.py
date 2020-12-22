@@ -192,11 +192,20 @@ def user_profile(request, pk):
     return render(request, 'asovi_app/user_profile.html', params)
 
 
-class PostListView(generic.ListView):
-    model = Post
-    template_name = 'asovi_app/post_list.html'
+def post_list(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    post_list = Post.objects.filter(posted_by=user).order_by("-time")
+    params = {
+        'post_list': post_list,
+    }
+    return render(request, 'asovi_app/post_list.html', params)
 
-    def get_queryset(self, *args, **kwargs):
-        me = self.request.user
-        post_list = Post.objects.filter(posted_by=me).order_by("-time")
-        return post_list
+
+def my_page(request):
+    me = request.user
+    friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
+    params = {
+        'me': me,
+        'friend_num': friend_num,
+    }
+    return render(request, 'asovi_app/mypage.html', params)
