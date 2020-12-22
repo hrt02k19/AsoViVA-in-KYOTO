@@ -12,18 +12,9 @@
 <body>
     <h1>ユーザー検索</h1>
     <p>検索したいＩＤを入力してください。</p>
-    <form method='POST' action="{% url 'asovi_app:find_user' %}">
-        {% csrf_token %}
-        <table class="table">
-            {{ form.as_table }}
-            <tr>
-                <th>
-                <td>
-                    <button type="submit" class="btn btn-secondary">検索</button>
-                </td>
-                </th>
-            </tr>
-        </table>
+    <form method='GET' action="{% url 'asovi_app:find_user' %}">
+            <input type="text" name="search_id" value="{{request.GET.search_id}}">
+                    <button type="submit">検索</button>
     </form>
     <div class="found_user_list">
         <table>
@@ -31,7 +22,8 @@
                 <th>ユーザーネーム |</th>
                 <th>ユーザーID</th>
             </tr>
-        {% for found_user in found_users %}
+
+        {% for found_user in object_list %}
             <tr>
                 <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}">{{found_user.username}}</a></td>
                 <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}">{{found_user.user_id}}</a></td>

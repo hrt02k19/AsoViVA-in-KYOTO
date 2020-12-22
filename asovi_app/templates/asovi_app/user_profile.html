@@ -2,14 +2,48 @@
 <html lang="ja">
     <head>
         <meta charset="utf-8">
-        <title>{{user.username}}｜遊ViVA in KYOTO</title>
+        <title>{{profile.username}}｜遊ViVA in KYOTO</title>
     </head>
     <body>
-        <p>{{user.username}}</p>
-        <p>{{user.user_id}}</p>
-        <form action="{% url 'asovi_app:friend_request' user.pk %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">友達申請</button>
-        </form>
+        <table>
+            <tr>
+                <th>ユーザー名：</th>
+                <td>{{profile.username}}</td>
+            </tr>
+            <tr>
+                <th>ユーザーID：</th>
+                <td>{{user.user_id}}</td>
+            </tr>
+            <tr>
+                <th>性別：</th>
+                <td>{{profile.get_gender_display}}</td>
+            </tr>
+            <tr>
+                <th>アイコン：</th>
+                {% if profile.icon %}
+                <td><img src="/{{profile.icon}}" width="30" height="30" alt="icon"></td>
+                {% endif %}
+            </tr>
+            {% if interested_genres %}
+            <tr>
+                <th>興味ジャンル：</th>
+                {% for interested_genre in interested_genres %}
+                    <td>{{interested_genre.name}}</td>
+                {% endfor %}
+            </tr>
+            {% endif %}
+            <tr>
+                <th>自己紹介：</th>
+                <td>{{profile.introduction}}</td>
+            </tr>
+        </table>
+        {% if user.pk == me.pk %}
+            <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
+        {% else %}
+            <form action="{% url 'asovi_app:friend_request' user.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">友達申請</button>
+            </form>
+        {% endif %}
     </body>
 </html>
