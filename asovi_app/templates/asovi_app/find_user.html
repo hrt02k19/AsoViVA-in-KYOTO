@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -8,28 +10,46 @@
             display: block;
         }
     </style>
+     <link rel="stylesheet" href="{% static 'asovi_app/css/find_user.css' %}">
+     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 <body>
-    <h1>ユーザー検索</h1>
-    <p>検索したいＩＤを入力してください。</p>
-    <form method='GET' action="{% url 'asovi_app:find_user' %}">
-            <input type="text" name="search_id" value="{{request.GET.search_id}}">
-                    <button type="submit">検索</button>
+  <!-- ここから -->
+  <div class="logo">
+    <p><strong>検索結果一覧</strong></p> 
+</div>     
+<!-- ここまで共通 -->
+
+<!-- <p class="hidden"><label for="username"></label><input type="search" placeholder="検索" name="username" id="username"><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></p>
+<p class="follow">フォローリクエスト</p> -->
+
+
+<form method='GET' action="{% url 'asovi_app:find_user' %}">
+            <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username'  placeholder="検索">
+                    <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+   
     </form>
     <div class="found_user_list">
-        <table>
-            <tr>
-                <th>ユーザーネーム |</th>
-                <th>ユーザーID</th>
-            </tr>
-
+    <p class="results">検索結果</p>
         {% for found_user in object_list %}
-            <tr>
-                <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}">{{found_user.username}}</a></td>
-                <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}">{{found_user.user_id}}</a></td>
+        <div class="list">
+            <img class="icon" src="/{{request.requestor_icon}}">
+            <table>
+            <tr>              
+                <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}" class="userid">@{{found_user.user_id}}</a></td>
+                <tr></tr>
+                <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}" class="username">{{found_user.username}}</a></td>
             </tr>
-        {% endfor %}
         </table>
+        <!-- ここから -->
+        <form action="{% url 'asovi_app:friend_request_accept' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="friend_request_pk" value="{{request.pk}}">
+            <input type="submit" name="accept" value="追加" class="request">
+        <!-- ここまで、友達検索仕様に修正して欲しいです -->
+        {% endfor %}
+    </div>
+        
     </div>
 </body>
 
