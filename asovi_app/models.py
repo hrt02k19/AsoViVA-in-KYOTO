@@ -141,14 +141,6 @@ class Profile(models.Model):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
 
 
-class Good(models.Model):
-    article=models.ForeignKey(post,on_delete=models.CASCADE)
-    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    good=models.BooleanField(default=False)
-
-class Save(models.Model):
-    item=models.ForeignKey(post,on_delete=models.CASCADE)
-    person=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
 
 # Create y
 class Post(models.Model):
@@ -160,6 +152,16 @@ class Post(models.Model):
     latitude=models.FloatField(null=True,blank=True)
     longitude=models.FloatField(null=True,blank=True)
     like=models.IntegerField(default=0)
+
+class Save(models.Model):
+    item=models.ForeignKey(Post,on_delete=models.CASCADE)
+    person = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+
+class Good(models.Model):
+    article=models.ForeignKey(Post,on_delete=models.CASCADE)
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    good = models.BooleanField(default=False)
 
 class Reply(models.Model):
     post = models.ForeignKey(Post,related_name="post_reply",on_delete=CASCADE)
@@ -179,4 +181,3 @@ class Block(models.Model):
     blocker = models.ForeignKey(CustomUser,related_name="blocker",on_delete=CASCADE)
     blocked = models.ForeignKey(CustomUser,related_name="blocked",on_delete=CASCADE)
     block_date = models.DateTimeField(auto_now=True)
-
