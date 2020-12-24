@@ -1,0 +1,65 @@
+[
+    {
+        "model": "asovi_app.genre",
+        "pk": 1,
+        "fields": {
+            "name": "食事"
+        }
+    },
+    {
+        "model": "asovi_app.genre",
+        "pk": 2,
+        "fields": {
+            "name": "音楽"
+        }
+    },
+    {
+        "model": "asovi_app.genre",
+        "pk": 3,
+        "fields": {
+            "name": "自然"
+        }
+    },
+    {
+        "model": "asovi_app.genre",
+        "pk": 4,
+        "fields": {
+            "name": "芸術"
+        }
+    },
+    {
+        "model": "asovi_app.genre",
+        "pk": 5,
+        "fields": {
+            "name": "寺社"
+        }
+    },
+    {
+        "model": "asovi_app.genre",
+        "pk": 6,
+        "fields": {
+            "name": "買物"
+        }
+    },
+    {
+        "model": "asovi_app.genre",
+        "pk": 7,
+        "fields": {
+            "name": "屋内"
+        }
+    },
+    {
+        "model": "asovi_app.genre",
+        "pk": 8,
+        "fields": {
+            "name": "屋外"
+        }
+    },
+    {
+        "model": "asovi_app.genre",
+        "pk": 9,
+        "fields": {
+            "name": "運動"
+        }
+    }
+]

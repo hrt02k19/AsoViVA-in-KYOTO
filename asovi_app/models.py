@@ -1,12 +1,113 @@
-from django.db.models.deletion import CASCADE, get_candidate_relations_to_delete
-from accounts.models import CustomUser
+from django.db.models.deletion import CASCADE, SET_NULL, get_candidate_relations_to_delete
 from django.db import models
+from django.core.mail import send_mail
+from django.contrib.auth.models import PermissionsMixin, UserManager
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+import re, random, string
 
 
+class CustomUserManager(UserManager):
+    use_in_migrations = True
+
+    def generate_user_id(self, num):
+        # <num>文字のランダムな文字列を生成
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=num))
 
 
+    def _create_user(self, email, password, **extra_fields):
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
 
-# Create your models here.
+        def isHalf(value):
+            """
+            半角文字(半角カナ以外）かチェック
+            user_idが全て半角文字の場合、True
+            """
+            return re.match(r"^[\x20-\x7E]+$", value) is not None
+
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        extra_fields.setdefault('user_id', self.generate_user_id(10))
+        return self._create_user(email, password, **extra_fields)
+
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+
+    email = models.EmailField(_('email address'), unique=True)
+    first_name = models.CharField(_('first name'), max_length=150, blank=True)
+    last_name = models.CharField(_('last name'), max_length=150, blank=True)
+    user_id = models.CharField(_('user id'), max_length=50, unique=True)
+
+    is_staff = models.BooleanField(
+        _('staff status'),
+        default=False,
+        help_text=_(
+            'Designates whether the user can log into this admin site.'
+        )
+    )
+    is_active = models.BooleanField(
+        _('active'),
+        default=True,
+        help_text=_(
+            'Designate whether this user should be treated as active.'
+            'Unselect this instead of deleting accounts.'
+        ),
+    )
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+
+    objects = CustomUserManager()
+
+    EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+    def isHalf(value):
+        """
+        半角文字(半角カナ以外）かチェック
+        user_idが全て半角文字の場合、True
+        """
+        return re.match(r"^[\x20-\x7E]+$", value) is not None
+
+    def get_full_name(self):
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def get_short_name(self):
+        return self.first_name
+
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    @property
+    def username(self):
+        return self.email
+
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=60)
@@ -17,6 +118,7 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
+
 class Profile(models.Model):
 
     GENDER_CHOICES = [
@@ -26,33 +128,17 @@ class Profile(models.Model):
     ]
 
     user = models.OneToOneField(CustomUser,related_name="user_profile",on_delete=CASCADE)
-    username = models.CharField(max_length=50)
-    icon = models.ImageField(null=True,blank=True)
-    introduction = models.TextField(null=True,blank=True)
-    interested_genre = models.ManyToManyField(Genre)
-    gender = models.IntegerField(choices=GENDER_CHOICES,default=0,null=True,blank=True)
+    username = models.CharField(verbose_name='ユーザーネーム',max_length=50)
+    icon = models.ImageField(verbose_name='アイコン',upload_to="static/asovi_app/img/",null=True,blank=True)
+    introduction = models.TextField(verbose_name='紹介文',null=True,blank=True)
+    interested_genre = models.ManyToManyField(Genre,verbose_name='興味のあるジャンル')
+    gender = models.IntegerField(verbose_name='性別',choices=GENDER_CHOICES,default=0,null=True,blank=True)
 
     class Meta:
         verbose_name_plural = 'Profile'
-    
+
     def __str__(self):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
-
-
-
-    
-class post(models.Model):
-    image=models.ImageField(upload_to="images",null=True)
-    time=models.DateTimeField(null=True)
-    body=models.CharField(max_length=300,unique=True)
-    latitude=models.FloatField(null=True,blank=True)
-    longitude=models.FloatField(null=True,blank=True)
-    like=models.IntegerField(default=0)
-    genre=models.ManyToManyField(Genre)
-
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)
-
-
 
 
 class Good(models.Model):
@@ -63,4 +149,34 @@ class Good(models.Model):
 class Save(models.Model):
     item=models.ForeignKey(post,on_delete=models.CASCADE)
     person=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+
+# Create y
+class Post(models.Model):
+    posted_by=models.ForeignKey(CustomUser,related_name='posted_by',on_delete=SET_NULL,null=True)
+    image=models.ImageField(upload_to="static/asovi_app/img")
+    genre=models.ForeignKey(Genre,related_name='post_genre',on_delete=SET_NULL,null=True,blank=True)
+    time=models.DateTimeField(auto_now_add=True,null=True)
+    body=models.CharField(max_length=300,unique=True)
+    latitude=models.FloatField(null=True,blank=True)
+    longitude=models.FloatField(null=True,blank=True)
+    like=models.IntegerField(default=0)
+
+class Reply(models.Model):
+    post = models.ForeignKey(Post,related_name="post_reply",on_delete=CASCADE)
+    posted_by = models.ForeignKey(CustomUser,related_name="user_reply",null=True,on_delete=SET_NULL)
+    body = models.TextField(max_length=300)
+    pub_date = models.DateTimeField(auto_now=True)
+
+
+class Friend(models.Model):
+    requestor = models.ForeignKey(CustomUser, related_name='requestor', on_delete=CASCADE)
+    requestee = models.ForeignKey(CustomUser, related_name='requestee', on_delete=CASCADE)
+    friended = models.BooleanField(default=False)
+    requested_date = models.DateTimeField(default=timezone.now)
+    friended_date = models.DateTimeField(blank=True, null=True)
+
+class Block(models.Model):
+    blocker = models.ForeignKey(CustomUser,related_name="blocker",on_delete=CASCADE)
+    blocked = models.ForeignKey(CustomUser,related_name="blocked",on_delete=CASCADE)
+    block_date = models.DateTimeField(auto_now=True)
 

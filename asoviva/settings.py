@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
@@ -98,7 +97,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'accounts', 'templates', 'account'),
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates', 'account'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -163,6 +163,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -171,19 +174,21 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'asovi_app.CustomUser'
 
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_REQUIRED = True
 # メールはとりあえずコンソールに表示
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
+ACCOUNT_FORMS = {'signup': 'asovi_app.forms.CustomSignupForm'}
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_SIGNUP_REDIRECT_URL =  'asovi_app:profile-edit'  # 本登録後Profile設定ページに遷移
+ACCOUNT_SIGNUP_REDIRECT_URL = 'asovi_app:profile-edit'  # 本登録後Profile設定ページに遷移
+LOGIN_REDIRECT_URL = 'asovi_app:profile_edit'
+ACCOUNT_SESSION_REMEMBER = True
 
 try:
     from .local_settings import *

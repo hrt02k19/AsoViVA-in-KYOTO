@@ -1,18 +1,87 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
         <title>プロフィール編集|遊ViVA in KYOTO</title>
+        <link rel="stylesheet" href="{% static 'asovi_app/css/profile_edit.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
     </head>
     <body>
-        <form method='POST' action="{% url 'asovi_app:profile-edit' %}">
+    <!-- ここから -->
+        <div class="logo">
+            <p><strong>プロフィール変更</strong></p> 
+        </div>     
+     <!-- ここまで共通 -->
+    
+     <img src="{% static 'asovi_app/img/034.jpg'%}" alt="" id="sampleimg">
+     
+        <form method='POST' action="{% url 'asovi_app:profile_edit' %}" enctype='multipart/form-data'>
+
+            <label id='imgselect'>
+                プロフィール画像を選択
+                <input type="file" accept='image/*' id='selectimg' onchange="previewImage(this);" name='icon'>
+            </label>
             {% csrf_token %}
+
+        <div class="formarea">
+            <p class="p1"><label for="id_username">名前</label> <br><input type="text" name="username" value="京大たろう" maxlength="50" required id="id_username"></p>
+            
+            <p class="p2"><label for="id_introduction">自己紹介</label><br>
+            <textarea name="introduction" cols="40" rows="10" id="id_introduction">
+            </textarea></p>
+
+            <p class="p3"><label for="id_interested_genre">興味ジャンル変更</label> <br>
+
+            <div class="genre1">
+                <input type="checkbox" id="expand-toggle01" class="genre-input" name="interested_genre" value="1" >
+                <label for="expand-toggle01" class="expand-btn">
+                    食事<img src="{% static 'asovi_app/img/フォークとスプーンのお食事アイコン素材 (1).png' %}" alt="">
+                </label>
+                <input type="checkbox" id="expand-toggle02" class="genre-input" name="interested_genre" value="2">
+                <label for="expand-toggle02" class="expand-btn">
+                    音楽<img src="{% static 'asovi_app/img/8分音符アイコン 1 (1).png' %}" alt="">
+                </label>
+                <input type="checkbox" id="expand-toggle03" class="genre-input" name="interested_genre" value="3">
+                <label for="expand-toggle03" class="expand-btn">
+                    自然<img src="{% static 'asovi_app/img/登山アイコン4.png' %}" alt=""></label><br>
+            </div>
+
+            <div class="genre2">
+                <input type="checkbox" id="expand-toggle04" class="genre-input" name="interested_genre" value="4">
+                <label for="expand-toggle04" class="expand-btn">
+                    芸術<img src="{% static 'asovi_app/img/パレットのフリーアイコン7.png' %}" alt=""></label>
+                <input type="checkbox" id="expand-toggle05" class="genre-input" name="interested_genre" value="5">
+                <label for="expand-toggle05" class="expand-btn">
+                    寺社<img src="{% static 'asovi_app/img/シンプルな鳥居アイコン.png' %}" alt=""></label>
+                <input type="checkbox" id="expand-toggle06" class="genre-input" name="interested_genre" value="6">
+                <label for="expand-toggle06" class="expand-btn">
+                    買物<img src="{% static 'asovi_app/img/ショッピングの無料アイコン　3.png' %}" alt=""></label><br>
+            </div>
+            
+            <div class="genre3">
+                <input type="checkbox" id="expand-toggle07" class="genre-input" name="interested_genre" value="7">
+                <label for="expand-toggle07" class="expand-btn"> 
+                    屋内<img src="{% static 'asovi_app/img/家のアイコン素材.png' %}" alt=""></label>
+                <input type="checkbox" id="expand-toggle08" class="genre-input" name="interested_genre" value="8">
+                <label for="expand-toggle08" class="expand-btn">
+                    屋外 <img src="{% static 'asovi_app/img/自動車の無料アイコン素材 その3 (2).png' %}" alt=""></label>
+                <input type="checkbox" id="expand-toggle09" class="genre-input" name="interested_genre" value="9" >
+                <label for="expand-toggle09" class="expand-btn">
+                    運動<img src="{% static 'asovi_app/img/ダッシュのピクトグラム1.png' %}" alt=""></label>
+            </div>
+             </p>
+        </div>
+
             <table class="table">
-                {{ form.as_table }}
                 <tr><th><td>
                 <button type="submit" class="btn btn-secondary">変更</button>
                 </td></th></tr>
             </table>
         </form>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="{% static 'asovi_app/js/profile_edit.js'%}"></script> 
+    
     </body>
 </html>

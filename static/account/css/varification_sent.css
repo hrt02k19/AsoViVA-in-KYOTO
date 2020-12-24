@@ -1,0 +1,100 @@
+body {
+margin: 0;
+}
+/* ロゴ部分 */
+.logo {
+height: 53px;
+width: 375px;
+border: solid #707070 1px;
+padding-left: 8px;
+}
+.logo p {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 13px;
+  margin-bottom: 13px;
+  font-family: "Segoe UI", sans-serif;
+  color: #707070;
+}
+.logo p strong {
+  margin-right: 103px;
+    margin-left:106px;
+    width: 135px;
+  }
+.left {
+  width: 18px;
+  color: #707070;
+  margin-left: -18px;
+}
+ 
+h1{
+  margin-left: 33px;
+ color: #909090;
+      font-size: 15px;
+      margin-top: 62px;
+      margin-bottom: 0;
+}
+p {
+  color: #909090;
+  font-size: 15px;
+  font-weight: 100;
+  margin-left: 33px;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+.again a{
+  color: #BF6F1E;
+  font-weight: 900;
+  text-decoration: none;
+}
+.again {
+  margin-top: 0;
+  margin-bottom: 11px;
+}
+.letter {
+  margin-top: -35px;
+}
+.agree {
+  margin-left: -12px;
+}
+.agreements {
+  padding-left: 14px;
+  padding-top: 7px;
+  height: 168px;
+  width: 283px;
+  border: solid #707070 1px;
+  margin-top: -5px;
+}
+
+/* form部分 */
+
+label {
+  display: none;
+}
+#verify {
+background-color:#EDEDED;
+border: solid #707070 1px;
+ height: 40px;
+ width: 271px;
+ margin-left: 45px;
+ padding-left: 10px;
+}
+
+/* 次へボタン */
+.next {
+  width: 285px;
+  height: 27px;
+  background-color: #E4A359;
+  border: none;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 900;
+  padding-top: 4px;
+  font-family: "Meiryo", sans-serif;
+  margin-top: 29px;
+  margin-left: 45px;
+  text-align: center;
+}
+a {
+  text-decoration: none;
+}

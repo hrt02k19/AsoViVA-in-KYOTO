@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー検索|遊ViVA in KYOTO</title>
+    <style>
+        .found_user_list a {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>ユーザー検索</h1>
+    <p>検索したいＩＤを入力してください。</p>
+    <form method='GET' action="{% url 'asovi_app:find_user' %}">
+            <input type="text" name="search_id" value="{{request.GET.search_id}}">
+                    <button type="submit">検索</button>
+    </form>
+    <div class="found_user_list">
+        <table>
+            <tr>
+                <th>ユーザーネーム |</th>
+                <th>ユーザーID</th>
+            </tr>
+
+        {% for found_user in object_list %}
+            <tr>
+                <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}">{{found_user.username}}</a></td>
+                <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}">{{found_user.user_id}}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+</body>
+
+</html>
