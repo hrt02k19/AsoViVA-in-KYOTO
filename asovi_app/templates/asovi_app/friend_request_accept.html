@@ -18,7 +18,12 @@
  <!-- ここまで共通 -->
 
     {% if new_requests %}
-        <p class="hidden"><label for="username"></label><input type="search" placeholder="検索" name="username" id="username"><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></p>
+        <p class="hidden">
+            <!-- ここから -->
+            <label for="username"></label><input type="search" placeholder="検索" name="username" id="username">
+            <img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+            <!-- ここまでを機能するように書き直して欲しいです -->
+        </p>
         <p class="follow">フォローリクエスト</p>
         {% for request in new_requests %}
         <div class="list">
