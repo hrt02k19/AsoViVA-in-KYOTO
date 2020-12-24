@@ -4,6 +4,7 @@ from . import views
 
 app_name = 'asovi_app'
 urlpatterns = [
+    path('look/<id>/<user>/',views.look,name='look'),
     path('accounts/signup/', views.MySignupView.as_view(), name='account_signup'),
     path('profile_edit/',views.profile_edit,name='profile_edit'),
     path('post/', views.post_view, name='post'),

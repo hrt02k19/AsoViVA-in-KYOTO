@@ -4,6 +4,7 @@ import asovi_app.models
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
+
 import django.utils.timezone
 
 
@@ -17,6 +18,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+
             name='CustomUser',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -52,6 +54,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+
             name='Post',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -60,6 +63,8 @@ class Migration(migrations.Migration):
                 ('body', models.CharField(max_length=300, unique=True)),
                 ('latitude', models.FloatField(blank=True, null=True)),
                 ('longitude', models.FloatField(blank=True, null=True)),
+                ('like', models.IntegerField(default=0)),
+
             ],
         ),
         migrations.CreateModel(
@@ -70,6 +75,7 @@ class Migration(migrations.Migration):
                 ('pub_date', models.DateTimeField(auto_now=True)),
                 ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='post_reply', to='asovi_app.post')),
                 ('posted_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='user_reply', to=settings.AUTH_USER_MODEL)),
+
             ],
         ),
         migrations.CreateModel(
@@ -87,6 +93,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Profile',
             },
         ),
+
         migrations.CreateModel(
             name='Friend',
             fields=[

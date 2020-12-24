@@ -15,6 +15,7 @@ class CustomUserManager(UserManager):
         # <num>文字のランダムな文字列を生成
         return ''.join(random.choices(string.ascii_letters + string.digits, k=num))
 
+
     def _create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('The given email must be set')
@@ -107,6 +108,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
+
 class Genre(models.Model):
     name = models.CharField(max_length=60)
 
@@ -138,6 +140,16 @@ class Profile(models.Model):
     def __str__(self):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
 
+
+class Good(models.Model):
+    article=models.ForeignKey(post,on_delete=models.CASCADE)
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    good=models.BooleanField(default=False)
+
+class Save(models.Model):
+    item=models.ForeignKey(post,on_delete=models.CASCADE)
+    person=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+
 # Create y
 class Post(models.Model):
     posted_by=models.ForeignKey(CustomUser,related_name='posted_by',on_delete=SET_NULL,null=True)
@@ -147,6 +159,7 @@ class Post(models.Model):
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
     longitude=models.FloatField(null=True,blank=True)
+    like=models.IntegerField(default=0)
 
 class Reply(models.Model):
     post = models.ForeignKey(Post,related_name="post_reply",on_delete=CASCADE)
@@ -166,3 +179,4 @@ class Block(models.Model):
     blocker = models.ForeignKey(CustomUser,related_name="blocker",on_delete=CASCADE)
     blocked = models.ForeignKey(CustomUser,related_name="blocked",on_delete=CASCADE)
     block_date = models.DateTimeField(auto_now=True)
+

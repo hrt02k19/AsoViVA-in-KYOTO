@@ -25,11 +25,12 @@
   </ul>
 
 
+
   <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng'>
+      {% csrf_token %}
       {{form.image}}
       {{form.body}}
-      {{form.latitude}}
-      {{form.longitude}}
+      <input type="submit" value="click" >
 
   </form>
     <script>

@@ -1,6 +1,7 @@
 from django import forms
+
 from allauth.account.forms import SignupForm
-from .models import CustomUser, Profile, Post
+from .models import CustomUser, Profile, Post, Good
 
 
 class CustomSignupForm(SignupForm):
@@ -24,8 +25,19 @@ class ProfileForm(forms.ModelForm):
 
 class PostForm(forms.ModelForm):
     class Meta:
-        model=Post
-        fields=['image','body','latitude','longitude']
+        model=post
+        fields=['image','body','latitude','longitude','user','genre']                                                                                                                                                                     
+
+
+class GoodForm(forms.ModelForm):
+    class Meta:
+        model=Good
+        fields=['good']
+
+class SaveForm(forms.Form):
+    save=forms.BooleanField(label='Checkbox',required=False)
+    model=Post
+    fields=['image','body','latitude','longitude']
 
 class FindForm(forms.Form):
     find = forms.CharField(max_length=100, required=False)
