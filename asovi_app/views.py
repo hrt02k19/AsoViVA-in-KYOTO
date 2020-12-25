@@ -63,7 +63,7 @@ def post_view(request):
             body=form.cleaned_data.get('body')
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
-            posted=post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
+            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
             posted.save()
             return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
 
@@ -74,7 +74,7 @@ def post_view(request):
 
 def look(request,id,user):
     data=Good.objects.filter(article=id,user=user)
-    post_data=post.objects.filter(id=id)
+    post_data=Post.objects.filter(id=id)
     save_data=Save.objects.filter(item=id,person=user)
     if request.method=='POST':
         form=GoodForm(request.POST)
@@ -147,9 +147,9 @@ def friend_request(request, pk):
     return render(request, 'asovi_app/friend_request.html', params)
 
 def friend_request_accept(request):
+    params = {}
     if request.method == 'GET':
         query = request.GET.get('search_id')
-        params = {}
         if query:
             new_requests = Friend.objects.filter(
                 requestee=request.user, friended=False, requestor__user_id__icontains=query
