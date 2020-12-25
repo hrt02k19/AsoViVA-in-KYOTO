@@ -18,6 +18,7 @@
             }
         </style>
         <script>
+            //geolocation apiに関する設定
             if(!navigator.geolocation){
                 alert("この端末では位置情報が取得できません");
             }
@@ -90,6 +91,7 @@
                 lat: 35,
                 lng: 136
             };
+            //地図の作成
             function initMap(){
                 map = new google.maps.Map(document.getElementById('map'),{
                     center: center,
@@ -99,6 +101,7 @@
                     //console.log(post.fields.genre)
                     var postLat = post.fields.latitude;
                     var postLng = post.fields.longitude;
+                    //エリア検索時に範囲外の点を削除
                     if( radius>0 ){
                         var sqDist = Math.pow((postLat-curLat)*110940.5844,2.0)+Math.pow((postLng-curLng)*91287.7885,2.0)
                         switch(radius){
@@ -116,6 +119,7 @@
                                 break;
                         }
                     }
+                    //マーカーを投稿の位置に刺す
                     markers.push(new google.maps.Marker({
                         position: {
                             lat: post.fields.latitude,
@@ -123,6 +127,7 @@
                         },
                         map: map
                     }));
+                    //マーカーをクリックした時に出る吹き出し
                     infoWindows.push(new google.maps.InfoWindow({
                         content : "<div id='content'>" + genre_list[post.fields.genre-1].fields.name + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
                     }));
