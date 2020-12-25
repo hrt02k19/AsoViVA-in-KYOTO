@@ -66,7 +66,7 @@ def post_view(request):
             posted=post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
             posted.save()
             return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
-        
+
 
     return render(request,'asovi_app/post.html',params)
 
@@ -89,7 +89,7 @@ def look(request,id,user):
             if data.good==False:
                 post_data.like-=1
                 post_data.save()
-        
+
         if save_data.exists():
             if form2.save==False:
                 save_data.delete()
@@ -97,7 +97,7 @@ def look(request,id,user):
             if form2.save==True:
                 save_data=Save(item=id,person=user)
                 save_data.save()
-    
+
 
     else:
         if data.good==True:
@@ -147,20 +147,39 @@ def friend_request(request, pk):
     return render(request, 'asovi_app/friend_request.html', params)
 
 def friend_request_accept(request):
-    new_requests = Friend.objects.filter(friended=False, requestee=request.user)
-    new_requests = Friend.objects.filter(
-        friended=False, requestee=request.user
-        ).annotate(
-        requestor_username = Subquery(
-            Profile.objects.filter(user=OuterRef("requestor")).values('username')
-        ),
-        requestor_icon=Subquery(
-            Profile.objects.filter(user=OuterRef("requestor")).values('icon')
-        ),
-    )
-    params = {
-        'new_requests': new_requests,
-    }
+    if request.method == 'GET':
+        query = request.GET.get('search_id')
+        params = {}
+        if query:
+            new_requests = Friend.objects.filter(
+                requestee=request.user, friended=False, requestor__user_id__icontains=query
+                ).annotate(
+                requestor_username = Subquery(
+                    Profile.objects.filter(user=OuterRef("requestor")).values('username')
+                ),
+                requestor_icon=Subquery(
+                    Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+                ),
+                )
+            if not new_requests:
+                params["no_results"] = '検索された文字列にマッチするユーザーは見つかりませんでした。'
+
+        else:
+            new_requests = Friend.objects.filter(
+                friended=False, requestee=request.user
+                ).annotate(
+                requestor_username = Subquery(
+                    Profile.objects.filter(user=OuterRef("requestor")).values('username')
+                ),
+                requestor_icon=Subquery(
+                    Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+                ),
+            )
+            print(new_requests)
+            if not new_requests:
+                params["no_results"] = '現在、あなたへの友達申請はありません。'
+        params["new_requests"] = new_requests
+
     if request.method == 'POST':
         new_request_pk = request.POST['friend_request_pk']
         new_request = Friend.objects.get(pk=new_request_pk)

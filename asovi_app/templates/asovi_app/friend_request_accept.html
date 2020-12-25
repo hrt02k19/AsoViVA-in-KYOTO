@@ -20,8 +20,11 @@
     {% if new_requests %}
         <p class="hidden">
             <!-- ここから -->
-            <label for="username"></label><input type="search" placeholder="検索" name="username" id="username">
-            <img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+            <!-- <label for="username"></label><input type="search" placeholder="検索" name="username" id="username"> -->
+            <form method='GET' action="{% url 'asovi_app:friend_request_accept' %}">
+                <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username' placeholder="検索">
+                <img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+            </form>
             <!-- ここまでを機能するように書き直して欲しいです -->
         </p>
         <p class="follow">フォローリクエスト</p>
@@ -40,7 +43,8 @@
         </div>
         {% endfor %}
     {% else %}
-        <p class="none">現在、あなたへの友達申請はありません。</p>
+        <!-- <p class="none">現在、あなたへの友達申請はありません。</p> -->
+        <p class="none">{{no_results}}</p>
     {% endif%}
     <a href="{% url 'asovi_app:friend_list' %}" class="back">友達一覧に戻る</a>
 </body>
