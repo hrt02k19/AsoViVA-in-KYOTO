@@ -20,13 +20,13 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['username','icon','introduction','interested_genre','gender']
         labels = {
-            'username': "名前", 
+            'username': "名前",
         }
 
 class PostForm(forms.ModelForm):
     class Meta:
-        model=post
-        fields=['image','body','latitude','longitude','user','genre']                                                                                                                                                                     
+        model = Post
+        fields = ['image','body','latitude','longitude','genre']
 
 
 class GoodForm(forms.ModelForm):
