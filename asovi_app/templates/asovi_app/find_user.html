@@ -42,7 +42,6 @@
             </tr>
         </table>
         <!-- ここから -->
-        {% if found_user in }
         <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
             {% csrf_token %}
             <input type="submit" value="追加" class="request">
