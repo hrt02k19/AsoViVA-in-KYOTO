@@ -16,8 +16,8 @@
 <body>
   <!-- ここから -->
   <div class="logo">
-    <p><strong>検索結果一覧</strong></p> 
-</div>     
+    <p><strong>検索結果一覧</strong></p>
+</div>
 <!-- ここまで共通 -->
 
 <!-- <p class="hidden"><label for="username"></label><input type="search" placeholder="検索" name="username" id="username"><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></p>
@@ -27,7 +27,7 @@
 <form method='GET' action="{% url 'asovi_app:find_user' %}">
             <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username'  placeholder="検索">
                     <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
-   
+
     </form>
     <div class="found_user_list">
     <p class="results">検索結果</p>
@@ -35,21 +35,21 @@
         <div class="list">
             <img class="icon" src="/{{request.requestor_icon}}">
             <table>
-            <tr>              
+            <tr>
                 <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}" class="userid">@{{found_user.user_id}}</a></td>
                 <tr></tr>
                 <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}" class="username">{{found_user.username}}</a></td>
             </tr>
         </table>
         <!-- ここから -->
-        <form action="{% url 'asovi_app:friend_request_accept' %}" method="POST">
+        {% if found_user in }
+        <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
             {% csrf_token %}
-            <input type="hidden" name="friend_request_pk" value="{{request.pk}}">
-            <input type="submit" name="accept" value="追加" class="request">
+            <input type="submit" value="追加" class="request">
         <!-- ここまで、友達検索仕様に修正して欲しいです -->
         {% endfor %}
     </div>
-        
+
     </div>
 </body>
 
