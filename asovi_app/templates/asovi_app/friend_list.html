@@ -2,12 +2,21 @@
 
 <!DOCTYPE html>
 <html lang="ja">
+
     <head>
         <meta charset="UTF-8">
         <title>友達一覧|遊ViVA in KYOTO</title>
-        <link rel="stylesheet" href="{% static 'asovi_app/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'asovi_app/css/friend_list.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
     </head>
+
     <body>
+    <!-- ここから -->
+    <div class="logo">
+        <p><strong>友達一覧</strong></p>
+    </div>
+    <!-- ここまで共通 -->
+
         フレンドリクエスト:
         <br>
         現在{{my_friend_requested_num}}件のフレンドリクエストが来ています。
