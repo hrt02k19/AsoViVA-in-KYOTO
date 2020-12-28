@@ -18,5 +18,9 @@ urlpatterns = [
     path('post_map/',views.post_map,name='post_map'),
     path('find_user/', views.FindUserView.as_view(), name='find_user'),
     path('my_page/', views.my_page, name='my_page'),
+    path('email/change/', views.EmailChange.as_view(), name='change_email'),
+    path('email/change/email_sent/', views.change_email_sent, name='change_email_sent'),
+    path('email/change/completed/<str:token>/', views.EmailChangeComplete.as_view(), name='change_email_completed'),
+    path('accounts/logout/completed/', views.logout_completed, name='logout_completed'),
     path('signout/', views.signout, name='signout')
 ]

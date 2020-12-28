@@ -1,0 +1,14 @@
+{% extends "asovi_app/logout_completed_base.html" %}
+
+{% load i18n %}
+{% block head_title %}ログアウト完了{% endblock %}
+
+{% block content %}
+<div class="letter">
+    <h2>ログアウト完了</h2>
+    <p>ログアウトしました。</p>
+    </div>
+    <div class="return">
+        <p><a href="{% url 'account_login' %}">ログインページに戻る</a></p>
+    </div>
+{% endblock %}
