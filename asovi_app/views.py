@@ -1,9 +1,15 @@
 
 from typing import Counter
 from django.core import serializers
+from django.core.mail import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.db.models import Subquery, OuterRef
 from django.db.models.query_utils import Q
+from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.views import generic
 
 from allauth.exceptions import ImmediateHttpResponse
@@ -13,7 +19,7 @@ from allauth.account.utils import complete_signup
 
 
 from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm, EmailChangeForm
 
 import datetime, random, string
 
@@ -324,6 +330,65 @@ def my_page(request):
     }
     return render(request, 'asovi_app/mypage.html', params)
 
+
+class EmailChange(LoginRequiredMixin, generic.FormView):
+    template_name = 'asovi_app/change_email.html'
+    form_class = EmailChangeForm
+
+    def form_valid(self, form):
+        """認証用メールの発行"""
+        user = self.request.user
+        email = form.cleaned_data['email']
+
+        current_site = get_current_site(self.request)
+        # domain = current_site.domain
+        domain = 'localhost:8000'
+        context = {
+            'protocol': 'https' if self.request.is_secure() else 'http',
+            'domain': domain,
+            'token': dumps(email),
+            'user': user,
+        }
+        subject = render_to_string('account/email/email_confirmation_subject.txt', context).strip()
+        message = render_to_string('account/email/email_confirmation_message.txt', context)
+        send_mail(subject, message, 'asoviva@in.kyoto', [email])
+        # user.email_user(subject, message)
+
+        return redirect('asovi_app:change_email_sent')
+
+def change_email_sent(request):
+    return render(request, 'asovi_app/change_email_sent.html')
+
+
+class EmailChangeComplete(LoginRequiredMixin, generic.TemplateView):
+    """変更"""
+    template_name = 'asovi_app/change_completed.html'
+    timeout_seconds = 60 * 60 * 24  # リンクの有効期限は１日
+    extra_context = {'change_what': 'メールアドレス'}
+
+    def get(self, request, **kwargs):
+        """tokenが正しければ本登録"""
+        token = kwargs.get('token')
+        try:
+            new_email = loads(token, max_age=self.timeout_seconds)
+
+        # 期限切れ
+        except SignatureExpired:
+            return HttpResponseBadRequest()
+
+        # tokenが間違っている
+        except BadSignature:
+            return HttpResponseBadRequest()
+
+        # tokenは問題なし
+        else:
+            CustomUser.objects.filter(email=new_email, is_active=False).delete()
+            request.user.email = new_email
+            request.user.save()
+            return super().get(request, **kwargs)
+
+def logout_completed(request):
+    return render(request, 'asovi_app/logout_completed.html')
 
 def signout(request):
     me = CustomUser.objects.get(email=request.user)

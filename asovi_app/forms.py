@@ -23,6 +23,28 @@ class ProfileForm(forms.ModelForm):
             'username': "名前",
         }
 
+
+class EmailChangeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['placeholder'] = '新しいメールアドレス'
+
+        def clean_email(self):
+            """同じアドレスで仮登録段階のアカウントを消去"""
+            email = self.cleaned_data['email']
+            CustomUser.objects.filter(email=email, is_active=False).delete()
+            try:
+                validate_email(email)
+            except ValidationError:
+                raise ValidationError('正しいメールアドレスを指定してください。')
+            return email
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
