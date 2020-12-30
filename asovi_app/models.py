@@ -162,7 +162,6 @@ class Post(models.Model):
     place_id = models.CharField(max_length=100)
     like=models.IntegerField(default=0)
 
-
 class Save(models.Model):
     item = models.ForeignKey(Post,on_delete=models.CASCADE)
     person = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

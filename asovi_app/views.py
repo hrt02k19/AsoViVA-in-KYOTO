@@ -387,6 +387,8 @@ def post_list(request, pk):
     return render(request, 'asovi_app/post_list.html', params)
 
 
+
+
 def my_page(request):
     me = request.user
     params = {
@@ -418,13 +420,13 @@ def change_id(request):
 
     return render(request, 'asovi_app/change_id.html', params)
 
-  
+
 def change_id_completed(request):
     params = {
         'change_what': 'ユーザーID',
     }
     return render(request, 'asovi_app/change_completed.html', params)
-  
+
 
 def check_event(request):
     user = request.user
@@ -444,7 +446,7 @@ def check_event(request):
                 Profile.objects.filter(user=OuterRef("user")).values('icon')
             )
         )
-    
+
     if setting.has_saved :
         new_save = Save.objects.filter(item__posted_by=user, pub_date__gte=expire_limit_time).annotate(
             saver_username = Subquery(
@@ -492,7 +494,7 @@ def notification_setting(request):
     if request.method == 'POST':
         form = NotificationForm(request.POST,instance=obj)
         form.save()
-    
+
     return render(request, 'asovi_app/notification_setting.html', {'form': form})
 
 
@@ -573,7 +575,7 @@ def contact(request):
             contact.save()
             return redirect(to='asovi_app:contact_fin')
 
-    
+
     else:
         form=ContactForm()
         params={
@@ -581,7 +583,7 @@ def contact(request):
         }
         return render(request,'asovi_app/contact.html',params)
 
-            
+
 
 
 
