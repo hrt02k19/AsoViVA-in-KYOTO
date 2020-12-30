@@ -1,7 +1,7 @@
 from django import forms
 
 from allauth.account.forms import SignupForm
-from .models import CustomUser, Profile, Post, Good
+from .models import CustomUser, Profile, Post, Good,Contact
 
 
 class CustomSignupForm(SignupForm):
@@ -86,3 +86,9 @@ class GenreSearchForm(forms.Form):
 
 class WordSearchForm(forms.Form):
     key_word = forms.CharField(label='検索:',max_length=50,required=False)
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model=Contact
+        fields=['content']

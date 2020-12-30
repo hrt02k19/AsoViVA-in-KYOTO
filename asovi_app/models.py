@@ -181,3 +181,7 @@ class Block(models.Model):
     blocker = models.ForeignKey(CustomUser,related_name="blocker",on_delete=CASCADE)
     blocked = models.ForeignKey(CustomUser,related_name="blocked",on_delete=CASCADE)
     block_date = models.DateTimeField(auto_now=True)
+
+class Contact(models.Model):
+    contacter=models.ForeignKey(CustomUser,on_delete=CASCADE)
+    content=models.CharField(null=False,max_length=500)
