@@ -21,7 +21,7 @@ from allauth.account.utils import complete_signup
 from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save
 from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm, EmailChangeForm
 
-import datetime, random, string
+import datetime, random, string, googlemaps
 
 
 class MySignupView(SignupView):
@@ -59,9 +59,11 @@ def post_view(request):
         'form':PostForm(),
     }
     if request.method=='POST':
-        form=PostForm(request.POST)
+        form = PostForm(request.POST)
+        # key = 'api-key' APIキーを取得したら代入
+        gmaps = googlemaps.Client(key=key)
         if form.is_valid():
-            user=request.user
+            user = request.user
             genre=form.cleaned_data('genre')
 
             now=datetime.datetime.now()
@@ -69,7 +71,11 @@ def post_view(request):
             body=form.cleaned_data.get('body')
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
-            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
+
+            place = gmaps.reverse_geocode((lat, lng))
+            place_id = place[0].place_id
+
+            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre, place_id=place_id)
             posted.save()
             return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
 
@@ -283,6 +289,23 @@ def post_map(request):
     }
     return render(request,'asovi_app/post_map.html', params)
 
+
+def place_detail(request, place_id):
+    user = request.user
+    involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
+    blocked_users = []
+    for block_obj in involved_blocks:
+        if block_obj.blocker == user:
+            blocked_users.append(block_obj.blocked)
+        else:
+            blocked_users.append(block_obj.blocker)
+    post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users).order_by(-time)
+    params = {
+        'post_list': post_list,
+    }
+    return render(request, 'asovi_app/place_detail.html', params)
+
+
 class FindUserView(generic.ListView):
     template_name = 'asovi_app/find_user.html'
     paginate_by = 10
@@ -319,6 +342,8 @@ def post_list(request, pk):
         'post_list': post_list,
     }
     return render(request, 'asovi_app/post_list.html', params)
+
+
 
 
 def my_page(request):

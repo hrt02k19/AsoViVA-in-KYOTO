@@ -150,7 +150,8 @@ class Post(models.Model):
     time=models.DateTimeField(auto_now_add=True,null=True)
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
-    longitude=models.FloatField(null=True,blank=True)
+    longitude=models.FloatField(null=True, blank=True)
+    place_id = models.CharField(max_length=100)
     like=models.IntegerField(default=0)
 
 class Save(models.Model):
