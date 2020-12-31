@@ -387,8 +387,6 @@ def post_list(request, pk):
     return render(request, 'asovi_app/post_list.html', params)
 
 
-
-
 def my_page(request):
     me = request.user
     params = {
