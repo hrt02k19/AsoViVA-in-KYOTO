@@ -60,7 +60,7 @@ def post_view(request):
     }
     if request.method=='POST':
         form = PostForm(request.POST)
-        # key = 'api-key' APIキーを取得したら代入
+        key = 'api-key' # APIキーを取得したら代入
         gmaps = googlemaps.Client(key=key)
         if form.is_valid():
             user = request.user
@@ -292,6 +292,16 @@ def post_map(request):
 
 def place_detail(request, place_id):
     user = request.user
+    # 詳細情報取得
+    key = "API Key"  # APIキー入力
+    map_api = googlemaps.Client(key)
+    # 取得したい情報を設定
+    fields = ['name', 'type', 'formatted_address', 'geometry']
+    place = map_api.place(place_id=place_id, field=fields, language='ja')
+    details = place['result']
+    location = place['result']['geometry']['location']
+
+    # 投稿取得
     involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
     blocked_users = []
     for block_obj in involved_blocks:
@@ -299,8 +309,12 @@ def place_detail(request, place_id):
             blocked_users.append(block_obj.blocked)
         else:
             blocked_users.append(block_obj.blocker)
+
     post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users).order_by(-time)
+
     params = {
+        'details': details,
+        'location': location,
         'post_list': post_list,
     }
     return render(request, 'asovi_app/place_detail.html', params)
