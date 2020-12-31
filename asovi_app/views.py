@@ -340,11 +340,21 @@ def user_profile(request, pk):
     user = CustomUser.objects.get(pk=pk)
     profile = Profile.objects.get(user=user.pk)
     interested_genres = profile.interested_genre.all()
+    post_list = Post.objects.filter(posted_by=user).order_by("-time")
+    friend_num = Friend.objects.filter(Q(requestor=user)|Q(requestee=user)).filter(friended=True).count()
+    post_num = Post.objects.filter(posted_by=user).count()
+
+    post_list_json = serializers.serialize('json', post_list)
+
     params = {
         'me': me,
         'user': user,
         'profile': profile,
         'interested_genres': interested_genres,
+        'post_list': post_list,
+        'friend_num': friend_num,
+        'post_num': post_num,
+        'post_list_json': post_list_json,
     }
     return render(request, 'asovi_app/user_profile.html', params)
 
@@ -358,11 +368,8 @@ def post_list(request, pk):
     return render(request, 'asovi_app/post_list.html', params)
 
 
-
-
 def my_page(request):
     me = request.user
-    friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
     params = {
         'me': me,
         'friend_num': friend_num,

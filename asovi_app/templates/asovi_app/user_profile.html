@@ -3,6 +3,43 @@
     <head>
         <meta charset="utf-8">
         <title>{{profile.username}}｜遊ViVA in KYOTO</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #map {
+                height: 80%;
+                width: 80%;
+            }
+        </style>
+        <script>
+            if ( !navigator.geolocation) {
+                window.alert('この端末では位置情報を取得できません');
+            } else {
+                var myLat;
+                var myLng;
+                navigator.geolocation.getCurrentPosition(success, error);
+
+                function success(position){
+                    myLat = position.coords.latitude;
+                    myLng = position.coords.longitude;
+                }
+
+                function error(position){
+                    var errorMessage = {
+                        0:"原因不明のエラーが発生しました。",
+                        1: "位置情報取得が許可されませんでした。",
+                        2: "位置情報が取得できませんでした。",
+                        3: "タイムアウトしました。",
+                    };
+                    window.alert(errorMessage[error.code]);
+                }
+            }
+        </script>
     </head>
     <body>
         <table>
@@ -13,6 +50,14 @@
             <tr>
                 <th>ユーザーID：</th>
                 <td>{{user.user_id}}</td>
+            </tr>
+            <tr>
+                <th>友達数：</th>
+                <td>{{ friend_num }}</td>
+            </tr>
+            <tr>
+                <th>投稿数：</th>
+                <td>{{ post_num }}</td>
             </tr>
             <tr>
                 <th>性別：</th>
@@ -28,7 +73,7 @@
             <tr>
                 <th>興味ジャンル：</th>
                 {% for interested_genre in interested_genres %}
-                    <td>{{interested_genre.name}}</td>
+                <td>{{interested_genre.name}}</td>
                 {% endfor %}
             </tr>
             {% endif %}
@@ -37,6 +82,16 @@
                 <td>{{profile.introduction}}</td>
             </tr>
         </table>
+        <div id="map"></div>
+        <br>
+        {% for post in post_list %}
+            <img src="/{{post.image}}" alt="" width="30" height="30">
+            {{post.posted_by}}
+            {{post.time}}
+            {{post.body}}
+            <a href="{% url 'asovi_app:post_detail' post.pk %}">この投稿を表示</a>
+            <br>
+        {% endfor %}
         {% if user.pk == me.pk %}
             <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
         {% else %}
@@ -45,5 +100,48 @@
                 <button type="submit">友達申請</button>
             </form>
         {% endif %}
+
     </body>
+    <script>
+        var map;
+        var markers = [];
+        var infoWindows = [];
+        var post_list = JSON.parse('{{ post_list_json|escapejs }}');
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: myLat,
+                    lng: myLng,
+                },
+                zoom: 13
+            });
+
+            for (var post of post_list){
+                var postLat = post.fields.latitude;
+                var postLng = post.fields.longitude;
+                markers.push(new google.maps.Marker({
+                    position: {
+                        lat: postLat,
+                        lng: postLng,
+                    },
+                    map: map
+                }));
+
+                infoWindows.push(new google.maps.InfoWindow({
+                    content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"30\">' + '<h2>' + post.fields.body + '</h2>' + '</div>'
+                }));
+
+            }
+
+            let num = markers.length
+            for (let i = 0; i < num; i++){
+                markers[i].addListener('click', function(){
+                    infoWindows[i].open(map, markers[i]);
+                });
+            }
+
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
 </html>
