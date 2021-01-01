@@ -74,7 +74,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'asovi_app.apps.AsoviAppConfig',
-
+    'webpush',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -143,6 +143,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+WEBPUSH_SETTINGS = {
+   "VAPID_PUBLIC_KEY": "BD5AYSzXQcTUiEyoixCrDQ_4TYm0j83voG2zYlFu2fjbxT8cv_9HEEG4RMDru36t766_gat_BGyctn5lLITuG3k",
+   "VAPID_PRIVATE_KEY": "mhnJWLrEqNmJnklC6JIz1oMeVvV_XZuw4eWGV5l8Z8E",
+   "VAPID_ADMIN_EMAIL": "admin@example.com"
+}
 
 
 # Internationalization
