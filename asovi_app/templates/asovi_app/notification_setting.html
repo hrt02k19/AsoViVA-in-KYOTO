@@ -1,0 +1,19 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>通知設定|遊ViVA in KYOTO</title>
+</head>
+
+<body>
+    <form action="{% url 'asovi_app:notification_setting' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">変更</button>
+    </form>
+</body>
+
+</html>
