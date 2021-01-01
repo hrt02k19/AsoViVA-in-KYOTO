@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>保存した投稿</title>
+    </head>
+    <body>
+        <p><a href="{% url 'mypage' %}">マイページに戻る</a></p>
+    
+
+        {% for data in data %}
+        <p>data.item.posted_by</p>
+        <p>data.item.image</p>
+        <p>data.item.genre</p>
+        <p>data.item.time</p>
+        <p>data.item.body</p>
+        
+
+        {% end for %}
+
+
+    </body>
+</html>

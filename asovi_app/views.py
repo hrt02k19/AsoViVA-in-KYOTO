@@ -18,8 +18,13 @@ from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
 
+<<<<<<< HEAD
 from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save
 from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm, EmailChangeForm
+=======
+from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save,Contact
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm
+>>>>>>> 保存投稿閲覧ページと問い合わせフォーム
 
 import datetime, random, string
 
@@ -395,3 +400,43 @@ def signout(request):
     me.is_active = False
     me.save()
     return redirect(to='asovi_app:account_signup')
+
+
+
+def contact(request):
+    who=request.user
+    if request.method=='POST':
+        form=ContactForm(request.POST)
+        if form.is_valid():
+            content=form.cleaned_data('content')
+            contact=Contact(contacter=who,content=content)
+            contact.save()
+            return redirect(to='asovi_app:contact_fin')
+
+    
+    else:
+        form=ContactForm()
+        params={
+            'form':form
+        }
+        return render(request,'asovi_app/contact.html',params)
+
+            
+
+
+
+
+def contact_fin(request):
+    params={
+        'page':'asovi_app:contact_fin',
+    }
+
+    return render(request,'asovi_app/contact_fin.html',params)
+
+def save_article(request):
+    person=request.user
+    data=Save.objects.filter(person=person)
+    params={
+        'data':data,
+    }
+    return render(request,'asovi_app/save_article.html',params)
