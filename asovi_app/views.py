@@ -495,6 +495,32 @@ def notification_setting(request):
 
     return render(request, 'asovi_app/notification_setting.html', {'form': form})
 
+def change_id(request):
+    me = CustomUser.objects.get(email=request.user)
+    form = IDChangeForm
+    params = {'form': form}
+
+    if request.method == 'POST':
+        form = IDChangeForm(request.POST)
+        try:
+            me.user_id = request.POST['user_id']
+            me.save()
+            return redirect(to='asovi_app:change_id_completed')
+
+        except IntegrityError:
+            msg = '他のユーザーがこのIDを使用しています。'
+            params['msg'] = msg
+        else:
+            msg = 'ユーザーIDの変更に失敗しました。'
+            params['msg'] = msg
+
+    return render(request, 'asovi_app/change_id.html', params)
+
+def change_id_completed(request):
+    params = {
+        'change_what': 'ユーザーID',
+    }
+    return render(request, 'asovi_app/change_completed.html', params)
 
 class EmailChange(LoginRequiredMixin, generic.FormView):
     template_name = 'asovi_app/change_email.html'
