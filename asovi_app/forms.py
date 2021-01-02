@@ -23,6 +23,14 @@ class ProfileForm(forms.ModelForm):
             'username': "名前",
         }
 
+class IDChangeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['user_id']
+        labels = {
+            'user_id': '新しいユーザーID',
+        }
+
 
 class EmailChangeForm(forms.ModelForm):
     class Meta:

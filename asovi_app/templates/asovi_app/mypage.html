@@ -15,6 +15,14 @@
     <a href="{% url 'asovi_app:user_profile' me.pk %}">プロフィール表示</a>
     <br>
     <a href="{% url 'asovi_app:post_list' me.pk %}">投稿一覧</a>
+    {% for post in post_list %}
+    <img src="/{{post.image}}" alt="" width="30" height="30">
+    {{post.posted_by}}
+    {{post.time}}
+    {{post.body}}
+    <a href="{% url 'asovi_app:post_detail' post.pk %}">この投稿を表示</a>
+    <br>
+    {% endfor %}
     <p>友達数：{{friend_num}}人</p>
     <a href="{% url 'asovi_app:friend_list' %}">友達一覧</a>
     <br>

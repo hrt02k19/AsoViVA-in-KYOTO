@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
+from django.db import IntegrityError
 from django.db.models import Subquery, OuterRef
 from django.db.models.query import EmptyQuerySet
 from django.db.models.query_utils import Q
@@ -19,12 +20,10 @@ from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,NotificationForm
-
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm
 from .models import *
 
-import datetime, random, string
+import datetime, random, string, googlemaps
 
 
 class MySignupView(SignupView):
@@ -39,7 +38,8 @@ class MySignupView(SignupView):
                 self.request,
                 self.user,
                 app_settings.EMAIL_VERIFICATION,
-                self.get_success_url(),
+                # self.get_success_url(),
+                success_url='asovi_app:profile_edit',
             )
         except ImmediateHttpResponse as e:
             return e.response
@@ -79,9 +79,11 @@ def post_view(request):
         'form':PostForm(),
     }
     if request.method=='POST':
-        form=PostForm(request.POST)
+        form = PostForm(request.POST)
+        key = 'api-key' # APIキーを取得したら代入
+        gmaps = googlemaps.Client(key=key)
         if form.is_valid():
-            user=request.user
+            user = request.user
             genre=form.cleaned_data('genre')
 
             now=datetime.datetime.now()
@@ -89,7 +91,11 @@ def post_view(request):
             body=form.cleaned_data.get('body')
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
-            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
+
+            place = gmaps.reverse_geocode((lat, lng))
+            place_id = place[0].place_id
+
+            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre, place_id=place_id)
             posted.save()
             return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
 
@@ -302,6 +308,37 @@ def post_map(request):
     }
     return render(request,'asovi_app/post_map.html', params)
 
+
+def place_detail(request, place_id):
+    user = request.user
+    # 詳細情報取得
+    key = "API Key"  # APIキー入力
+    map_api = googlemaps.Client(key)
+    # 取得したい情報を設定
+    fields = ['name', 'type', 'formatted_address', 'geometry']
+    place = map_api.place(place_id=place_id, field=fields, language='ja')
+    details = place['result']
+    location = place['result']['geometry']['location']
+
+    # 投稿取得
+    involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
+    blocked_users = []
+    for block_obj in involved_blocks:
+        if block_obj.blocker == user:
+            blocked_users.append(block_obj.blocked)
+        else:
+            blocked_users.append(block_obj.blocker)
+
+    post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users).order_by(-time)
+
+    params = {
+        'details': details,
+        'location': location,
+        'post_list': post_list,
+    }
+    return render(request, 'asovi_app/place_detail.html', params)
+
+
 class FindUserView(generic.ListView):
     template_name = 'asovi_app/find_user.html'
     paginate_by = 10
@@ -322,11 +359,21 @@ def user_profile(request, pk):
     user = CustomUser.objects.get(pk=pk)
     profile = Profile.objects.get(user=user.pk)
     interested_genres = profile.interested_genre.all()
+    post_list = Post.objects.filter(posted_by=user).order_by("-time")
+    friend_num = Friend.objects.filter(Q(requestor=user)|Q(requestee=user)).filter(friended=True).count()
+    post_num = Post.objects.filter(posted_by=user).count()
+
+    post_list_json = serializers.serialize('json', post_list)
+
     params = {
         'me': me,
         'user': user,
         'profile': profile,
         'interested_genres': interested_genres,
+        'post_list': post_list,
+        'friend_num': friend_num,
+        'post_num': post_num,
+        'post_list_json': post_list_json,
     }
     return render(request, 'asovi_app/user_profile.html', params)
 
@@ -342,13 +389,42 @@ def post_list(request, pk):
 
 def my_page(request):
     me = request.user
-    friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
     params = {
         'me': me,
         'notification': count_new_events(me),
         'friend_num': friend_num,
     }
     return render(request, 'asovi_app/mypage.html', params)
+
+
+def change_id(request):
+    me = CustomUser.objects.get(email=request.user)
+    form = IDChangeForm
+    params = {'form': form}
+
+    if request.method == 'POST':
+        form = IDChangeForm(request.POST)
+        try:
+            me.user_id = request.POST['user_id']
+            me.save()
+            return redirect(to='asovi_app:change_id_completed')
+
+        except IntegrityError:
+            msg = '他のユーザーがこのIDを使用しています。'
+            params['msg'] = msg
+        else:
+            msg = 'ユーザーIDの変更に失敗しました。'
+            params['msg'] = msg
+
+    return render(request, 'asovi_app/change_id.html', params)
+
+  
+def change_id_completed(request):
+    params = {
+        'change_what': 'ユーザーID',
+    }
+    return render(request, 'asovi_app/change_completed.html', params)
+  
 
 def check_event(request):
     user = request.user
@@ -439,7 +515,7 @@ class EmailChange(LoginRequiredMixin, generic.FormView):
             'user': user,
         }
         subject = render_to_string('account/email/email_confirmation_subject.txt', context).strip()
-        message = render_to_string('account/email/email_confirmation_message.txt', context)
+        message = render_to_string('account/email/email_change_confirmation_message.txt', context)
         send_mail(subject, message, 'asoviva@in.kyoto', [email])
         # user.email_user(subject, message)
 
