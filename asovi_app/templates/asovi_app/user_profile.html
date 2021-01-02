@@ -94,6 +94,8 @@
         {% endfor %}
         {% if user.pk == me.pk %}
             <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
+            <a href="{% url 'asovi_app:signout' %}">サインアウト</a>
+
         {% else %}
             <form action="{% url 'asovi_app:friend_request' user.pk %}" method="POST">
                 {% csrf_token %}

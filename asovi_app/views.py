@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
+from django.db import IntegrityError
 from django.db.models import Subquery, OuterRef
 from django.db.models.query_utils import Q
 from django.http import HttpResponseBadRequest
@@ -19,7 +20,7 @@ from allauth.account.utils import complete_signup
 
 
 from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm, EmailChangeForm
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm, EmailChangeForm, IDChangeForm
 
 import datetime, random, string, googlemaps
 
@@ -36,7 +37,8 @@ class MySignupView(SignupView):
                 self.request,
                 self.user,
                 app_settings.EMAIL_VERIFICATION,
-                self.get_success_url(),
+                # self.get_success_url(),
+                success_url='asovi_app:profile_edit',
             )
         except ImmediateHttpResponse as e:
             return e.response
@@ -376,6 +378,32 @@ def my_page(request):
     }
     return render(request, 'asovi_app/mypage.html', params)
 
+def change_id(request):
+    me = CustomUser.objects.get(email=request.user)
+    form = IDChangeForm
+    params = {'form': form}
+
+    if request.method == 'POST':
+        form = IDChangeForm(request.POST)
+        try:
+            me.user_id = request.POST['user_id']
+            me.save()
+            return redirect(to='asovi_app:change_id_completed')
+
+        except IntegrityError:
+            msg = '他のユーザーがこのIDを使用しています。'
+            params['msg'] = msg
+        else:
+            msg = 'ユーザーIDの変更に失敗しました。'
+            params['msg'] = msg
+
+    return render(request, 'asovi_app/change_id.html', params)
+
+def change_id_completed(request):
+    params = {
+        'change_what': 'ユーザーID',
+    }
+    return render(request, 'asovi_app/change_completed.html', params)
 
 class EmailChange(LoginRequiredMixin, generic.FormView):
     template_name = 'asovi_app/change_email.html'
@@ -396,7 +424,7 @@ class EmailChange(LoginRequiredMixin, generic.FormView):
             'user': user,
         }
         subject = render_to_string('account/email/email_confirmation_subject.txt', context).strip()
-        message = render_to_string('account/email/email_confirmation_message.txt', context)
+        message = render_to_string('account/email/email_change_confirmation_message.txt', context)
         send_mail(subject, message, 'asoviva@in.kyoto', [email])
         # user.email_user(subject, message)
 

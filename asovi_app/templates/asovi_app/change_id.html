@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザーID変更|遊ViVA in KYOTO</title>
+</head>
+
+<body>
+    <h1>ユーザーID変更</h1>
+    <form action="{% url 'asovi_app:change_id' %}" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">変更</button>
+    </form>
+
+    <div>
+        {{msg}}
+    </div>
+
+
+</body>
+
+</html>
