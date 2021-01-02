@@ -10,6 +10,8 @@
 
 <body>
     <h1>マイページ</h1>
+    <a href="{% url 'asovi_app:check_event' %}">通知:{{ notification }}件</a>
+    <br>
     <a href="{% url 'asovi_app:user_profile' me.pk %}">プロフィール表示</a>
     <br>
     <a href="{% url 'asovi_app:post_list' me.pk %}">投稿一覧</a>

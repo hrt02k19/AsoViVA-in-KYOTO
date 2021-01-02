@@ -140,7 +140,15 @@ class Profile(models.Model):
     def __str__(self):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
 
+class NotificationSetting(models.Model):
+    user = models.OneToOneField(CustomUser,related_name="user_notification",on_delete=CASCADE)
+    good = models.BooleanField(verbose_name='通知設定:いいね',default=True)
+    has_saved = models.BooleanField(verbose_name='通知設定:保存',default=True)
+    reply = models.BooleanField(verbose_name='通知設定:返信',default=True)
+    friend = models.BooleanField(verbose_name='通知設定:フレンドリクエスト',default=True)
 
+    class Meta:
+        verbose_name_plural = '通知設定'
 
 # Create y
 class Post(models.Model):
@@ -154,31 +162,40 @@ class Post(models.Model):
     place_id = models.CharField(max_length=100)
     like=models.IntegerField(default=0)
 
-class Save(models.Model):
-    item=models.ForeignKey(Post,on_delete=models.CASCADE)
-    person = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
+class Save(models.Model):
+    item = models.ForeignKey(Post,on_delete=models.CASCADE)
+    person = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    checked = models.BooleanField(default=False)
 
 class Good(models.Model):
-    article=models.ForeignKey(Post,on_delete=models.CASCADE)
-    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    article = models.ForeignKey(Post,on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     good = models.BooleanField(default=False)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    checked = models.BooleanField(default=False)
 
 class Reply(models.Model):
     post = models.ForeignKey(Post,related_name="post_reply",on_delete=CASCADE)
     posted_by = models.ForeignKey(CustomUser,related_name="user_reply",null=True,on_delete=SET_NULL)
     body = models.TextField(max_length=300)
-    pub_date = models.DateTimeField(auto_now=True)
-
+    pub_date = models.DateTimeField(auto_now_add=True)
+    checked = models.BooleanField(default=False)
 
 class Friend(models.Model):
     requestor = models.ForeignKey(CustomUser, related_name='requestor', on_delete=CASCADE)
     requestee = models.ForeignKey(CustomUser, related_name='requestee', on_delete=CASCADE)
     friended = models.BooleanField(default=False)
-    requested_date = models.DateTimeField(default=timezone.now)
+    requested_date = models.DateTimeField(auto_now_add=True)
     friended_date = models.DateTimeField(blank=True, null=True)
+    request_checked = models.BooleanField(default=False)
 
 class Block(models.Model):
     blocker = models.ForeignKey(CustomUser,related_name="blocker",on_delete=CASCADE)
     blocked = models.ForeignKey(CustomUser,related_name="blocked",on_delete=CASCADE)
     block_date = models.DateTimeField(auto_now=True)
+
+class Contact(models.Model):
+    contacter=models.ForeignKey(CustomUser,on_delete=CASCADE)
+    content=models.CharField(null=False,max_length=500)

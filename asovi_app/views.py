@@ -7,10 +7,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.db import IntegrityError
 from django.db.models import Subquery, OuterRef
+from django.db.models.query import EmptyQuerySet
 from django.db.models.query_utils import Q
 from django.http import HttpResponseBadRequest
-from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
+from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 
 from allauth.exceptions import ImmediateHttpResponse
@@ -18,9 +20,8 @@ from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-
-from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm, EmailChangeForm, IDChangeForm
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm
+from .models import *
 
 import datetime, random, string, googlemaps
 
@@ -43,6 +44,23 @@ class MySignupView(SignupView):
         except ImmediateHttpResponse as e:
             return e.response
 
+def count_new_events(user: CustomUser):
+    setting = user.user_notification
+    events_num = 0
+    if setting.good :
+        new_good = Good.objects.filter(article__posted_by=user, checked=False)
+        events_num += new_good.count()
+    if setting.has_saved :
+        new_save = Save.objects.filter(item__posted_by=user, checked=False)
+        events_num += new_save.count()
+    if setting.reply :
+        new_reply = Reply.objects.filter(post__posted_by=user, checked=False)
+        events_num += new_reply.count()
+    if setting.friend :
+        new_friend_request = Friend.objects.filter(requestee=user, friended=False, request_checked=False)
+        events_num += new_friend_request.count()
+
+    return events_num
 
 def profile_edit(request):
     obj = Profile.objects.get(user=request.user)
@@ -80,7 +98,6 @@ def post_view(request):
             posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre, place_id=place_id)
             posted.save()
             return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
-
 
     return render(request,'asovi_app/post.html',params)
 
@@ -374,9 +391,11 @@ def my_page(request):
     me = request.user
     params = {
         'me': me,
+        'notification': count_new_events(me),
         'friend_num': friend_num,
     }
     return render(request, 'asovi_app/mypage.html', params)
+
 
 def change_id(request):
     me = CustomUser.objects.get(email=request.user)
@@ -399,11 +418,83 @@ def change_id(request):
 
     return render(request, 'asovi_app/change_id.html', params)
 
+  
 def change_id_completed(request):
     params = {
         'change_what': 'ユーザーID',
     }
     return render(request, 'asovi_app/change_completed.html', params)
+  
+
+def check_event(request):
+    user = request.user
+    setting = user.user_notification
+    now = datetime.datetime.now()
+    expire_limit_time = now - datetime.timedelta(hours=24)
+    new_good = Good.objects.none()
+    new_save = Save.objects.none()
+    new_reply = Reply.objects.none()
+    new_friend_request = Friend.objects.none()
+    if setting.good :
+        new_good = Good.objects.filter(article__posted_by=user, pub_date__gte=expire_limit_time).annotate(
+            user_username = Subquery(
+                Profile.objects.filter(user=OuterRef("user")).values('username')
+            ),
+            user_icon = Subquery(
+                Profile.objects.filter(user=OuterRef("user")).values('icon')
+            )
+        )
+    
+    if setting.has_saved :
+        new_save = Save.objects.filter(item__posted_by=user, pub_date__gte=expire_limit_time).annotate(
+            saver_username = Subquery(
+                Profile.objects.filter(user=OuterRef("person")).values('username')
+            )
+        )
+    if setting.reply :
+        new_reply = Reply.objects.filter(post__posted_by=user, pub_date__gte=expire_limit_time).annotate(
+            replier_username = Subquery(
+                Profile.objects.filter(user=OuterRef("posted_by")).values('username')
+            )
+        )
+    if setting.friend :
+        new_friend_request = Friend.objects.filter(requestee=user, friended=False, requested_date__gte=expire_limit_time).annotate(
+            requestor_username = Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values('username')
+            ),
+            requestor_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+            ),
+        )
+
+    Good.objects.filter(article__posted_by=user).update(checked=True)
+    Save.objects.filter(item__posted_by=user).update(checked=True)
+    Reply.objects.filter(post__posted_by=user).update(checked=True)
+    Friend.objects.filter(requestee=user).update(request_checked=True)
+
+
+    params = {
+        'new_good_num': new_good.count(),
+        'new_save_num': new_save.count(),
+        'new_reply_num': new_reply.count(),
+        'new_friend_request_num': new_friend_request.count(),
+        'new_goods': new_good,
+        'new_saves': new_save,
+        'new_replies': new_reply,
+        'new_friend_requests': new_friend_request,
+    }
+
+    return render(request, 'asovi_app/check_event.html', params)
+
+def notification_setting(request):
+    obj = get_object_or_404(NotificationSetting,user=request.user)
+    form = NotificationForm(instance=obj)
+    if request.method == 'POST':
+        form = NotificationForm(request.POST,instance=obj)
+        form.save()
+    
+    return render(request, 'asovi_app/notification_setting.html', {'form': form})
+
 
 class EmailChange(LoginRequiredMixin, generic.FormView):
     template_name = 'asovi_app/change_email.html'
@@ -469,3 +560,43 @@ def signout(request):
     me.is_active = False
     me.save()
     return redirect(to='asovi_app:account_signup')
+
+
+
+def contact(request):
+    who=request.user
+    if request.method=='POST':
+        form=ContactForm(request.POST)
+        if form.is_valid():
+            content=form.cleaned_data('content')
+            contact=Contact(contacter=who,content=content)
+            contact.save()
+            return redirect(to='asovi_app:contact_fin')
+
+    
+    else:
+        form=ContactForm()
+        params={
+            'form':form
+        }
+        return render(request,'asovi_app/contact.html',params)
+
+            
+
+
+
+
+def contact_fin(request):
+    params={
+        'page':'asovi_app:contact_fin',
+    }
+
+    return render(request,'asovi_app/contact_fin.html',params)
+
+def save_article(request):
+    person=request.user
+    data=Save.objects.filter(person=person)
+    params={
+        'data':data,
+    }
+    return render(request,'asovi_app/save_article.html',params)

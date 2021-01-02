@@ -16,6 +16,7 @@
       width: 80%;
     }
   </style>
+ 
 </head>
 <body>
   <div id="map"></div>
@@ -23,7 +24,7 @@
     <li>lat: <span id="lat"></span></li>
     <li>lng: <span id="lng"></span></li>
   </ul>
-
+  
 
 
   <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng'>
@@ -33,7 +34,62 @@
       <input type="submit" value="click" >
 
   </form>
-    <script>
+
+  <input type="button" value="button" onclick="getPosition();">
+ 
+  
+
+
+
+
+  <script>
+    //geolocation apiに関する設定
+    if(!navigator.geolocation){
+        alert("この端末では位置情報が取得できません");
+    }
+    var curLat;
+    var curLng;
+    function getPosition(){
+        navigator.geolocation.getCurrentPosition(
+
+            function(position){
+                curLat = position.coords.latitude;
+                curLng = position.coords.longitude;
+                //curLat = 35.0;
+                //curLng = 135.75;
+                var form= document.getElementById('latlng')
+
+                form.latitude.value=curLat
+                form.longitude.value=curLng
+
+            },
+            
+
+
+            function(error) {
+                switch(error.code) {
+                    case 1: //PERMISSION_DENIED
+                    alert("位置情報の利用が許可されていません");
+                    break;
+                    case 2: //POSITION_UNAVAILABLE
+                    alert("現在位置が取得できませんでした");
+                    break;
+                    case 3: //TIMEOUT
+                    alert("タイムアウトになりました");
+                    break;
+                    default:
+                    alert("その他のエラー(エラーコード:"+error.code+")");
+                    break;
+                }
+            }
+        );
+    }
+
+
+
+
+
+
     function initMap() {
 
 

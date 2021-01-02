@@ -1,7 +1,7 @@
 from django import forms
 
 from allauth.account.forms import SignupForm
-from .models import CustomUser, Profile, Post, Good
+from .models import *
 
 
 class CustomSignupForm(SignupForm):
@@ -53,6 +53,17 @@ class EmailChangeForm(forms.ModelForm):
                 raise ValidationError('正しいメールアドレスを指定してください。')
             return email
 
+class NotificationForm(forms.ModelForm):
+   class Meta:
+        model = NotificationSetting
+        fields = ['good','has_saved','reply','friend']
+        labels = {
+           'good': "自分の投稿へのいいねを通知する",
+           'has_saved': "自分の投稿が保存されたことを通知する",
+           'reply': "自分の投稿への返信を通知する",
+           'friend': "自分へのフレンドリクエストを通知する"
+        }
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -94,3 +105,9 @@ class GenreSearchForm(forms.Form):
 
 class WordSearchForm(forms.Form):
     key_word = forms.CharField(label='検索:',max_length=50,required=False)
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model=Contact
+        fields=['content']
