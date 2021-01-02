@@ -20,18 +20,9 @@ from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm, EmailChangeForm
-=======
-from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save,Contact
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm
->>>>>>> 保存投稿閲覧ページと問い合わせフォーム
-=======
-from .models import Block, NotificationSetting, Profile, CustomUserManager, Friend, CustomUser, Post, Reply, Genre, Good, Save
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, NotificationForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm
->>>>>>> 通知設定と通知確認画面
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,NotificationForm
+
+from .models import *
 
 import datetime, random, string
 
