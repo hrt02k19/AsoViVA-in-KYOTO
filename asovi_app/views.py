@@ -345,6 +345,7 @@ def my_page(request):
     friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
     params = {
         'me': me,
+        'notification': count_new_events(me),
         'friend_num': friend_num,
     }
     return render(request, 'asovi_app/mypage.html', params)
@@ -390,10 +391,11 @@ def check_event(request):
             ),
         )
 
-    new_good.update(checked=True)
-    new_save.update(checked=True)
-    new_reply.update(checked=True)
-    new_friend_request.update(request_checked=True)
+    Good.objects.filter(article__posted_by=user).update(checked=True)
+    Save.objects.filter(item__posted_by=user).update(checked=True)
+    Reply.objects.filter(post__posted_by=user).update(checked=True)
+    Friend.objects.filter(requestee=user).update(request_checked=True)
+
 
     params = {
         'new_good_num': new_good.count(),
