@@ -197,4 +197,4 @@ class Block(models.Model):
 
 class Contact(models.Model):
     contacter=models.ForeignKey(CustomUser,on_delete=CASCADE)
-    content=models.CharField(null=False,max_length=500)
+    content=models.TextField(null=False,max_length=500)
