@@ -159,9 +159,8 @@ class Post(models.Model):
     body=models.CharField(max_length=300,unique=True)
     latitude=models.FloatField(null=True,blank=True)
     longitude=models.FloatField(null=True, blank=True)
-    place_id = models.CharField(max_length=100)
+    place_id = models.CharField(max_length=100, default=1)
     like=models.IntegerField(default=0)
-
 
 class Save(models.Model):
     item = models.ForeignKey(Post,on_delete=models.CASCADE)
