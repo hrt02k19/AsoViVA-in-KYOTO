@@ -5,12 +5,22 @@
 
 <head>
     <meta charset="UTF-8">
+    <link href="{% static 'asovi_app/css/change_completed.css' %}" type="text/css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <title>変更完了|遊ViVA in KYOTO</title>
 </head>
 
 <body>
-    <p>{{ change_what }}を変更しました。</p>
-    <a href="{% url 'asovi_app:my_page' %}">マイページに戻る</a>
+    <div class="logo">
+        <p><strong>変更完了</strong></p>
+    </div>
+
+    <p class="top">{{ change_what }}変更完了</p>
+    <p class="comp">{{ change_what }}を変更しました。</p>
+<div class="return">
+    <a href="{% url 'asovi_app:my_page' %}"><p>マイページに戻る</p></a>
+</div>
 
 </body>
 
