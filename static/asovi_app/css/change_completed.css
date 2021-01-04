@@ -23,55 +23,18 @@ body {
   margin:0;
   position: relative;
 }
-/* 検索窓 */
-#username {
-  width: 271px;
-  height: 40px;
-  background-color: #EDEDED;
-  border: solid 1px #707070;
-  margin-left: 45px;
-  margin-top: 20px;
-  position: absolute;
-  padding-left: 10px;
-  font-size: 15px;
+.top {
+  margin-top: 62px;
+  margin-left: 33px;
   color: #909090;
-}
-.loupe {
-  position: absolute;
-  width: 15px;
-  margin-left: 305px;
-  margin-top: 34px;
-}
-.results  {
-  margin-top: 84px;
-    margin-left: 24px;
-    font-weight: 900;
-    color: #909090;
-}
-
-/* 検索結果 */
-.list {
-  display: flex;
-  margin-top: 25px;
-  color: #909090;
-  margin-left: 22px;
-}
-.icon {
-    width: 48px;
-    height: 48px;
-    border: solid 1px #707070;
-    border-radius: 50px;
-    margin-right: 10px;
-}
-.userid {
-  text-decoration: none;
-  color: #909090;
+  font-weight: 900;
   font-size: 15px;
 }
-.username {
-  text-decoration: none;
+.comp {
+  margin-top: 8px;
+  margin-left: 33px;
   color: #909090;
-  font-size: 10px;
+  font-size: 15px;
 }
 /* ボタン */
 .request {
@@ -88,4 +51,27 @@ body {
   position: absolute;
   margin-top: 30px;
   display: none;
+}
+
+.return {
+    width: 285px;
+    height: 33px;
+    background-color: #E4A359;
+    border: none;
+    margin-left: 45px;
+    font-size: 15px;
+    font-weight: 900;
+    padding: 0;
+    font-family: "Meiryo", sans-serif;
+    margin-top: 44px;
+    text-align: center;
+}
+.return a{
+    padding-top: 4px;
+    padding-bottom: 4px;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.return p {
+  padding-top: 5px;
 }
