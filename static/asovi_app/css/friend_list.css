@@ -1,0 +1,141 @@
+/* ここから */
+body {
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+  }
+  /* ロゴ部分 */
+  .logo {
+  height: 51px;
+  width: 373px;
+  text-align: center;
+  border: solid #707070 1px;
+  }
+  .logo p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 11px;
+    margin-bottom: 13px;
+    font-family: "Segoe UI", sans-serif;
+    color: #707070;
+  }
+/* ここまでテンプレ */
+.hidden {
+  margin:0;
+  position: relative;
+}
+/* 検索窓 */
+#username {
+  width: 285px;
+  height: 44px;
+  background-color: #EDEDED;
+  border: solid 1px #707070;
+  margin-left: 45px;
+  margin-top:  20px;
+  position: absolute;
+  padding-left: 10px;
+  font-size: 15px;
+}
+.loupe {
+  position: absolute;
+  width: 15px;
+  margin-left: 318px;
+  margin-top: 36px;
+}
+.follow  {
+    margin-left: 24px;
+    font-weight: 900;
+    color: #909090;
+    display: flex;
+    position: relative;
+}
+.req {
+    margin-left: 64px;
+    font-size: 15px;
+    margin-top: -55px;
+    text-decoration: none;
+}
+.aright {
+  margin-top: -36px;
+  margin-left: 103px;
+  color: #909090;
+}
+.bright {
+  text-decoration: none;
+  color: #909090;
+}
+.right {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  
+}
+/* 友達リスト内 */
+.list {
+display: flex;
+  margin-top: 25px;
+  color: #909090;
+}
+.icon {
+  width: 48px;
+  height: 48px;
+  border: solid 1px #707070;
+  border-radius: 50px;
+  margin-right: 10px;
+  margin-top: 90px;
+  margin-left: 24px;
+}
+.icon2 {
+  width: 48px;
+  height: 48px;
+  border: solid 1px #707070;
+  border-radius: 50px;
+  margin-right: 10px;
+  margin-top: -20px;
+  margin-left: 24px;
+}
+.button {
+  display: none;
+}
+.all {
+  margin-left: 24px;
+  margin-top: -37px;
+  font-size: 15px;
+  font-weight: 900;
+  margin-bottom: -64px;
+  color: #909090;
+}
+.userid {
+  margin-top: -23px;
+  width: 221px;
+}
+/* ボタン */
+.accept {
+  background-color: #E4A359;
+  color: #FFFFFF;
+  width: 50px;
+  height: 30px;
+  border: none;
+  margin-left: 37px;
+}
+
+.reject {
+  background-color: #EDEDED;
+  width: 50px;
+    height: 30px;
+    border: 1px solid #707070;
+    margin-left: 6px;
+    color: #909090;
+  }
+
+
+.back {
+  display: none;
+}
+
+.none {
+  color: #909090;
+  font-size: 15px;
+  margin-left: 50px;
+  margin-top: 250px;
+}
