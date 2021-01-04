@@ -18,12 +18,17 @@ border: solid #707070 1px;
 }
 /* 謎の四角部分 */
 .border {
-    border: solid #707070 1px;
+
     height: 93px;
     width: 125;
     width: 215px;
     margin-left: 80px;
     margin-top: 81px;
+}
+.logoimg {
+  width: 805px;
+  object-fit: cover;
+  margin-top: -27px;
 }
 
 /* form部分 */
