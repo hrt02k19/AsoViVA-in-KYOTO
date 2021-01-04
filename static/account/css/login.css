@@ -54,22 +54,26 @@ a:-webkit-any-link {
 }
 #id_login {
   background-color: #EDEDED;
-  height: 44px;
-  width: 285px;
+  height: 40px;
+  width: 273px;
   border: solid #707070 1px;
   margin-left: 38px;
-  padding: 0;
+  padding-left: 8px;
   margin-bottom: 6px;
+  font-size: 15px;
+  color: #707070;
 }
 #id_password {
   background-color: #EDEDED;
-  height: 44px;
-  width: 285px;
+  height: 40px;
+  width: 273px;
   border: solid #707070 1px;
   margin-left: 38px;
-  padding: 0;
+  padding-left: 8px;
   padding-bottom: 0;
   margin-bottom: -5px;
+  font-size: 15px;
+  color: #707070;
 }
 .login label {
   display: none;

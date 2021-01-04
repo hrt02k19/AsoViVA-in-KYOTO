@@ -1,4 +1,4 @@
-{% extends "account/base.html" %}
+{% extends "account/email_confirm_base.html" %}
 
 {% load i18n %}
 {% load account %}
@@ -7,17 +7,19 @@
 
 
 {% block content %}
-<h1>{% trans "Confirm E-mail Address" %}</h1>
 
 {% if confirmation %}
 
 {% user_display confirmation.email_address.user as user_display %}
 
-<p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}</p>
+<p class="letter">{% blocktrans with confirmation.email_address.email as email %} {{ email }}</a> さん <br>
+   遊ViVA in Kyotoへようこそ！
+  {% endblocktrans %}</p>
 
+  <a href="#プロフィール遷移" class="deco"><p class="profile">プロフィール設定に進む</p></a>
 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
 {% csrf_token %}
-    <button type="submit">{% trans 'Confirm' %}</button>
+    <button type="submit" class="submit">後にする</button>
 </form>
 
 {% else %}
