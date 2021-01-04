@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>設定|遊ViVA in KYOTO</title>
+</head>
+
+<body>
+    <h2>アカウント設定</h2>
+    <ul>
+        <li><a href="{% url 'asovi_app:change_email' %}">メールアドレス変更</a></li>
+        <li><a href="{% url 'account_change_password' %}">パスワード変更</a></li>
+        <li><a href="{% url 'asovi_app:change_id' %}">ユーザーID変更</a></li>
+        <li>アカウント変更</li>
+    </ul>
+    <h2>通知設定</h2>
+    <ul>
+        <li>通知</li>
+    </ul>
+    <h2>サービスについて</h2>
+    <ul>
+        <li>プライバシーポリシー</li>
+        <li>利用規約</li>
+        <li><a href="{% url 'asovi_app:contact' %}">問い合わせ</a></li>
+    </ul>
+    </body>
+
+</html>

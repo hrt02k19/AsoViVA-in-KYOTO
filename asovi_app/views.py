@@ -656,10 +656,6 @@ def contact(request):
         return render(request,'asovi_app/contact.html',params)
 
 
-
-
-
-
 def contact_fin(request):
     params={
         'page':'asovi_app:contact_fin',
@@ -674,3 +670,7 @@ def save_article(request):
         'data':data,
     }
     return render(request,'asovi_app/save_article.html',params)
+
+
+def settings(request):
+    return render(request, 'asovi_app/settings.html')
