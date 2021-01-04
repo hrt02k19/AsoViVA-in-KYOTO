@@ -8,6 +8,7 @@
         <title>友達一覧|遊ViVA in KYOTO</title>
         <link rel="stylesheet" href="{% static 'asovi_app/css/friend_list.css' %}">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+        <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     </head>
 
     <body>
@@ -17,39 +18,60 @@
     </div>
     <!-- ここまで共通 -->
 
-        フレンドリクエスト:
+    <form method='GET' action="{% url 'asovi_app:find_user' %}">
+        <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username'  placeholder="検索">
+                <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+
+    
+    <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="/{{request.requestor_icon}}"></a>           
+    <div class="follow">
+        <a href="{% url 'asovi_app:friend_request_accept' %}" class="bright"> <p class="req">フォローリクエスト</p></a>
         <br>
-        現在{{my_friend_requested_num}}件のフレンドリクエストが来ています。
-        <a href="{% url 'asovi_app:friend_request_accept' %}">一覧を見る</a>
+        <a href="{% url 'asovi_app:friend_request_accept' %}" class="aright"><i class="fas fa-arrow-right right"></i></a>
         <br>
-        リクエスト中:
+        
         {% for friendship in friend_requesting %}
-            {{ friendship.requestee }}
-            <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a>
+        {{ friendship.requestee }}
+        <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a>
         {% endfor %}
+    </div>
         <br>
-        友達一覧:
+        <p class="all">
+        すべての友達
+        </p>
         <br>
         {% for friendship in friend %}
+        <br>
+        <br>
+         
             {% if friendship.requestor == me %}
-                {{ friendship.requestee }}
-
-                <a href="{% url 'asovi_app:post_list' friendship.requestee.pk %}">投稿を見る</a>
-                <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a>
+            <p class="userid"> @{{ friendship.requestee.user_id }}</p><br>
+            <p class="username"> {{friendship.requestee_username}}</p>
+                <!-- <a href="{% url 'asovi_app:post_list' friendship.requestee.pk %}">投稿を見る</a>
+                <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a> -->
                 <form action="{% url 'asovi_app:friend_block' friendship.requestee.pk %}" method='POST'>
-                {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">ブロック</button>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
-            {% else %}
-                {{ friendship.requestor }}
-      
-                <a href="{% url 'asovi_app:post_list' friendship.requestor.pk %}">投稿を見る</a>
-                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}">プロフィールを見る</a>
+                
+                {% else %}
+            <div class="list">    
+                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}"><img class="icon2" src="/{{request.requestor_icon}}"></a>         
+                <p class="userid"> @{{ friendship.requestor.user_id }}</p><br>
+                <p class="username"> {{friendship.requestor_username}}</p>
+                
+                <!-- <a href="{% url 'asovi_app:post_list' friendship.requestor.pk %}">投稿を見る</a>
+                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}">プロフィールを見る</a> -->
                 <form action="{% url 'asovi_app:friend_block' friendship.requestor.pk %}" method='POST'>
-                {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">ブロック</button>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
-            {% endif %}
-        {% endfor %}
+                <br>
+            </div>
+                {% endif %}
+                
+                {% endfor %}
+            </div>
+                
     </body>
 </html>
