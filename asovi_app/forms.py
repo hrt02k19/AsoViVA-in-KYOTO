@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
 
 from allauth.account.forms import SignupForm
 from .models import *
@@ -48,7 +50,7 @@ class EmailChangeForm(forms.ModelForm):
             email = self.cleaned_data['email']
             CustomUser.objects.filter(email=email, is_active=False).delete()
             try:
-                validate_email(email)
+                EmailValidator.validate_email(email)
             except ValidationError:
                 raise ValidationError('正しいメールアドレスを指定してください。')
             return email
