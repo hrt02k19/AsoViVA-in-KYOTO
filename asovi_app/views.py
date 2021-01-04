@@ -244,14 +244,46 @@ def friend_block(request,pk):
 
 def friend_list(request,*args):
     me = request.user
-    my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).order_by("-friended_date")
-    my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).order_by("-requested_date")
-    my_friend_requested = Friend.objects.filter(requestee=me,friended=False).order_by("-requested_date")
+    my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).annotate(
+        requestor_username=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values("username")
+        ),
+        requestor_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+        ),
+        requestee_username=Subquery(
+            Profile.objects.filter(user=OuterRef("requestee")).values("username")
+        ),
+        requestee_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+        ),
+    ).order_by("-friended_date")
+    my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).annotate(
+        requestee_username=Subquery(
+            Profile.objects.filter(user=OuterRef("requestee")).values("username")
+        ),
+        requestee_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+        )
+    ).order_by("-requested_date")
+    my_friend_requested = Friend.objects.filter(requestee=me,friended=False).annotate(
+        requestor_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+        )
+    ).order_by("-requested_date")
+    my_friend_requested_num = len(my_friend_requested)
+    if my_friend_requested_num > 0:
+        my_friend_requested_top = my_friend_requested[0]
+    else:
+        my_friend_requested_top = None
+    
     params = {
         'me': me,
         'friend': my_friend,
         'my_friend_requesting': my_friend_requesting,
-        'my_friend_requested_num': len(my_friend_requested)
+        'my_friend_requesting_num': len(my_friend_requesting),
+        'my_friend_requested_top': my_friend_requested_top,
+        'my_friend_requested_num': my_friend_requested_num
     }
     return render(request, 'asovi_app/friend_list.html', params)
 
@@ -364,9 +396,10 @@ class FindUserView(generic.ListView):
 def user_profile(request, pk):
     me = CustomUser.objects.get(pk=request.user.pk)
     user = CustomUser.objects.get(pk=pk)
+    params = {}
     try:
         params['profile'] = Profile.objects.get(user=user.pk)
-        params['interested_genres'] = profile.interested_genre.all()
+        params['interested_genres'] = Profile.interested_genre.all()
     except ObjectDoesNotExist:
         pass
     post_list = Post.objects.filter(posted_by=user).order_by("-time")
@@ -388,13 +421,13 @@ def user_profile(request, pk):
     return render(request, 'asovi_app/user_profile.html', params)
 
 
-# def post_list(request, pk):
-#     user = CustomUser.objects.get(pk=pk)
-#     post_list = Post.objects.filter(posted_by=user).order_by("-time")
-#     params = {
-#         'post_list': post_list,
-#     }
-#     return render(request, 'asovi_app/post_list.html', params)
+def post_list(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    post_list = Post.objects.filter(posted_by=user).order_by("-time")
+    params = {
+        'post_list': post_list,
+    }
+    return render(request, 'asovi_app/post_list.html', params)
 
 
 def my_page(request):

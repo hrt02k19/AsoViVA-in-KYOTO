@@ -14,7 +14,7 @@
     <br>
     <a href="{% url 'asovi_app:user_profile' me.pk %}">プロフィール表示</a>
     <br>
-    <a href="{% url 'asovi_app:post_list' me.pk %}">投稿一覧</a>
+    
     {% for post in post_list %}
     <img src="/{{post.image}}" alt="" width="30" height="30">
     {{post.posted_by}}
