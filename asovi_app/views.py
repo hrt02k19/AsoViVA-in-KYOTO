@@ -1,9 +1,9 @@
-
 from typing import Counter
 from django.core import serializers
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.db import IntegrityError
 from django.db.models import Subquery, OuterRef
@@ -23,7 +23,7 @@ from allauth.account.utils import complete_signup
 from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm
 from .models import *
 
-import datetime, random, string, googlemaps
+import datetime, random, string
 
 
 class MySignupView(SignupView):
@@ -63,13 +63,20 @@ def count_new_events(user: CustomUser):
     return events_num
 
 def profile_edit(request):
-    obj = Profile.objects.get(user=request.user)
+    params = {}
+    try:
+        obj = Profile.objects.get(user=request.user)
+        params['form'] = ProfileForm(instance=obj)
+    # obj = get_object_or_404(Profile, user=request.user)
+    except ObjectDoesNotExist:
+        form = ProfileForm()
+        params['form'] = form
     if request.method == 'POST':
         profile = ProfileForm(request.POST, instance=obj)
         profile.save()
-    params = {
-        'form': ProfileForm(instance=obj),
-    }
+    # params = {
+        # 'form': ProfileForm(instance=obj),
+    # }
     return render(request, 'asovi_app/profile_edit.html', params)
 
 
@@ -81,7 +88,7 @@ def post_view(request):
     if request.method=='POST':
         form = PostForm(request.POST)
         key = 'api-key' # APIキーを取得したら代入
-        gmaps = googlemaps.Client(key=key)
+        #gmaps = googlemaps.Client(key=key)
         if form.is_valid():
             user = request.user
             genre=form.cleaned_data('genre')
@@ -92,10 +99,10 @@ def post_view(request):
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
 
-            place = gmaps.reverse_geocode((lat, lng))
-            place_id = place[0].place_id
+            #place = gmaps.reverse_geocode((lat, lng))
+            #place_id = place[0].place_id
 
-            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre, place_id=place_id)
+            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
             posted.save()
             return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
 
@@ -309,34 +316,34 @@ def post_map(request):
     return render(request,'asovi_app/post_map.html', params)
 
 
-def place_detail(request, place_id):
-    user = request.user
-    # 詳細情報取得
-    key = "API Key"  # APIキー入力
-    map_api = googlemaps.Client(key)
-    # 取得したい情報を設定
-    fields = ['name', 'type', 'formatted_address', 'geometry']
-    place = map_api.place(place_id=place_id, field=fields, language='ja')
-    details = place['result']
-    location = place['result']['geometry']['location']
+# def place_detail(request, place_id):
+#     user = request.user
+#     # 詳細情報取得
+#     key = "API Key"  # APIキー入力
+#     #map_api = googlemaps.Client(key)
+#     # 取得したい情報を設定
+#     fields = ['name', 'type', 'formatted_address', 'geometry']
+#     #place = map_api.place(place_id=place_id, field=fields, language='ja')
+#     #details = place['result']
+#     #location = place['result']['geometry']['location']
 
-    # 投稿取得
-    involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
-    blocked_users = []
-    for block_obj in involved_blocks:
-        if block_obj.blocker == user:
-            blocked_users.append(block_obj.blocked)
-        else:
-            blocked_users.append(block_obj.blocker)
+#     # 投稿取得
+#     involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
+#     blocked_users = []
+#     for block_obj in involved_blocks:
+#         if block_obj.blocker == user:
+#             blocked_users.append(block_obj.blocked)
+#         else:
+#             blocked_users.append(block_obj.blocker)
 
-    post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users).order_by(-time)
+#     post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users).order_by(-time)
 
-    params = {
-        'details': details,
-        'location': location,
-        'post_list': post_list,
-    }
-    return render(request, 'asovi_app/place_detail.html', params)
+#     params = {
+#         'details': details,
+#         'location': location,
+#         'post_list': post_list,
+#     }
+#     return render(request, 'asovi_app/place_detail.html', params)
 
 
 class FindUserView(generic.ListView):
@@ -357,9 +364,13 @@ class FindUserView(generic.ListView):
 def user_profile(request, pk):
     me = CustomUser.objects.get(pk=request.user.pk)
     user = CustomUser.objects.get(pk=pk)
-    profile = Profile.objects.get(user=user.pk)
-    interested_genres = profile.interested_genre.all()
+    try:
+        params['profile'] = Profile.objects.get(user=user.pk)
+        params['interested_genres'] = profile.interested_genre.all()
+    except ObjectDoesNotExist:
+        pass
     post_list = Post.objects.filter(posted_by=user).order_by("-time")
+    print(post_list)
     friend_num = Friend.objects.filter(Q(requestor=user)|Q(requestee=user)).filter(friended=True).count()
     post_num = Post.objects.filter(posted_by=user).count()
 
@@ -368,8 +379,7 @@ def user_profile(request, pk):
     params = {
         'me': me,
         'user': user,
-        'profile': profile,
-        'interested_genres': interested_genres,
+        # 'profile': profile,
         'post_list': post_list,
         'friend_num': friend_num,
         'post_num': post_num,
@@ -378,17 +388,18 @@ def user_profile(request, pk):
     return render(request, 'asovi_app/user_profile.html', params)
 
 
-def post_list(request, pk):
-    user = CustomUser.objects.get(pk=pk)
-    post_list = Post.objects.filter(posted_by=user).order_by("-time")
-    params = {
-        'post_list': post_list,
-    }
-    return render(request, 'asovi_app/post_list.html', params)
+# def post_list(request, pk):
+#     user = CustomUser.objects.get(pk=pk)
+#     post_list = Post.objects.filter(posted_by=user).order_by("-time")
+#     params = {
+#         'post_list': post_list,
+#     }
+#     return render(request, 'asovi_app/post_list.html', params)
 
 
 def my_page(request):
     me = request.user
+    friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
     params = {
         'me': me,
         'notification': count_new_events(me),
@@ -418,13 +429,14 @@ def change_id(request):
 
     return render(request, 'asovi_app/change_id.html', params)
 
-  
+
 def change_id_completed(request):
     params = {
         'change_what': 'ユーザーID',
+        'user': request.user,
     }
     return render(request, 'asovi_app/change_completed.html', params)
-  
+
 
 def check_event(request):
     user = request.user
@@ -444,7 +456,7 @@ def check_event(request):
                 Profile.objects.filter(user=OuterRef("user")).values('icon')
             )
         )
-    
+
     if setting.has_saved :
         new_save = Save.objects.filter(item__posted_by=user, pub_date__gte=expire_limit_time).annotate(
             saver_username = Subquery(
@@ -492,9 +504,35 @@ def notification_setting(request):
     if request.method == 'POST':
         form = NotificationForm(request.POST,instance=obj)
         form.save()
-    
+
     return render(request, 'asovi_app/notification_setting.html', {'form': form})
 
+def change_id(request):
+    me = CustomUser.objects.get(email=request.user)
+    form = IDChangeForm
+    params = {'form': form}
+
+    if request.method == 'POST':
+        form = IDChangeForm(request.POST)
+        try:
+            me.user_id = request.POST['user_id']
+            me.save()
+            return redirect(to='asovi_app:change_id_completed')
+
+        except IntegrityError:
+            msg = '他のユーザーがこのIDを使用しています。'
+            params['msg'] = msg
+        else:
+            msg = 'ユーザーIDの変更に失敗しました。'
+            params['msg'] = msg
+
+    return render(request, 'asovi_app/change_id.html', params)
+
+def change_id_completed(request):
+    params = {
+        'change_what': 'ユーザーID',
+    }
+    return render(request, 'asovi_app/change_completed.html', params)
 
 class EmailChange(LoginRequiredMixin, generic.FormView):
     template_name = 'asovi_app/change_email.html'
@@ -522,6 +560,9 @@ class EmailChange(LoginRequiredMixin, generic.FormView):
         return redirect('asovi_app:change_email_sent')
 
 def change_email_sent(request):
+    params = {
+        'user': request.user,
+    }
     return render(request, 'asovi_app/change_email_sent.html')
 
 
@@ -573,7 +614,7 @@ def contact(request):
             contact.save()
             return redirect(to='asovi_app:contact_fin')
 
-    
+
     else:
         form=ContactForm()
         params={
@@ -581,7 +622,7 @@ def contact(request):
         }
         return render(request,'asovi_app/contact.html',params)
 
-            
+
 
 
 
