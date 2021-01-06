@@ -1,6 +1,7 @@
 from typing import Counter
 from django.core import serializers
 from django.core.mail import send_mail
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
@@ -20,7 +21,7 @@ from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm, SignOutForm
 from .models import *
 
 import datetime, random, string, googlemaps, sys
@@ -89,7 +90,7 @@ def post_view(request):
     }
     if request.method=='POST':
         form = PostForm(request.POST)
-        gmaps = googlemaps.Client(key=API_KEY)
+        # gmaps = googlemaps.Client(key=API_KEY)
         print('送信しました')
         if form.is_valid():
             user = request.user
@@ -101,9 +102,9 @@ def post_view(request):
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
 
-            place = gmaps.reverse_geocode((lat, lng))
-            place_id = place[0].place_id
-            print(place_id)
+            # place = gmaps.reverse_geocode((lat, lng))
+            # place_id = place[0].place_id
+            # print(place_id)
 
             posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
             posted.save()
@@ -646,11 +647,28 @@ def logout_completed(request):
     return render(request, 'asovi_app/logout_completed.html')
 
 def signout(request):
-    me = CustomUser.objects.get(email=request.user)
-    me.is_active = False
-    me.save()
-    return redirect(to='asovi_app:account_signup')
+    form = SignOutForm()
+    params = {'form': form}
+    if request.method == 'POST':
+        form = SignOutForm(request.POST)
+        email = request.POST['email']
+        password = request.POST['password']
+        if request.user.email == email and check_password(password, request.user.password):
+            """メールもパスワードもログインユーザーのものと同じならアカウント削除"""
+            me = CustomUser.objects.get(email=request.user)
+            me.delete()
+            return redirect(to='asovi_app:signout_completed')
+        elif request.user.email != email:
+            params['msg'] = 'メールアドレスが違います。'
+        elif request.user.password != password:
+            params['msg'] = 'パスワードが違います。'
+        else:
+            params['msg'] = 'アカウントを削除できませんでした。'
+    return render(request, 'asovi_app/signout.html', params)
 
+
+def signout_completed(request):
+    return render(request, 'asovi_app/signout_completed.html')
 
 
 def contact(request):
