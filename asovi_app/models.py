@@ -131,7 +131,7 @@ class Profile(models.Model):
     username = models.CharField(verbose_name='ユーザーネーム',max_length=50)
     icon = models.ImageField(verbose_name='アイコン',upload_to="static/asovi_app/img/",null=True,blank=True)
     introduction = models.TextField(verbose_name='紹介文',null=True,blank=True)
-    interested_genre = models.ManyToManyField(Genre,verbose_name='興味のあるジャンル')
+    interested_genre = models.ManyToManyField(Genre,verbose_name='興味のあるジャンル',blank=True)
     gender = models.IntegerField(verbose_name='性別',choices=GENDER_CHOICES,default=0,null=True,blank=True)
 
     class Meta:
