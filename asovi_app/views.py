@@ -65,21 +65,53 @@ def count_new_events(user: CustomUser):
 
     return events_num
 
+def generate_genre_list(profile: Profile):
+    list = []
+    qs = profile.interested_genre.all()
+    for genre in qs:
+        list.append(genre.pk)
+    #print(st)
+    return list
+
 def profile_edit(request):
     params = {}
+    # obj_exists = True
     try:
         obj = Profile.objects.get(user=request.user)
-        params['form'] = ProfileForm(instance=obj)
+    except:
+        obj = Profile.objects.create(user=request.user)
+    params['form'] = ProfileForm(instance=obj)
+    params['icon'] = obj.icon
+    params['genre_list']=generate_genre_list(obj)
+    # print(generate_genre_list(obj))    
     # obj = get_object_or_404(Profile, user=request.user)
-    except ObjectDoesNotExist:
-        form = ProfileForm()
-        params['form'] = form
     if request.method == 'POST':
         profile = ProfileForm(request.POST, instance=obj)
         profile.save()
-    # params = {
-        # 'form': ProfileForm(instance=obj),
-    # }
+        if 'icon' in request.FILES:
+            obj.icon = request.FILES['icon']
+            obj.save()
+        if "1" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=1))
+        if "2" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=2))
+        if "3" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=3))
+        if "4" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=4))
+        if "5" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=5))
+        if "6" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=6))
+        if "7" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=7))
+        if "8" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=8))
+        if "9" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=9))
+        params['form']=ProfileForm(instance=obj)
+        params['icon']=obj.icon
+        params['genre_list']=generate_genre_list(obj)
     return render(request, 'asovi_app/profile_edit.html', params)
 
 
