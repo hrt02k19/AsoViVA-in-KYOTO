@@ -113,3 +113,12 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model=Contact
         fields=['content']
+
+
+class SignOutForm(forms.Form):
+    email = forms.EmailField(required=True, widget=forms.TextInput(attrs={
+        'placeholder': 'メールアドレス',
+    }))
+    password = forms.CharField(max_length=200, required=True, widget=forms.PasswordInput(attrs={
+        'placeholder': 'パスワード',
+    }))

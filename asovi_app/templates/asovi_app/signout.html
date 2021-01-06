@@ -1,0 +1,21 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>アカウント削除|遊ViVA in KYOTO</title>
+</head>
+<body>
+    <h1>アカウント削除</h1>
+    <p>アカウントを削除する</p>
+    <form action="{% url 'asovi_app:signout' %}" method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">削除する</button>
+    </form>
+    {{ msg }}
+    <a href="{% url 'asovi_app:settings' %}">設定に戻る</a>
+</body>
+
+</html>
