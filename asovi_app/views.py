@@ -23,8 +23,10 @@ from allauth.account.utils import complete_signup
 from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm
 from .models import *
 
-import datetime, random, string
+import datetime, random, string, googlemaps, sys
 
+sys.path.append('../asoviva')
+from asoviva.local_settings import API_KEY
 
 class MySignupView(SignupView):
     form_class = CustomSignupForm
@@ -87,8 +89,8 @@ def post_view(request):
     }
     if request.method=='POST':
         form = PostForm(request.POST)
-        key = 'api-key' # APIキーを取得したら代入
-        #gmaps = googlemaps.Client(key=key)
+        gmaps = googlemaps.Client(key=API_KEY)
+        print('送信しました')
         if form.is_valid():
             user = request.user
             genre=form.cleaned_data('genre')
@@ -99,12 +101,15 @@ def post_view(request):
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
 
-            #place = gmaps.reverse_geocode((lat, lng))
-            #place_id = place[0].place_id
+            place = gmaps.reverse_geocode((lat, lng))
+            place_id = place[0].place_id
+            print(place_id)
 
             posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
             posted.save()
-            return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
+            return redirect(to='post')  #投稿後に遷移するページが完成次第post/から変更する
+        else:
+            print('送信できませんでした')
 
     return render(request,'asovi_app/post.html',params)
 
@@ -276,7 +281,7 @@ def friend_list(request,*args):
         my_friend_requested_top = my_friend_requested[0]
     else:
         my_friend_requested_top = None
-    
+
     params = {
         'me': me,
         'friend': my_friend,
@@ -348,34 +353,43 @@ def post_map(request):
     return render(request,'asovi_app/post_map.html', params)
 
 
-# def place_detail(request, place_id):
-#     user = request.user
-#     # 詳細情報取得
-#     key = "API Key"  # APIキー入力
-#     #map_api = googlemaps.Client(key)
-#     # 取得したい情報を設定
-#     fields = ['name', 'type', 'formatted_address', 'geometry']
-#     #place = map_api.place(place_id=place_id, field=fields, language='ja')
-#     #details = place['result']
-#     #location = place['result']['geometry']['location']
+def place_detail(request, place_id):
+    user = request.user
+    # 詳細情報取得
+    # APIキーはlocal_settings.pyに設定しておく
+    map_api = googlemaps.Client(API_KEY)
+    # 取得したい情報を設定
+    fields = ['name', 'type', 'address_component', 'geometry']
+    place = map_api.place(place_id=place_id, fields=fields, language='ja')
+    details = place['result']
+    location = place['result']['geometry']['location']
+    address_components = place['result']['address_components']
+    address = '〒'
+    for address_component in reversed(address_components):
+        if address_component['types'] == ["country", "political"]:
+            continue
+        else:
+            address += address_component['long_name']
 
-#     # 投稿取得
-#     involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
-#     blocked_users = []
-#     for block_obj in involved_blocks:
-#         if block_obj.blocker == user:
-#             blocked_users.append(block_obj.blocked)
-#         else:
-#             blocked_users.append(block_obj.blocker)
+    # 投稿取得
+    involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
+    blocked_users = []
+    for block_obj in involved_blocks:
+        if block_obj.blocker == user:
+            blocked_users.append(block_obj.blocked)
+        else:
+            blocked_users.append(block_obj.blocker)
 
-#     post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users).order_by(-time)
+    post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users)
 
-#     params = {
-#         'details': details,
-#         'location': location,
-#         'post_list': post_list,
-#     }
-#     return render(request, 'asovi_app/place_detail.html', params)
+    params = {
+        'details': details,
+        'location': location,
+        'address': address,
+        'post_list': post_list,
+        'API_KEY': API_KEY,
+    }
+    return render(request, 'asovi_app/place_detail.html', params)
 
 
 class FindUserView(generic.ListView):
@@ -417,6 +431,8 @@ def user_profile(request, pk):
         'friend_num': friend_num,
         'post_num': post_num,
         'post_list_json': post_list_json,
+        'notification': count_new_events(me),
+        'friend_num': friend_num,
     }
     return render(request, 'asovi_app/user_profile.html', params)
 

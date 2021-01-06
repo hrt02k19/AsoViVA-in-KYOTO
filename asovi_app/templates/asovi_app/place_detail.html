@@ -24,30 +24,34 @@
     <!-- 地点付近のマップ表示(js) -->
     <div id="map"></div>
     <!-- 地点詳細情報表示 -->
-    {% for field, detail in details.items %}
-        {{ field }}:{{ detail }}
-    {% endfor %}
+    <p>地点名：{{details.name}}</p>
+    <p>住所：{{address}}</p>
+
+    <p></p>
     <!-- この地点についての投稿を表示 -->
     {% for post in post_list %}
-        <a href="{% url 'asovi_app:post_detail' post.pk %}"><img src="{{post.image}}" width="35" height="35"></a>
+        <a href="{% url 'asovi_app:post_detail' post.pk %}"><img src="/{{post.image}}" width="35" height="35"></a>
     {% endfor %}
 </body>
 <script>
-    var details = JSON.parse('{{ details|escapejs }}');
-
     // 地点中心の地図
+    var center = {
+        lat: {{location.lat}},
+        lng: {{location.lng}}
+    };
     function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
-            center: '{{ location }}',
+            center: center,
             zoom: 15,
         });
         // 地点にマーカー
         new google.maps.Marker({
-            position: '{{ location }}',
+            position: center,
             map,
-            title: details.name,
+            title: '{{details.name}}',
         })
     }
 </script>
-<script defer src="https://maps.googleapis.com/maps/api/js?key=xxxxxxxxxx&&callback=initMap"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key='{{API_KEY}}'callback=initMap" async defer></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
 </html>
