@@ -21,12 +21,12 @@
     {% endif %}
     
         <form method='POST' action="{% url 'asovi_app:profile_edit' %}" enctype='multipart/form-data'>
-
+            {% csrf_token %}
             <label id='imgselect'>
                 プロフィール画像を選択
                 <input type="file" accept='image/*' id='selectimg' onchange="previewImage(this);" name='icon'>
             </label>
-            {% csrf_token %}
+            
 
             <div class="formarea">
                 <p class="p1"><label for="id_username">名前</label> <br>

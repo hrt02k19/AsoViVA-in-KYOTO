@@ -54,6 +54,9 @@ label {
 .p2 {
 margin-bottom: 6px;
 }
+.p2 > textarea {
+  font-size: 13px;
+}
 .p3 {
   margin-top: 0;
   margin-bottom: -1.5px;
