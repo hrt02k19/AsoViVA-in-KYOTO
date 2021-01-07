@@ -25,7 +25,7 @@
     
     <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="/{{my_friend_requested_top.requestor_icon}}"></a>           
     <div class="follow">
-        <a href="{% url 'asovi_app:friend_request_accept' %}" class="bright"> <p class="req">フォローリクエスト</p></a>
+        <a href="{% url 'asovi_app:friend_request_accept' %}" class="bright"> <p class="req">フォローリクエスト:{{my_friend_requested_num}}件</p></a>
         <br>
         <a href="{% url 'asovi_app:friend_request_accept' %}" class="aright"><i class="fas fa-arrow-right right"></i></a>
         <br>

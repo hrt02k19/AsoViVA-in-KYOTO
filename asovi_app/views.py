@@ -112,6 +112,7 @@ def profile_edit(request):
         params['form']=ProfileForm(instance=obj)
         params['icon']=obj.icon
         params['genre_list']=generate_genre_list(obj)
+        return redirect('/my_page/')
     return render(request, 'asovi_app/profile_edit.html', params)
 
 
@@ -445,12 +446,12 @@ def user_profile(request, pk):
     user = CustomUser.objects.get(pk=pk)
     params = {}
     try:
-        params['profile'] = Profile.objects.get(user=user.pk)
-        params['interested_genres'] = Profile.interested_genre.all()
+        profile = Profile.objects.get(user=user.pk)
+        interested_genres = profile.interested_genre.all()
     except ObjectDoesNotExist:
         pass
     post_list = Post.objects.filter(posted_by=user).order_by("-time")
-    print(post_list)
+    # print(post_list)
     friend_num = Friend.objects.filter(Q(requestor=user)|Q(requestee=user)).filter(friended=True).count()
     post_num = Post.objects.filter(posted_by=user).count()
 
@@ -459,7 +460,8 @@ def user_profile(request, pk):
     params = {
         'me': me,
         'user': user,
-        # 'profile': profile,
+        'profile': profile,
+        'interested_genres': interested_genres,
         'post_list': post_list,
         'friend_num': friend_num,
         'post_num': post_num,
@@ -473,8 +475,10 @@ def user_profile(request, pk):
 def post_list(request, pk):
     user = CustomUser.objects.get(pk=pk)
     post_list = Post.objects.filter(posted_by=user).order_by("-time")
+    post_list_json = serializers.serialize('json', post_list)
     params = {
         'post_list': post_list,
+        'post_list_json': post_list_json,
     }
     return render(request, 'asovi_app/post_list.html', params)
 
@@ -581,7 +585,10 @@ def check_event(request):
     return render(request, 'asovi_app/check_event.html', params)
 
 def notification_setting(request):
-    obj = get_object_or_404(NotificationSetting,user=request.user)
+    try:
+        obj = get_object_or_404(NotificationSetting,user=request.user)
+    except:
+        obj = NotificationSetting.objects.create(user=request.user)
     form = NotificationForm(instance=obj)
     if request.method == 'POST':
         form = NotificationForm(request.POST,instance=obj)
