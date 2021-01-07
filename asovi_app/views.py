@@ -85,7 +85,7 @@ def profile_edit(request):
     params['form'] = ProfileForm(instance=obj)
     params['icon'] = obj.icon
     params['genre_list']=generate_genre_list(obj)
-    # print(generate_genre_list(obj))    
+    # print(generate_genre_list(obj))
     # obj = get_object_or_404(Profile, user=request.user)
     if request.method == 'POST':
         print(request.POST)
@@ -475,7 +475,6 @@ def user_profile(request, pk):
         profile = Profile.objects.create(user=user)
         interested_genres = profile.interested_genre.all()
     post_list = Post.objects.filter(posted_by=user).order_by("-time")
-    # print(post_list)
     friend_num = Friend.objects.filter(Q(requestor=user)|Q(requestee=user)).filter(friended=True).count()
     post_num = Post.objects.filter(posted_by=user).count()
 
@@ -490,8 +489,6 @@ def user_profile(request, pk):
         'friend_num': friend_num,
         'post_num': post_num,
         'post_list_json': post_list_json,
-        'notification': count_new_events(me),
-        'friend_num': friend_num,
     }
     return render(request, 'asovi_app/user_profile.html', params)
 
