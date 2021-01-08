@@ -416,9 +416,16 @@ def place_detail(request, place_id):
     # APIキーはlocal_settings.pyに設定しておく
     map_api = googlemaps.Client(API_KEY)
     # 取得したい情報を設定
-    fields = ['name', 'type', 'address_component', 'geometry']
+    fields = ['name', 'address_component', 'business_status', 'geometry']
     place = map_api.place(place_id=place_id, fields=fields, language='ja')
     details = place['result']
+    business_status = details['business_status']
+    if business_status == 'CLOSED_TEMPORARILY':
+        business_status = '一時休業中'
+    elif business_status == 'CLOSED_PERMANENTLY':
+        business_status = '閉鎖中'
+    else:
+        business_status = ''
     location = place['result']['geometry']['location']
     address_components = place['result']['address_components']
     address = '〒'
@@ -441,6 +448,7 @@ def place_detail(request, place_id):
 
     params = {
         'details': details,
+        'business_status': business_status,
         'location': location,
         'address': address,
         'post_list': post_list,
