@@ -23,16 +23,28 @@
                 <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
 
     
-    <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="{{request.requestor_icon.url}}"></a>           
+    <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="/{{my_friend_requested_top.requestor_icon}}"></a>           
     <div class="follow">
         <a href="{% url 'asovi_app:friend_request_accept' %}" class="bright"> <p class="req">フォローリクエスト</p></a>
         <br>
         <a href="{% url 'asovi_app:friend_request_accept' %}" class="aright"><i class="fas fa-arrow-right right"></i></a>
         <br>
-        
-        {% for friendship in friend_requesting %}
-        {{ friendship.requestee }}
-        <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a>
+        <br>
+        {% if my_friend_requesting_num > 0 %}
+        <p class="all">リクエスト中:{{my_friend_requesting_num}}</p>
+        {% endif %}
+        {% for friendship in my_friend_requesting %}
+        <br>
+        <br>
+        <div class="list">
+            <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}"><img class="icon2" src="/{{ friendship.requestee_icon }}" width="40" height="40"></a> 
+            <p class="userid"> @{{ friendship.requestee.user_id }}</p><br>
+            <p class="username"> {{friendship.requestee_username}}</p>
+            <form action="{% url 'asovi_app:friend_block' friendship.requestee.pk %}" method='POST'>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary reject">削除</button>
+            </form>
+        </div>
         {% endfor %}
     </div>
         <br>
@@ -45,33 +57,35 @@
         <br>
          
             {% if friendship.requestor == me %}
-            <p class="userid"> @{{ friendship.requestee.user_id }}</p><br>
-            <p class="username"> {{friendship.requestee_username}}</p>
-                <!-- <a href="{% url 'asovi_app:post_list' friendship.requestee.pk %}">投稿を見る</a>
-                <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a> -->
+            <div class="list">
+                <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}"><img class="icon2" src="/{{ friendship.requestee_icon }}" width="40" height="40"></a> 
+                <p class="userid"> @{{ friendship.requestee.user_id }}</p><br>
+                <p class="username"> {{friendship.requestee_username}}</p>
+                <a href="{% url 'asovi_app:post_list' friendship.requestee.pk %}">投稿を見る</a><br>
+                <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a>
                 <form action="{% url 'asovi_app:friend_block' friendship.requestee.pk %}" method='POST'>
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
-                
-                {% else %}
+            </div>
+            {% else %}
             <div class="list">    
-                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}"><img class="icon2" src="/{{request.requestor_icon}}"></a>         
+                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}"><img class="icon2" src="/{{ friendship.requestor_icon }}" width="40" height="40"></a>         
                 <p class="userid"> @{{ friendship.requestor.user_id }}</p><br>
-                <p class="username"> {{friendship.requestor_username}}</p>
+                <p class="username"> {{ friendship.requestor_username }}</p>
                 
-                <!-- <a href="{% url 'asovi_app:post_list' friendship.requestor.pk %}">投稿を見る</a>
-                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}">プロフィールを見る</a> -->
+                <a href="{% url 'asovi_app:post_list' friendship.requestor.pk %}">投稿を見る</a><br>
+                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}">プロフィールを見る</a>
                 <form action="{% url 'asovi_app:friend_block' friendship.requestor.pk %}" method='POST'>
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
                 <br>
             </div>
-                {% endif %}
+            {% endif %}
                 
-                {% endfor %}
-            </div>
+        {% endfor %}
+        </div>
                 
     </body>
 </html>

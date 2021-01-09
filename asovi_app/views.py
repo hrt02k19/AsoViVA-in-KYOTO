@@ -1,6 +1,7 @@
 from typing import Counter
 from django.core import serializers
 from django.core.mail import send_mail
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
@@ -20,11 +21,13 @@ from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm, SignOutForm
 from .models import *
 
-import datetime, random, string
+import datetime, random, string, googlemaps, sys
 
+sys.path.append('../asoviva')
+from asoviva.local_settings import API_KEY
 
 class MySignupView(SignupView):
     form_class = CustomSignupForm
@@ -62,21 +65,53 @@ def count_new_events(user: CustomUser):
 
     return events_num
 
+def generate_genre_list(profile: Profile):
+    list = []
+    qs = profile.interested_genre.all()
+    for genre in qs:
+        list.append(genre.pk)
+    #print(st)
+    return list
+
 def profile_edit(request):
     params = {}
+    # obj_exists = True
     try:
         obj = Profile.objects.get(user=request.user)
-        params['form'] = ProfileForm(instance=obj)
+    except:
+        obj = Profile.objects.create(user=request.user)
+    params['form'] = ProfileForm(instance=obj)
+    params['icon'] = obj.icon
+    params['genre_list']=generate_genre_list(obj)
+    # print(generate_genre_list(obj))    
     # obj = get_object_or_404(Profile, user=request.user)
-    except ObjectDoesNotExist:
-        form = ProfileForm()
-        params['form'] = form
     if request.method == 'POST':
         profile = ProfileForm(request.POST, instance=obj)
         profile.save()
-    # params = {
-        # 'form': ProfileForm(instance=obj),
-    # }
+        if 'icon' in request.FILES:
+            obj.icon = request.FILES['icon']
+            obj.save()
+        if "1" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=1))
+        if "2" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=2))
+        if "3" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=3))
+        if "4" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=4))
+        if "5" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=5))
+        if "6" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=6))
+        if "7" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=7))
+        if "8" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=8))
+        if "9" in request.POST:
+            obj.interested_genre.add(Genre.objects.get(pk=9))
+        params['form']=ProfileForm(instance=obj)
+        params['icon']=obj.icon
+        params['genre_list']=generate_genre_list(obj)
     return render(request, 'asovi_app/profile_edit.html', params)
 
 
@@ -87,8 +122,8 @@ def post_view(request):
     }
     if request.method=='POST':
         form = PostForm(request.POST)
-        key = 'api-key' # APIキーを取得したら代入
-        #gmaps = googlemaps.Client(key=key)
+        # gmaps = googlemaps.Client(key=API_KEY)
+        print('送信しました')
         if form.is_valid():
             user = request.user
             genre=form.cleaned_data('genre')
@@ -99,12 +134,15 @@ def post_view(request):
             lat=form.cleaned_data.get('latitude')
             lng=form.cleaned_data.get('longitude')
 
-            #place = gmaps.reverse_geocode((lat, lng))
-            #place_id = place[0].place_id
+            # place = gmaps.reverse_geocode((lat, lng))
+            # place_id = place[0].place_id
+            # print(place_id)
 
             posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
             posted.save()
-            return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
+            return redirect(to='post')  #投稿後に遷移するページが完成次第post/から変更する
+        else:
+            print('送信できませんでした')
 
     return render(request,'asovi_app/post.html',params)
 
@@ -244,14 +282,46 @@ def friend_block(request,pk):
 
 def friend_list(request,*args):
     me = request.user
-    my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).order_by("-friended_date")
-    my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).order_by("-requested_date")
-    my_friend_requested = Friend.objects.filter(requestee=me,friended=False).order_by("-requested_date")
+    my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).annotate(
+        requestor_username=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values("username")
+        ),
+        requestor_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+        ),
+        requestee_username=Subquery(
+            Profile.objects.filter(user=OuterRef("requestee")).values("username")
+        ),
+        requestee_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+        ),
+    ).order_by("-friended_date")
+    my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).annotate(
+        requestee_username=Subquery(
+            Profile.objects.filter(user=OuterRef("requestee")).values("username")
+        ),
+        requestee_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+        )
+    ).order_by("-requested_date")
+    my_friend_requested = Friend.objects.filter(requestee=me,friended=False).annotate(
+        requestor_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+        )
+    ).order_by("-requested_date")
+    my_friend_requested_num = len(my_friend_requested)
+    if my_friend_requested_num > 0:
+        my_friend_requested_top = my_friend_requested[0]
+    else:
+        my_friend_requested_top = None
+
     params = {
         'me': me,
         'friend': my_friend,
         'my_friend_requesting': my_friend_requesting,
-        'my_friend_requested_num': len(my_friend_requested)
+        'my_friend_requesting_num': len(my_friend_requesting),
+        'my_friend_requested_top': my_friend_requested_top,
+        'my_friend_requested_num': my_friend_requested_num
     }
     return render(request, 'asovi_app/friend_list.html', params)
 
@@ -316,34 +386,43 @@ def post_map(request):
     return render(request,'asovi_app/post_map.html', params)
 
 
-# def place_detail(request, place_id):
-#     user = request.user
-#     # 詳細情報取得
-#     key = "API Key"  # APIキー入力
-#     #map_api = googlemaps.Client(key)
-#     # 取得したい情報を設定
-#     fields = ['name', 'type', 'formatted_address', 'geometry']
-#     #place = map_api.place(place_id=place_id, field=fields, language='ja')
-#     #details = place['result']
-#     #location = place['result']['geometry']['location']
+def place_detail(request, place_id):
+    user = request.user
+    # 詳細情報取得
+    # APIキーはlocal_settings.pyに設定しておく
+    map_api = googlemaps.Client(API_KEY)
+    # 取得したい情報を設定
+    fields = ['name', 'type', 'address_component', 'geometry']
+    place = map_api.place(place_id=place_id, fields=fields, language='ja')
+    details = place['result']
+    location = place['result']['geometry']['location']
+    address_components = place['result']['address_components']
+    address = '〒'
+    for address_component in reversed(address_components):
+        if address_component['types'] == ["country", "political"]:
+            continue
+        else:
+            address += address_component['long_name']
 
-#     # 投稿取得
-#     involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
-#     blocked_users = []
-#     for block_obj in involved_blocks:
-#         if block_obj.blocker == user:
-#             blocked_users.append(block_obj.blocked)
-#         else:
-#             blocked_users.append(block_obj.blocker)
+    # 投稿取得
+    involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
+    blocked_users = []
+    for block_obj in involved_blocks:
+        if block_obj.blocker == user:
+            blocked_users.append(block_obj.blocked)
+        else:
+            blocked_users.append(block_obj.blocker)
 
-#     post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users).order_by(-time)
+    post_list = Post.objects.filter(place_id=place_id).exclude(posted_by__in=blocked_users)
 
-#     params = {
-#         'details': details,
-#         'location': location,
-#         'post_list': post_list,
-#     }
-#     return render(request, 'asovi_app/place_detail.html', params)
+    params = {
+        'details': details,
+        'location': location,
+        'address': address,
+        'post_list': post_list,
+        'API_KEY': API_KEY,
+    }
+    return render(request, 'asovi_app/place_detail.html', params)
 
 
 class FindUserView(generic.ListView):
@@ -364,9 +443,10 @@ class FindUserView(generic.ListView):
 def user_profile(request, pk):
     me = CustomUser.objects.get(pk=request.user.pk)
     user = CustomUser.objects.get(pk=pk)
+    params = {}
     try:
         params['profile'] = Profile.objects.get(user=user.pk)
-        params['interested_genres'] = profile.interested_genre.all()
+        params['interested_genres'] = Profile.interested_genre.all()
     except ObjectDoesNotExist:
         pass
     post_list = Post.objects.filter(posted_by=user).order_by("-time")
@@ -384,6 +464,8 @@ def user_profile(request, pk):
         'friend_num': friend_num,
         'post_num': post_num,
         'post_list_json': post_list_json,
+        'notification': count_new_events(me),
+        'friend_num': friend_num,
     }
     return render(request, 'asovi_app/user_profile.html', params)
 
@@ -597,11 +679,28 @@ def logout_completed(request):
     return render(request, 'asovi_app/logout_completed.html')
 
 def signout(request):
-    me = CustomUser.objects.get(email=request.user)
-    me.is_active = False
-    me.save()
-    return redirect(to='asovi_app:account_signup')
+    form = SignOutForm()
+    params = {'form': form}
+    if request.method == 'POST':
+        form = SignOutForm(request.POST)
+        email = request.POST['email']
+        password = request.POST['password']
+        if request.user.email == email and check_password(password, request.user.password):
+            """メールもパスワードもログインユーザーのものと同じならアカウント削除"""
+            me = CustomUser.objects.get(email=request.user)
+            me.delete()
+            return redirect(to='asovi_app:signout_completed')
+        elif request.user.email != email:
+            params['msg'] = 'メールアドレスが違います。'
+        elif request.user.password != password:
+            params['msg'] = 'パスワードが違います。'
+        else:
+            params['msg'] = 'アカウントを削除できませんでした。'
+    return render(request, 'asovi_app/signout.html', params)
 
+
+def signout_completed(request):
+    return render(request, 'asovi_app/signout_completed.html')
 
 
 def contact(request):
@@ -623,10 +722,6 @@ def contact(request):
         return render(request,'asovi_app/contact.html',params)
 
 
-
-
-
-
 def contact_fin(request):
     params={
         'page':'asovi_app:contact_fin',
@@ -641,3 +736,7 @@ def save_article(request):
         'data':data,
     }
     return render(request,'asovi_app/save_article.html',params)
+
+
+def settings(request):
+    return render(request, 'asovi_app/settings.html')
