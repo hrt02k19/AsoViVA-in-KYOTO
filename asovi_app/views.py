@@ -21,12 +21,10 @@ from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm, SignOutForm
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm, SignOutForm, PlaceSearchForm
 from .models import *
 
-from asoviva.local_settings import API_KEY
-
-import datetime, random, string, googlemaps, sys
+import datetime, json, random, string, googlemaps, sys
 
 sys.path.append('../asoviva')
 #from asoviva.local_settings import API_KEY
@@ -348,6 +346,34 @@ def friend_list(request,*args):
         'my_friend_requested_num': my_friend_requested_num
     }
     return render(request, 'asovi_app/friend_list.html', params)
+
+
+def place_search(request):
+    params = {'form': PlaceSearchForm}
+    if request.method == 'POST':
+        form = PlaceSearchForm(request.POST)
+        keyword = request.POST['keyword']
+        radius = request.POST['radius']
+        lat = request.POST.get('lat')
+        lng = request.POST.get('lng')
+
+        gmaps = googlemaps.Client(API_KEY)
+
+        if lat == None or lng == None:
+            search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, language='ja')
+
+        else:
+            search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, language='ja')
+
+        results = search_results['results']
+        results_json = json.dumps(results)
+        params = {
+            'form': form,
+            'results': results,
+            'results_json': results_json,
+        }
+
+    return render(request, 'asovi_app/place_search.html', params)
 
 def post_map(request):
     user = request.user

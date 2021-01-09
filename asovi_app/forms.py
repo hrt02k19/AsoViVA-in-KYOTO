@@ -116,6 +116,36 @@ class WordSearchForm(forms.Form):
     key_word = forms.CharField(label='検索:',max_length=50,required=False)
 
 
+class PlaceSearchForm(forms.Form):
+    types = [
+        ('none', '指定しない'),
+        ('amusement_park', '遊園地'),
+        ('aquarium', '水族館'),
+        ('art_gallery', '美術館'),
+        ('bar', 'バー'),
+        ('bowling_alley', 'ボーリング場'),
+        ('cafe', 'カフェ'),
+        ('campground', 'キャンプ場'),
+        ('lodging', '宿泊施設'),
+        ('movie_theater', '映画館'),
+        ('moseum', '博物館'),
+        ('night_club', 'ナイトクラブ'),
+        ('park', '公園'),
+        ('restaurant', 'レストラン'),
+        ('shopping_mall', 'ショッピングセンター'),
+        ('spa', '温泉'),
+        ('stadium', 'スタジアム'),
+        ('store', '店'),
+        ('tourist_attraction', '観光名所'),
+        ('zoo', '動物園'),
+    ]
+    radius = forms.IntegerField(label='検索対象の半径', max_value=50000, min_value=0, initial=1000)
+    keyword = forms.CharField(label='キーワード', max_length=200, required=False, initial='')
+    place_type = forms.MultipleChoiceField(label='カテゴリー', required=False, choices=types, widget=forms.RadioSelect())
+    lat = forms.FloatField(label='緯度', required=False, initial=34.987)
+    lng = forms.FloatField(label='経度', required=False, initial=135.759)
+
+
 class ContactForm(forms.ModelForm):
     class Meta:
         model=Contact
