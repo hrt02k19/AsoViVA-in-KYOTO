@@ -24,10 +24,12 @@ from allauth.account.utils import complete_signup
 from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm, SignOutForm
 from .models import *
 
+from asoviva.local_settings import API_KEY
+
 import datetime, random, string, googlemaps, sys
 
 sys.path.append('../asoviva')
-from asoviva.local_settings import API_KEY
+#from asoviva.local_settings import API_KEY
 
 class MySignupView(SignupView):
     form_class = CustomSignupForm
@@ -86,6 +88,8 @@ def profile_edit(request):
     # print(generate_genre_list(obj))    
     # obj = get_object_or_404(Profile, user=request.user)
     if request.method == 'POST':
+        print(request.POST)
+        print(request.FILES)
         profile = ProfileForm(request.POST, instance=obj)
         profile.save()
         if 'icon' in request.FILES:
@@ -123,29 +127,48 @@ def post_view(request):
     }
     if request.method=='POST':
         form = PostForm(request.POST)
-        # gmaps = googlemaps.Client(key=API_KEY)
-        print('送信しました')
-        if form.is_valid():
-            user = request.user
-            genre=form.cleaned_data('genre')
+        gmaps = googlemaps.Client(key=API_KEY)
+        # print('送信しました')
+        user = request.user
+        genre = None
+        if request.POST['genre'] == '1':
+            genre=Genre.objects.get(pk=1)
+        elif request.POST['genre'] == '2':
+            genre=Genre.objects.get(pk=2)
+        elif request.POST['genre'] == '3':
+            genre=Genre.objects.get(pk=3)
+        elif request.POST['genre'] == '4':
+            genre=Genre.objects.get(pk=4)
+        elif request.POST['genre'] == '5':
+            genre=Genre.objects.get(pk=5)
+        elif request.POST['genre'] == '6':
+            genre=Genre.objects.get(pk=6)
+        elif request.POST['genre'] == '7':
+            genre=Genre.objects.get(pk=7)
+        elif request.POST['genre'] == '8':
+            genre=Genre.objects.get(pk=8)
+        elif request.POST['genre'] == '9':
+            genre=Genre.objects.get(pk=9)
+        # now=datetime.datetime.now()
+        image = request.FILES['image']
+        body = request.POST['body']
+        lat= request.POST['latitude']
+        lng= request.POST['longitude']
 
-            now=datetime.datetime.now()
-            image=form.cleaned_data.get('image')
-            body=form.cleaned_data.get('body')
-            lat=form.cleaned_data.get('latitude')
-            lng=form.cleaned_data.get('longitude')
+        place = gmaps.reverse_geocode((lat, lng))
+        #print(place)
+        place_id = place[0]['place_id']
+        print(place_id)
 
-            # place = gmaps.reverse_geocode((lat, lng))
-            # place_id = place[0].place_id
-            # print(place_id)
-
-            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
-            posted.save()
-            return redirect(to='post')  #投稿後に遷移するページが完成次第post/から変更する
-        else:
-            print('送信できませんでした')
+        new_post = Post(posted_by=user,image=image,genre=genre,body=body,latitude=lat,longitude=lng,place_id=place_id)
+        new_post.save()
+        print('保存されました')
+        return redirect('/post_completed/' + str(new_post.pk))  #投稿後に遷移するページが完成次第post/から変更する
 
     return render(request,'asovi_app/post.html',params)
+
+def post_completed(request,pk):
+    return render(request, 'asovi_app/post_completed.html', {'post_pk': pk})
 
 
 
@@ -446,10 +469,11 @@ def user_profile(request, pk):
     user = CustomUser.objects.get(pk=pk)
     params = {}
     try:
-        profile = Profile.objects.get(user=user.pk)
+        profile = Profile.objects.get(user=user)
         interested_genres = profile.interested_genre.all()
     except ObjectDoesNotExist:
-        pass
+        profile = Profile.objects.create(user=user)
+        interested_genres = profile.interested_genre.all()
     post_list = Post.objects.filter(posted_by=user).order_by("-time")
     # print(post_list)
     friend_num = Friend.objects.filter(Q(requestor=user)|Q(requestee=user)).filter(friended=True).count()

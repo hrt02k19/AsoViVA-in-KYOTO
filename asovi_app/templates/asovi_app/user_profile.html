@@ -38,7 +38,7 @@
                         2: "位置情報が取得できませんでした。",
                         3: "タイムアウトしました。",
                     };
-                    window.alert(errorMessage[error.code]);
+                    //window.alert(errorMessage[error.code]);
                     myLat=35;
                     myLng=136;
                 }
@@ -86,7 +86,9 @@
                 <th>自己紹介：</th>
                 <td>{{profile.introduction|linebreaksbr}}</td>
             </tr>
-            <div id="map"></div>
+        </table>
+        <div id="map"></div>
+        <table>
             <br>
             {% for post in post_list %}
                 <img src="/{{post.image}}" alt="" width="30" height="30">
@@ -135,7 +137,7 @@
                 }));
 
                 infoWindows.push(new google.maps.InfoWindow({
-                    content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"30\">' + '<h2>' + post.fields.body + '</h2>' + '</div>'
+                    content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"70\">' + '<h2>' + post.fields.body + '</h2>' + '</div>'
                 }));
 
             }
@@ -149,5 +151,5 @@
 
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 </html>
