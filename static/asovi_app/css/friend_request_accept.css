@@ -91,3 +91,13 @@ width: 50px;
   margin-left: 50px;
   margin-top: 250px;
 }
+
+.userid {
+  margin-top: 0px;
+  width: 163px;
+  font-size: 15px;
+}
+.username {
+  font-size: 13px;
+  margin-top: -8px;
+}

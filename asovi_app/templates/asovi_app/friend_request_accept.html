@@ -31,9 +31,10 @@
         {% for request in new_requests %}
         <div class="list">
             <img class="icon" src="/{{request.requestor_icon}}">
-            {{request.requestor.user_id}}
-            {{request.requestor_username}}
-
+            <div>
+            <p class="userid">  {{request.requestor.user_id}} </p>
+            <p class="username">{{request.requestor_username}}</p>
+        </div>
             <form action="{% url 'asovi_app:friend_request_accept' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="friend_request_pk" value="{{request.pk}}">

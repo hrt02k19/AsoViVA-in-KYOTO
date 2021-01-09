@@ -23,7 +23,7 @@
                 <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
 
     
-    <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="/{{request.requestor_icon}}"></a>           
+    <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="{{request.requestor_icon.url}}"></a>           
     <div class="follow">
         <a href="{% url 'asovi_app:friend_request_accept' %}" class="bright"> <p class="req">フォローリクエスト</p></a>
         <br>

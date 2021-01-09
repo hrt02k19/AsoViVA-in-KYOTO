@@ -388,13 +388,13 @@ def user_profile(request, pk):
     return render(request, 'asovi_app/user_profile.html', params)
 
 
-# def post_list(request, pk):
-#     user = CustomUser.objects.get(pk=pk)
-#     post_list = Post.objects.filter(posted_by=user).order_by("-time")
-#     params = {
-#         'post_list': post_list,
-#     }
-#     return render(request, 'asovi_app/post_list.html', params)
+def post_list(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    post_list = Post.objects.filter(posted_by=user).order_by("-time")
+    params = {
+        'post_list': post_list,
+    }
+    return render(request, 'asovi_app/post_list.html', params)
 
 
 def my_page(request):
