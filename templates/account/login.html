@@ -2,13 +2,14 @@
 
 {% load i18n %}
 {% load account socialaccount %}
+{% load static %}
 
 {% block head_title %}{% trans "Sign In" %}
 {% endblock %}
 
 {% block content %}
 <div class="border">
-  <h1></h1>
+  <img src="{% static 'asovi_app/img/グループ 120@3x.png' %}" alt="" class="logoimg">
 </div>
 
 {% get_providers as socialaccount_providers %}
