@@ -2,7 +2,8 @@
 <html lang="ja">
     <head>
         <meta charset="utf-8">
-        <title>{{profile.username}}マイページ｜遊ViVA in KYOTO</title>
+        <title>{{profile.username}}さんのプロフィール｜遊ViVA in KYOTO</title>
+        
         <style>
             html,
             body {
@@ -17,11 +18,12 @@
             }
         </style>
         <script>
+            var myLat;
+            var myLng;
             if ( !navigator.geolocation) {
                 window.alert('この端末では位置情報を取得できません');
             } else {
-                var myLat;
-                var myLng;
+                
                 navigator.geolocation.getCurrentPosition(success, error);
 
                 function success(position){
@@ -36,10 +38,17 @@
                         2: "位置情報が取得できませんでした。",
                         3: "タイムアウトしました。",
                     };
+<<<<<<< HEAD
+                    //window.alert(errorMessage[error.code]);
+=======
                     window.alert(errorMessage[error.code]);
+>>>>>>> 927564f8fad7729c01e8601c84d4d353d7f3d9d5
+                    myLat=35;
+                    myLng=136;
                 }
             }
         </script>
+        
     </head>
     <body>
         <table>
@@ -73,36 +82,37 @@
             <tr>
                 <th>興味ジャンル：</th>
                 {% for interested_genre in interested_genres %}
-                <td>{{interested_genre.name}}</td>
+                    <td>{{interested_genre.name}}</td>
                 {% endfor %}
             </tr>
             {% endif %}
             <tr>
                 <th>自己紹介：</th>
-                <td>{{profile.introduction}}</td>
+                <td>{{profile.introduction|linebreaksbr}}</td>
             </tr>
         </table>
         <div id="map"></div>
-        <br>
-        {% for post in post_list %}
-            <img src="/{{post.image}}" alt="" width="30" height="30">
-            {{post.posted_by}}
-            {{post.time}}
-            {{post.body}}
-            <a href="{% url 'asovi_app:post_detail' post.pk %}">この投稿を表示</a>
+        <table>
             <br>
-        {% endfor %}
-        {% if user.pk == me.pk %}
-            <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
-            <a href="{% url 'asovi_app:signout' %}">サインアウト</a>
+            {% for post in post_list %}
+                <img src="/{{post.image}}" alt="" width="30" height="30">
+                {{post.posted_by}}
+                {{post.time}}
+                {{post.body}}
+                <a href="{% url 'asovi_app:post_detail' post.pk %}">この投稿を表示</a>
+                <br>
+            {% endfor %}
+            {% if user.pk == me.pk %}
+                <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
+                <a href="{% url 'asovi_app:signout' %}">サインアウト</a>
 
-        {% else %}
-            <form action="{% url 'asovi_app:friend_request' user.pk %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">友達申請</button>
-            </form>
-        {% endif %}
-
+            {% else %}
+                <form action="{% url 'asovi_app:friend_request' user.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">友達申請</button>
+                </form>
+            {% endif %}
+        </table>
     </body>
     <script>
         var map;
@@ -131,7 +141,7 @@
                 }));
 
                 infoWindows.push(new google.maps.InfoWindow({
-                    content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"30\">' + '<h2>' + post.fields.body + '</h2>' + '</div>'
+                    content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"70\">' + '<h2>' + post.fields.body + '</h2>' + '</div>'
                 }));
 
             }
@@ -145,5 +155,5 @@
 
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 </html>

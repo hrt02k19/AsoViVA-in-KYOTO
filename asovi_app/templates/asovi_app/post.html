@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -20,22 +22,32 @@
 </head>
 <body>
   <div id="map"></div>
-  <ul>
+  <!-- <ul>
     <li>lat: <span id="lat"></span></li>
     <li>lng: <span id="lng"></span></li>
-  </ul>
+  </ul> -->
   
 
 
-  <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng'>
+  <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng' enctype='multipart/form-data'>
       {% csrf_token %}
+      写真<br>
       {{form.image}}
+      <br>
       {{form.body}}
-      <input type="submit" value="click" >
+      <br>
+      投稿のジャンル
+      <br>
+      {{form.genre}}
+      <br>
+      {{form.latitude}}
+      <br>
+      {{form.longitude}}
+      <button type="submit" class="btn btn-secondary">投稿</button>
 
   </form>
 
-  <input type="button" value="button" onclick="getPosition();">
+  <input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();">
  
   
 
@@ -58,6 +70,9 @@
                 //curLat = 35.0;
                 //curLng = 135.75;
                 var form= document.getElementById('latlng')
+
+                document.getElementById('lat').textContent = lat1
+                document.getElementById('lng').textContent = lng1
 
                 form.latitude.value=curLat
                 form.longitude.value=curLng
@@ -104,20 +119,24 @@
       });
     }
 
+    var marker;
+
     function getClickLatLng(lat_lng, map) {
       var lat1=lat_lng.lat()
       var lng1=lat_lng.lng()
 
-      document.getElementById('lat').textContent = lat1
-      document.getElementById('lng').textContent = lng1
+      //document.getElementById('lat').textContent = lat1
+      //document.getElementById('lng').textContent = lng1
 
       var form= document.getElementById('latlng')
       form.latitude.value=lat1
       form.longitude.value=lng1
 
+      if(marker != null){
+        marker.setMap(null);
+      }
 
-
-      var marker = new google.maps.Marker({
+      marker = new google.maps.Marker({
         position: lat_lng,
         map: map
       });
@@ -127,6 +146,6 @@
     }
 
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 </body>
 </html>

@@ -70,6 +70,13 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['image','body','latitude','longitude','genre']
+        labels = {
+            'image': "写真",
+            'body': "",
+            'latitude': "緯度",
+            'longitude': "経度",
+            'genre': "投稿のジャンル"
+        }
 
 
 class GoodForm(forms.ModelForm):
