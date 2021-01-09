@@ -58,7 +58,7 @@
     <p>検索結果</p>
     <div id="map"></div>
     {% for result in results %}
-    <a href="{% url 'asovi_app:place_detail' '{{result.place_id}}' %}">{{result.name}}</a>
+    <a href="{% url 'asovi_app:place_detail' result.place_id %}">{{result.name}}</a>
     {{result.vicinity}}
     <br>
     {% endfor %}
