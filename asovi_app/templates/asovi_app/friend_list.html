@@ -22,8 +22,8 @@
         <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username'  placeholder="検索">
                 <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
 
-    
-    <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="/{{my_friend_requested_top.requestor_icon}}"></a>           
+
+    <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="/{{my_friend_requested_top.requestor_icon}}"></a>
     <div class="follow">
         <a href="{% url 'asovi_app:friend_request_accept' %}" class="bright"> <p class="req">フォローリクエスト:{{my_friend_requested_num}}件</p></a>
         <br>
@@ -37,7 +37,7 @@
         <br>
         <br>
         <div class="list">
-            <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}"><img class="icon2" src="/{{ friendship.requestee_icon }}" width="40" height="40"></a> 
+            <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}"><img class="icon2" src="/{{ friendship.requestee_icon }}" width="40" height="40"></a>
             <p class="userid"> @{{ friendship.requestee.user_id }}</p><br>
             <p class="username"> {{friendship.requestee_username}}</p>
             <form action="{% url 'asovi_app:friend_block' friendship.requestee.pk %}" method='POST'>
@@ -55,27 +55,24 @@
         {% for friendship in friend %}
         <br>
         <br>
-         
+
             {% if friendship.requestor == me %}
             <div class="list">
-                <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}"><img class="icon2" src="/{{ friendship.requestee_icon }}" width="40" height="40"></a> 
+                <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}"><img class="icon2" src="/{{ friendship.requestee_icon }}" width="40" height="40"></a>
                 <p class="userid"> @{{ friendship.requestee.user_id }}</p><br>
                 <p class="username"> {{friendship.requestee_username}}</p>
-                <a href="{% url 'asovi_app:post_list' friendship.requestee.pk %}">投稿を見る</a><br>
-                <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}">プロフィールを見る</a>
+
                 <form action="{% url 'asovi_app:friend_block' friendship.requestee.pk %}" method='POST'>
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
             </div>
             {% else %}
-            <div class="list">    
-                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}"><img class="icon2" src="/{{ friendship.requestor_icon }}" width="40" height="40"></a>         
+            <div class="list">
+                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}"><img class="icon2" src="/{{ friendship.requestor_icon }}" width="40" height="40"></a>
                 <p class="userid"> @{{ friendship.requestor.user_id }}</p><br>
                 <p class="username"> {{ friendship.requestor_username }}</p>
-                
-                <a href="{% url 'asovi_app:post_list' friendship.requestor.pk %}">投稿を見る</a><br>
-                <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}">プロフィールを見る</a>
+
                 <form action="{% url 'asovi_app:friend_block' friendship.requestor.pk %}" method='POST'>
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary reject">削除</button>
@@ -83,9 +80,9 @@
                 <br>
             </div>
             {% endif %}
-                
+
         {% endfor %}
         </div>
-                
+
     </body>
 </html>

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>{{profile.username}}さんのプロフィール｜遊ViVA in KYOTO</title>
-        
+
         <style>
             html,
             body {
@@ -23,7 +23,7 @@
             if ( !navigator.geolocation) {
                 window.alert('この端末では位置情報を取得できません');
             } else {
-                
+
                 navigator.geolocation.getCurrentPosition(success, error);
 
                 function success(position){
@@ -44,7 +44,7 @@
                 }
             }
         </script>
-        
+
     </head>
     <body>
         <table>
@@ -58,7 +58,11 @@
             </tr>
             <tr>
                 <th>友達数：</th>
+                {% if me == user %}
+                <a href="{% url 'asovi_app:friend_list' %}"><td>{{ friend_num }}</td></a>
+                {% else %}
                 <td>{{ friend_num }}</td>
+                {% endif %}
             </tr>
             <tr>
                 <th>投稿数：</th>
@@ -100,12 +104,11 @@
             {% endfor %}
             {% if user.pk == me.pk %}
                 <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
-                <a href="{% url 'asovi_app:signout' %}">サインアウト</a>
 
             {% else %}
-                <form action="{% url 'asovi_app:friend_request' user.pk %}" method="POST">
+                <form action="{% url 'asovi_app:friend_block' user.pk %}" method="POST">
                     {% csrf_token %}
-                    <button type="submit">友達申請</button>
+                    <button type="submit">ブロック</button>
                 </form>
             {% endif %}
         </table>

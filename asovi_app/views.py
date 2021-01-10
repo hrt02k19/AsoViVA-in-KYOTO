@@ -21,12 +21,10 @@ from allauth.account import app_settings
 from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
-from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm, SignOutForm
+from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm, SignOutForm, PlaceSearchForm
 from .models import *
 
-from asoviva.local_settings import API_KEY
-
-import datetime, random, string, googlemaps, sys
+import datetime, json, random, string, googlemaps, sys
 
 sys.path.append('../asoviva')
 #from asoviva.local_settings import API_KEY
@@ -85,7 +83,7 @@ def profile_edit(request):
     params['form'] = ProfileForm(instance=obj)
     params['icon'] = obj.icon
     params['genre_list']=generate_genre_list(obj)
-    # print(generate_genre_list(obj))    
+    # print(generate_genre_list(obj))
     # obj = get_object_or_404(Profile, user=request.user)
     if request.method == 'POST':
         print(request.POST)
@@ -349,6 +347,34 @@ def friend_list(request,*args):
     }
     return render(request, 'asovi_app/friend_list.html', params)
 
+
+def place_search(request):
+    params = {'form': PlaceSearchForm}
+    if request.method == 'POST':
+        form = PlaceSearchForm(request.POST)
+        keyword = request.POST['keyword']
+        radius = request.POST['radius']
+        lat = request.POST.get('lat')
+        lng = request.POST.get('lng')
+
+        gmaps = googlemaps.Client(API_KEY)
+
+        if lat == None or lng == None:
+            search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, language='ja')
+
+        else:
+            search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, language='ja')
+
+        results = search_results['results']
+        results_json = json.dumps(results)
+        params = {
+            'form': form,
+            'results': results,
+            'results_json': results_json,
+        }
+
+    return render(request, 'asovi_app/place_search.html', params)
+
 def post_map(request):
     user = request.user
     involved_blocks = Block.objects.filter( Q(blocker=user) | Q(blocked=user) )
@@ -416,9 +442,16 @@ def place_detail(request, place_id):
     # APIキーはlocal_settings.pyに設定しておく
     map_api = googlemaps.Client(API_KEY)
     # 取得したい情報を設定
-    fields = ['name', 'type', 'address_component', 'geometry']
+    fields = ['name', 'address_component', 'business_status', 'geometry']
     place = map_api.place(place_id=place_id, fields=fields, language='ja')
     details = place['result']
+    business_status = details['business_status']
+    if business_status == 'CLOSED_TEMPORARILY':
+        business_status = '一時休業中'
+    elif business_status == 'CLOSED_PERMANENTLY':
+        business_status = '閉鎖中'
+    else:
+        business_status = ''
     location = place['result']['geometry']['location']
     address_components = place['result']['address_components']
     address = '〒'
@@ -441,6 +474,7 @@ def place_detail(request, place_id):
 
     params = {
         'details': details,
+        'business_status': business_status,
         'location': location,
         'address': address,
         'post_list': post_list,
@@ -475,7 +509,6 @@ def user_profile(request, pk):
         profile = Profile.objects.create(user=user)
         interested_genres = profile.interested_genre.all()
     post_list = Post.objects.filter(posted_by=user).order_by("-time")
-    # print(post_list)
     friend_num = Friend.objects.filter(Q(requestor=user)|Q(requestee=user)).filter(friended=True).count()
     post_num = Post.objects.filter(posted_by=user).count()
 
@@ -490,8 +523,6 @@ def user_profile(request, pk):
         'friend_num': friend_num,
         'post_num': post_num,
         'post_list_json': post_list_json,
-        'notification': count_new_events(me),
-        'friend_num': friend_num,
     }
     return render(request, 'asovi_app/user_profile.html', params)
 

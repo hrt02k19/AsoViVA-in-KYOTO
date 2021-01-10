@@ -17,6 +17,7 @@ urlpatterns = [
     path('friend_list/',views.friend_list, name='friend_list'),
     path('friend_block/<int:pk>/',views.friend_block, name='friend_block'),
     path('post_map/', views.post_map, name='post_map'),
+    path('place_search/', views.place_search, name='place_search'),
     path('place_detail/<str:place_id>/', views.place_detail, name='place_detail'),
     path('find_user/', views.FindUserView.as_view(), name='find_user'),
     path('check_event/', views.check_event, name='check_event'),
