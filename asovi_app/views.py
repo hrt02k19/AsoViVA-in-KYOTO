@@ -27,7 +27,7 @@ from .models import *
 import datetime, json, random, string, googlemaps, sys
 
 sys.path.append('../asoviva')
-#from asoviva.local_settings import API_KEY
+from asoviva.local_settings import API_KEY
 
 class MySignupView(SignupView):
     form_class = CustomSignupForm
@@ -119,54 +119,96 @@ def profile_edit(request):
 
 
 def post_view(request):
+    params = {}
+    # 地点変更せず戻って来た時に入力途中のフォームを表示
+    params['form'] = PostForm(request.session.get('post_form_data'))
 
-    params={
-        'form':PostForm(),
-    }
-    if request.method=='POST':
-        form = PostForm(request.POST)
-        gmaps = googlemaps.Client(key=API_KEY)
-        # print('送信しました')
-        user = request.user
-        genre = None
-        if request.POST['genre'] == '1':
-            genre=Genre.objects.get(pk=1)
-        elif request.POST['genre'] == '2':
-            genre=Genre.objects.get(pk=2)
-        elif request.POST['genre'] == '3':
-            genre=Genre.objects.get(pk=3)
-        elif request.POST['genre'] == '4':
-            genre=Genre.objects.get(pk=4)
-        elif request.POST['genre'] == '5':
-            genre=Genre.objects.get(pk=5)
-        elif request.POST['genre'] == '6':
-            genre=Genre.objects.get(pk=6)
-        elif request.POST['genre'] == '7':
-            genre=Genre.objects.get(pk=7)
-        elif request.POST['genre'] == '8':
-            genre=Genre.objects.get(pk=8)
-        elif request.POST['genre'] == '9':
-            genre=Genre.objects.get(pk=9)
-        # now=datetime.datetime.now()
-        image = request.FILES['image']
-        body = request.POST['body']
-        lat= request.POST['latitude']
-        lng= request.POST['longitude']
+    if request.method == 'POST':
+        if 'change_place' in request.POST:
+            # 入力したデータをセッションに保存して地点変更ページへ
+            request.session['post_form_data'] = request.POST
+            return redirect('asovi_app:change_place')
 
-        place = gmaps.reverse_geocode((lat, lng))
-        #print(place)
-        place_id = place[0]['place_id']
-        print(place_id)
+        elif 'decide_place' in request.POST:
+            # 地点変更して戻ってきたとき
+            params['form'] = PostForm(request.session.get('post_form_data'))
+            params['place_lat'] = request.POST.get('place_lat')
+            params['place_lng'] = request.POST.get('place_lng')
+            params['place_name'] = request.POST.get('place_name')
 
-        new_post = Post(posted_by=user,image=image,genre=genre,body=body,latitude=lat,longitude=lng,place_id=place_id)
-        new_post.save()
-        print('保存されました')
-        return redirect('/post_completed/' + str(new_post.pk))  #投稿後に遷移するページが完成次第post/から変更する
+
+        else:
+            # 投稿ボタンを押したとき
+            params['form'] = PostForm(request.POST)
+            gmaps = googlemaps.Client(key=API_KEY)
+            user = request.user
+            genre = None
+            if request.POST['genre'] == '1':
+                genre=Genre.objects.get(pk=1)
+            elif request.POST['genre'] == '2':
+                genre=Genre.objects.get(pk=2)
+            elif request.POST['genre'] == '3':
+                genre=Genre.objects.get(pk=3)
+            elif request.POST['genre'] == '4':
+                genre=Genre.objects.get(pk=4)
+            elif request.POST['genre'] == '5':
+                genre=Genre.objects.get(pk=5)
+            elif request.POST['genre'] == '6':
+                genre=Genre.objects.get(pk=6)
+            elif request.POST['genre'] == '7':
+                genre=Genre.objects.get(pk=7)
+            elif request.POST['genre'] == '8':
+                genre=Genre.objects.get(pk=8)
+            elif request.POST['genre'] == '9':
+                genre=Genre.objects.get(pk=9)
+            # now=datetime.datetime.now()
+            image = request.FILES['image']
+            body = request.POST['body']
+            lat= request.POST['latitude']
+            lng = request.POST['longitude']
+
+            place = gmaps.reverse_geocode((lat, lng), language='ja')
+            place_id = place[0]['place_id']
+
+            new_post = Post(posted_by=user,image=image,genre=genre,body=body,latitude=lat,longitude=lng,place_id=place_id)
+            new_post.save()
+            return redirect('/post_completed/' + str(new_post.pk))  #投稿後に遷移するページが完成次第post/から変更する
 
     return render(request,'asovi_app/post.html',params)
 
 def post_completed(request,pk):
     return render(request, 'asovi_app/post_completed.html', {'post_pk': pk})
+
+
+def change_place(request):
+    params = {
+        'search_form': PlaceSearchForm(),
+        'post_form': PostForm()
+    }
+    if request.method == 'POST':
+        search_form = PlaceSearchForm(request.POST)
+        keyword = request.POST['keyword']
+        radius = request.POST['radius']
+        place_type = request.POST['place_type']
+        lat = request.POST.get('lat')
+        lng = request.POST.get('lng')
+
+        gmaps = googlemaps.Client(API_KEY)
+
+        if lat == None or lng == None:
+            search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, type=place_type, language='ja')
+
+        else:
+            search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, type=place_type, language='ja')
+
+        results = search_results['results']
+        results_json = json.dumps(results)
+        params = {
+            'search_form': search_form,
+            'results': results,
+            'results_json': results_json,
+        }
+    return render(request, 'asovi_app/change_place.html', params)
 
 
 
@@ -354,16 +396,17 @@ def place_search(request):
         form = PlaceSearchForm(request.POST)
         keyword = request.POST['keyword']
         radius = request.POST['radius']
+        place_type = request.POST['place_type']
         lat = request.POST.get('lat')
         lng = request.POST.get('lng')
 
         gmaps = googlemaps.Client(API_KEY)
 
         if lat == None or lng == None:
-            search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, language='ja')
+            search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, type=place_type, language='ja')
 
         else:
-            search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, language='ja')
+            search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, type=place_type, language='ja')
 
         results = search_results['results']
         results_json = json.dumps(results)

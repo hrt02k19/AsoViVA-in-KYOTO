@@ -18,7 +18,7 @@
       width: 80%;
     }
   </style>
- 
+
 </head>
 <body>
   <div id="map"></div>
@@ -26,32 +26,28 @@
     <li>lat: <span id="lat"></span></li>
     <li>lng: <span id="lng"></span></li>
   </ul> -->
-  
-
-
   <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng' enctype='multipart/form-data'>
-      {% csrf_token %}
-      写真<br>
-      {{form.image}}
-      <br>
-      {{form.body}}
-      <br>
-      投稿のジャンル
-      <br>
-      {{form.genre}}
-      <br>
-      {{form.latitude}}
-      <br>
-      {{form.longitude}}
-      <button type="submit" class="btn btn-secondary">投稿</button>
+    {% csrf_token %}
+    位置情報：{{ place_name }}
+    <input type="submit" name="change_place" value="地点を選択して変更">
+    <br>
+    緯度：{{form.latitude}}
+    <br>
+    経度：{{form.longitude}}
+    <br>
+    写真<br>
+    {{form.image}}
+    <br>
+    {{form.body}}
+    <br>
+    投稿のジャンル
+    <br>
+    {{form.genre}}
+    <button type="submit" class="btn btn-secondary">投稿</button>
 
   </form>
 
   <input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();">
- 
-  
-
-
 
 
   <script>
@@ -78,7 +74,7 @@
                 form.longitude.value=curLng
 
             },
-            
+
 
 
             function(error) {
@@ -99,10 +95,6 @@
             }
         );
     }
-
-
-
-
 
 
     function initMap() {
@@ -143,6 +135,23 @@
 
 
       map.panTo(lat_lng);
+    }
+
+    // marker = new google.maps.Marker({
+    //   position: {
+    //     'lat': {{place_lat}},
+    //     'lng': {{place_lng}}
+    //   },
+    //   map: map
+    // });
+
+    if({{place_lat}} != null){
+      var form = document.getElementById('latlng');
+      form.latitude.value = {{place_lat}};
+    }
+    if ({{place_lng}} != null){
+      var form = document.getElementById('latlng');
+      form.longitude.value = {{place_lng}};
     }
 
   </script>
