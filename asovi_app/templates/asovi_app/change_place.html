@@ -63,16 +63,11 @@
             navigator.geolocation.getCurrentPosition(
 
                 function (position) {
-                    console.log('成功');
                     curLat = position.coords.latitude;
                     curLng = position.coords.longitude;
-                    //curLat = 35.0;
-                    //curLng = 135.75;
-                    console.log(curLat);
                 },
 
                 function (error) {
-                    console.log('エラー');
                     switch (error.code) {
                         case 1: //PERMISSION_DENIED
                         alert("位置情報の利用が許可されていません");
@@ -98,7 +93,6 @@
         }
 
         function initMap() {
-            console.log('curLat:' + curLat + ', curLng:' + curLng);
             map = new google.maps.Map(document.getElementById('map'), {
                 center: {
                     lat: curLat,
