@@ -5,10 +5,19 @@
 
 <head>
     <meta charset="UTF-8">
+    <link href="{% static 'account/css/settings.css' %}" type="text/css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <title>設定|遊ViVA in KYOTO</title>
 </head>
 
 <body>
+     <!-- ここから -->
+  <div class="logo">
+    <p><strong>設定</strong></p>
+</div>
+<!-- ここまで共通 -->
+
     <h2>アカウント設定</h2>
     <ul>
         <li><a href="{% url 'asovi_app:change_email' %}">メールアドレス変更</a></li>
@@ -16,15 +25,15 @@
         <li><a href="{% url 'asovi_app:change_id' %}">ユーザーID変更</a></li>
         <li><a href="{% url 'asovi_app:signout' %}">アカウント削除</a></li>
     </ul>
-    <h2>通知設定</h2>
+    <h2 class="tuuti">通知設定</h2>
     <ul>
-        <li><a href="{% url 'asovi_app:notification_setting' %}">通知設定へ</a></li>
+        <li><a href="{% url 'asovi_app:notification_setting' %}">プッシュ通知</a></li>
     </ul>
-    <h2>サービスについて</h2>
+    <h2 class="service">サービスについて</h2>
     <ul>
         <li>プライバシーポリシー</li>
         <li>利用規約</li>
-        <li><a href="{% url 'asovi_app:contact' %}">お問い合わせ</a></li>
+        <li><a href="{% url 'asovi_app:contact' %}">問い合わせ</a></li>
     </ul>
     </body>
 
