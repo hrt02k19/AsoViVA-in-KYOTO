@@ -119,6 +119,7 @@ def profile_edit(request):
 
 
 def post_view(request):
+    request.session.set_expiry(0)  # ブラウザを閉じたらセッションを破棄
     params = {}
     # 地点変更せず戻って来た時に入力途中のフォームを表示
     params['form'] = PostForm(request.session.get('post_form_data'))

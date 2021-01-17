@@ -114,15 +114,15 @@
     var marker;
 
     function getClickLatLng(lat_lng, map) {
-      var lat1=lat_lng.lat()
-      var lng1=lat_lng.lng()
+      var lat1=lat_lng.lat();
+      var lng1=lat_lng.lng();
 
       //document.getElementById('lat').textContent = lat1
       //document.getElementById('lng').textContent = lng1
 
-      var form= document.getElementById('latlng')
-      form.latitude.value=lat1
-      form.longitude.value=lng1
+      var form= document.getElementById('latlng');
+      form.latitude.value=lat1;
+      form.longitude.value=lng1;
 
       if(marker != null){
         marker.setMap(null);
@@ -145,13 +145,13 @@
     //   map: map
     // });
 
-    if({{place_lat}} != null){
+    if( "{{place_lat}}" ){
       var form = document.getElementById('latlng');
-      form.latitude.value = {{place_lat}};
+      form.latitude.value = "{{place_lat}}";
     }
-    if ({{place_lng}} != null){
+    if ( "{{place_lng}}" ){
       var form = document.getElementById('latlng');
-      form.longitude.value = {{place_lng}};
+      form.longitude.value = "{{place_lng}}";
     }
 
   </script>
