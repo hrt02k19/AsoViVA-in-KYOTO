@@ -21,28 +21,7 @@
         }
     </style>
     <script>
-        var myLat;
-        var myLng;
-        if (!navigator.geolocation) {
-            window.alert('この端末では位置情報を取得できません');
-        } else {
-            navigator.geolocation.getCurrentPosition(success, error);
 
-            function success(position) {
-                myLat = position.coords.latitude;
-                myLng = position.coords.longitude;
-            }
-
-            function error(position) {
-                var errorMessage = {
-                    0: "原因不明のエラーが発生しました。",
-                    1: "位置情報取得が許可されませんでした。",
-                    2: "位置情報が取得できませんでした。",
-                    3: "タイムアウトしました。",
-                };
-                window.alert(errorMessage[error.code]);
-            }
-        }
     </script>
 </head>
 
@@ -75,15 +54,60 @@
         var map;
         var markers = [];
         var infoWindows = [];
-        var results = JSON.parse('{{results_json|escapejs}}');
+        if ("{{results_json}}"){
+            var results = JSON.parse('{{results_json|escapejs}}');
+        }
+        var curLat;
+        var curLng;
+
+        if (!navigator.geolocation) {
+            alert("この端末では位置情報が取得できません");
+        } else {
+            navigator.geolocation.getCurrentPosition(
+
+                function (position) {
+                    console.log('成功');
+                    curLat = position.coords.latitude;
+                    curLng = position.coords.longitude;
+                    //curLat = 35.0;
+                    //curLng = 135.75;
+                    console.log(curLat);
+                },
+
+                function (error) {
+                    console.log('エラー');
+                    switch (error.code) {
+                        case 1: //PERMISSION_DENIED
+                        alert("位置情報の利用が許可されていません");
+                        break;
+                        case 2: //POSITION_UNAVAILABLE
+                        alert("現在位置が取得できませんでした");
+                        break;
+                        case 3: //TIMEOUT
+                        alert("タイムアウトになりました");
+                        break;
+                        default:
+                            alert("その他のエラー(エラーコード:" + error.code + ")");
+                            break;
+                    }
+                }
+            );
+        }
+
+        // 現在地が取得できなかった場合の中心：とりあえず京都駅
+        if (!curLat || !curLng) {
+            curLat = 34.986156632;
+            curLng = 135.758777425;
+        }
 
         function initMap() {
+            console.log('curLat:' + curLat + ', curLng:' + curLng);
             map = new google.maps.Map(document.getElementById('map'), {
                 center: {
-                    lat: myLat,
-                    lng: myLng,
+                    lat: curLat,
+                    lng: curLng,
                 },
-                zoom: 11
+                zoom: 13
             });
 
             // クリックイベントを追加
@@ -101,7 +125,8 @@
                 map.panTo(lat_lng);
             }
 
-            if (results != null) {
+            // 検索結果表示
+            if (results) {
 
                 for (var result of results) {
                     var resultLat = result.geometry.location.lat;
