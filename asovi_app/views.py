@@ -36,6 +36,13 @@ class MySignupView(SignupView):
         self.user = form.save(self.request)
         self.user.user_id = CustomUserManager.generate_user_id(self, 10)
         self.user.save()
+        NotificationSetting.objects.create(
+            user=self.user,
+            good=True,
+            has_saved=True,
+            reply=True,
+            friend=True,
+        )
         try:
             return complete_signup(
                 self.request,
