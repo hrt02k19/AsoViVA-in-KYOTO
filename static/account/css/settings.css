@@ -29,12 +29,23 @@ h2, p {
 }
 h2 {
   margin-top: 62px;
+  margin-left: 33px;
 }
 .letter {
   margin-left: 33px;
 }
 
-/* form部分 */
+/* リスト */
+ul li {
+  list-style: none;
+  margin-bottom: 10px;
+
+}
+ul li a {
+  text-decoration: none;
+  color: #909090;
+  margin-left: 11px;
+}
 
 
 /* ログインページに戻る」ボタン */
@@ -59,4 +70,12 @@ h2 {
 .return a {
   color: #FFFFFF;
   text-decoration: none !important;
+  font-size: 15px;
+}
+/* 位置調整 */
+.tuuti {
+  margin-top: 18px;
+}
+.service {
+  margin-top: 17px;
 }
