@@ -55,7 +55,17 @@ class MySignupView(SignupView):
             return e.response
 
 def count_new_events(user: CustomUser):
-    setting = user.user_notification
+    try:
+        setting = user.user_notification
+    except ObjectDoesNotExist:
+        setting = NotificationSetting.objects.create(
+            user=user,
+            good=True,
+            has_saved=True,
+            reply=True,
+            friend=True,
+        )
+
     events_num = 0
     if setting.good :
         new_good = Good.objects.filter(article__posted_by=user, checked=False)
@@ -96,7 +106,8 @@ def profile_edit(request):
         print(request.POST)
         print(request.FILES)
         profile = ProfileForm(request.POST, instance=obj)
-        profile.save()
+        if profile.is_valid():
+            profile.save()
         if 'icon' in request.FILES:
             obj.icon = request.FILES['icon']
             obj.save()
