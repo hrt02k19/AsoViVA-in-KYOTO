@@ -153,7 +153,7 @@ class NotificationSetting(models.Model):
 # Create y
 class Post(models.Model):
     posted_by=models.ForeignKey(CustomUser,related_name='posted_by',on_delete=SET_NULL,null=True)
-    image=models.ImageField(upload_to="static/asovi_app/img/")
+    image=models.ImageField(upload_to="static/asovi_app/img/", null=True, blank=True)
     genre=models.ForeignKey(Genre,related_name='post_genre',on_delete=SET_NULL,null=True,blank=True)
     time=models.DateTimeField(auto_now_add=True,null=True)
     body=models.TextField(max_length=300)

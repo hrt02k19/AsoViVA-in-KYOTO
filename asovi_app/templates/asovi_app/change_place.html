@@ -1,0 +1,151 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>場所変更|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/style.css' %}">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 80%;
+            width: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>投稿する地点を変更</h1>
+    <p>検索の中心にしたい位置を地図上でクリックしてください。緯度・経度が自動入力されます。</p>
+    <form action="{% url 'asovi_app:change_place' %}" method="POST">
+        {% csrf_token %}
+        {{search_form.as_p}}
+        <button type="submit">検索</button>
+    </form>
+    <p>検索結果</p>
+    <div id="map"></div>
+    {% for result in results %}
+    {{result.name}}
+    {{result.vicinity}}
+    <form action="{% url 'asovi_app:post' %}" method="POST">
+        {% csrf_token %}
+        <!-- 緯度と経度の情報をpost_viewに送り、表示させる -->
+        <input type="hidden" name="place_lat" value="{{result.geometry.location.lat}}">
+        <input type="hidden" name="place_lng" value="{{result.geometry.location.lng}}">
+        <input type="hidden" name="place_name" value="{{result.name}}">
+        <input type="submit" name="decide_place" value="地点選択">
+    </form>
+    <br>
+    <br>
+    {% endfor %}
+
+    <script>
+        var map;
+        var markers = [];
+        var infoWindows = [];
+        if ("{{results_json}}"){
+            var results = JSON.parse('{{results_json|escapejs}}');
+        }
+        var curLat;
+        var curLng;
+
+        if (!navigator.geolocation) {
+            alert("この端末では位置情報が取得できません");
+        } else {
+            navigator.geolocation.getCurrentPosition(
+
+                function (position) {
+                    curLat = position.coords.latitude;
+                    curLng = position.coords.longitude;
+                },
+
+                function (error) {
+                    switch (error.code) {
+                        case 1: //PERMISSION_DENIED
+                        alert("位置情報の利用が許可されていません");
+                        break;
+                        case 2: //POSITION_UNAVAILABLE
+                        alert("現在位置が取得できませんでした");
+                        break;
+                        case 3: //TIMEOUT
+                        alert("タイムアウトになりました");
+                        break;
+                        default:
+                            alert("その他のエラー(エラーコード:" + error.code + ")");
+                            break;
+                    }
+                }
+            );
+        }
+
+        // 現在地が取得できなかった場合の中心：とりあえず京都駅
+        if (!curLat || !curLng) {
+            curLat = 34.986156632;
+            curLng = 135.758777425;
+        }
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: curLat,
+                    lng: curLng,
+                },
+                zoom: 13
+            });
+
+            // クリックイベントを追加
+            map.addListener('click', function (e) {
+                getClickLatLng(e.latLng, map);
+            });
+
+            function getClickLatLng(lat_lng, map) {
+
+                // 座標を表示
+                document.getElementById('id_lat').value = lat_lng.lat();
+                document.getElementById('id_lng').value = lat_lng.lng();
+
+                // 座標の中心をずらす
+                map.panTo(lat_lng);
+            }
+
+            // 検索結果表示
+            if (results) {
+
+                for (var result of results) {
+                    var resultLat = result.geometry.location.lat;
+                    var resultLng = result.geometry.location.lng;
+
+                    markers.push(new google.maps.Marker({
+                        position: {
+                            lat: resultLat,
+                            lng: resultLng,
+                        },
+                        map: map
+                    }));
+                    infoWindows.push(new google.maps.InfoWindow({
+                        content: result.name
+                    }));
+                }
+            }
+
+            let num = markers.length
+            for (let i = 0; i < num; i++) {
+                markers[i].addListener('click', function () {
+                    infoWindows[i].open(map, markers[i]);
+                });
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
+
+</body>
+
+</html>

@@ -23,7 +23,6 @@
     <script>
         var myLat;
         var myLng;
-        console.log(myLng);
         if (!navigator.geolocation) {
             window.alert('この端末では位置情報を取得できません');
         } else {
@@ -32,7 +31,6 @@
             function success(position) {
                 myLat = position.coords.latitude;
                 myLng = position.coords.longitude;
-                console.log(myLat + ',' + myLng);
             }
 
             function error(position) {
@@ -64,15 +62,10 @@
     {% endfor %}
 
     <script>
-        console.log('1');
         var map;
         var markers = [];
         var infoWindows = [];
         var results = JSON.parse('{{results_json|escapejs}}');
-        console.log('結果：' + results);
-        console.log(myLat + ',' + myLng);
-
-        console.log('2');
 
         function initMap(){
             map = new google.maps.Map(document.getElementById('map'), {
@@ -87,8 +80,6 @@
             map.addListener('click', function (e) {
                 getClickLatLng(e.latLng, map);
             });
-
-            console.log('4');
 
             function getClickLatLng(lat_lng, map) {
 
@@ -105,9 +96,6 @@
                 for (var result of results){
                     var resultLat = result.geometry.location.lat;
                     var resultLng = result.geometry.location.lng;
-
-                    console.log(resultLat);
-                    console.log(resultLng);
 
                     markers.push(new google.maps.Marker({
                         position: {
