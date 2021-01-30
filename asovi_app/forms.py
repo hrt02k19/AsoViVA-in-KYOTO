@@ -48,7 +48,7 @@ class EmailChangeForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['image','body','latitude','longitude','genre']
+        fields = ['image','body','place_id','genre','name']
 
 
 class GoodForm(forms.ModelForm):

@@ -1,4 +1,6 @@
+
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
   <title>Test Map</title>
@@ -29,12 +31,13 @@
 
   <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng'>
       {% csrf_token %}
-      {{form.image}}
-      {{form.body}}
+      {{form.as_p}}
+      <!-- {{form.body}} -->
       <input type="submit" value="click" >
 
   </form>
 
+  <h6>現在地取得ボタン↓</h6>
   <input type="button" value="button" onclick="getPosition();">
  
   
@@ -98,35 +101,110 @@
         center: {lat: 35.0030, lng: 135.7674}
       });
 
+      var marker=new google.maps.Marker({
+        position: map.getCenter(),
+        map: map,
+
+      });
+
+
+
+
 
       map.addListener('click', function(e) {
-        getClickLatLng(e.latLng, map);
+        // getClickLatLng(e.latLng, map);
+        var lat_lng = e.latLng;
+        
+
+        var lat1=lat_lng.lat();
+        var lng1=lat_lng.lng();
+
+        document.getElementById('lat').textContent = lat1;
+        document.getElementById('lng').textContent = lng1;
+       // console.log(typeof(lat1));     
+
+
+       // var form= document.getElementById('latlng');
+        //form.latitude.value=lat1;
+        //form.longitude.value=lng1;
+
+
+        var position = { 'lat': lat1, 'lng': lng1};
+        //console.log(typeof(lat1));     
+        marker.setPosition(position);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open( 'GET', 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+ lat1 +','+ lng1 +'1&radius=50&language=ja&key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk');
+        xhr.send();
+        var data = xhr.responseXML;
+        xhr.addEventListener("load",()=>{
+          const data = xhr.response
+          console.log(data)
+        })
+
+  
+
+        var lat2=data.results.geometry.location.lat;
+        var lng2=data.results.geometry.location.lng;
+        var position2={'lat':lat2,'lng':lng2};
+        marker.setPosition(position2);
+
+        var place_id_xhr=data.results.place_id;
+        var place_name=data.results.name;
+        document.write(place_name); 
+
+        var form= document.getElementById('latlng');
+        form.place_id.value=place_id_xhr;
+        form.name.value=place_name
+
+        
+        
+
+        
+
+        
+        
+
+
+
+
+
+
+
       });
     }
 
-    function getClickLatLng(lat_lng, map) {
-      var lat1=lat_lng.lat()
-      var lng1=lat_lng.lng()
+    // function getClickLatLng(lat_lng, map) {
+    //   var lat1=lat_lng.lat();
+    //   var lng1=lat_lng.lng();
 
-      document.getElementById('lat').textContent = lat1
-      document.getElementById('lng').textContent = lng1
+    //   document.getElementById('lat').textContent = lat1;
+    //   document.getElementById('lng').textContent = lng1;
 
-      var form= document.getElementById('latlng')
-      form.latitude.value=lat1
-      form.longitude.value=lng1
-
-
-
-      var marker = new google.maps.Marker({
-        position: lat_lng,
-        map: map
-      });
+    //   var form= document.getElementById('latlng');
+    //   form.latitude.value=lat1;
+    //   form.longitude.value=lng1;
 
 
-      map.panTo(lat_lng);
-    }
+    //   var position = { 'lat': lat1, 'lng': lng1}
+    //   console.log(typeof(lat1));     
+    //   marker.setPosition(position);
+     
+      
+
+        
+        
+        
+        
+        
+               
+
+
+
+     
+    // }
 
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&signed_in=true&callback=initMap" async defer></script>
 </body>
 </html>

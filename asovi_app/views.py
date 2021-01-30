@@ -18,16 +18,14 @@ from allauth.account.views import SignupView
 from allauth.account.utils import complete_signup
 
 
-<<<<<<< HEAD
-from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save
+from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save,Popular
 from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm, EmailChangeForm
-=======
 from .models import Block, Profile, CustomUserManager, Friend, CustomUser, Post, Genre, Good, Save,Contact
 from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm
->>>>>>> 保存投稿閲覧ページと問い合わせフォーム
 
 import datetime, random, string
 
+from asoviva.local_settings import API_KEY
 
 class MySignupView(SignupView):
     form_class = CustomSignupForm
@@ -68,13 +66,14 @@ def post_view(request):
         if form.is_valid():
             user=request.user
             genre=form.cleaned_data('genre')
+            name=form.cleaned_data('name')
 
             now=datetime.datetime.now()
             image=form.cleaned_data.get('image')
             body=form.cleaned_data.get('body')
-            lat=form.cleaned_data.get('latitude')
-            lng=form.cleaned_data.get('longitude')
-            posted=Post(image=image,body=body,time=now,latitude=lat,longitude=lng,user=user,genre=genre)
+            # lat=form.cleaned_data.get('latitude')
+            # lng=form.cleaned_data.get('longitude')
+            posted=Post(image=image,body=body,time=now,user=user,genre=genre,name=name)
             posted.save()
             return redirect(to='post') #投稿後に遷移するページが完成次第post/から変更する
 
@@ -440,3 +439,21 @@ def save_article(request):
         'data':data,
     }
     return render(request,'asovi_app/save_article.html',params)
+
+
+def popular(request):
+    Popular.objects.all().delete()
+    data_all=Post.objects.all()
+    for item in data_all:
+        num=Post.objects.filter(place_id=item.place_id).count()
+        place_name=item.place_name
+        data_popular=Popular(num=num,place_name=place_name)
+        if Popular.objects.filter(place_name=place_name).count==0:
+            data_popular.save()
+
+    data=Popular.objects.all().order_by('num')[0:5]
+    params={
+        'data':data
+    }
+
+    return render(request,'asovi_app/popular.html',params)

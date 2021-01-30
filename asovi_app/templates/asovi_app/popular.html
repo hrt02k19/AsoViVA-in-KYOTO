@@ -1,0 +1,14 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>人気</title>
+    </head>
+    <body>
+        <h1>Ranking</h1>
+        {% for data in data %}
+        <h5>{{data.id}}:{{data.place_name}}</h5>
+        {% endfor %}
+    </body>
+</html>

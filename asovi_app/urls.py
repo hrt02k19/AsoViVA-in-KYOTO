@@ -27,4 +27,6 @@ urlpatterns = [
     path('contact/',views.contact,name='contact'),
     path('save_article/',views.save_article,name='save_article'),
     path('contact_fin/',views.contact_fin,name='contact_fin'),
+    path('popular/',views.popular,name='popular'),
+   
 ]
