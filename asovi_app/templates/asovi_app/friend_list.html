@@ -21,6 +21,7 @@
     <form method='GET' action="{% url 'asovi_app:find_user' %}">
         <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username'  placeholder="検索">
                 <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+    </form>
 
 
     <a href="{% url 'asovi_app:friend_request_accept' %}" class=""><img class="icon" src="/{{my_friend_requested_top.requestor_icon}}"></a>
@@ -61,9 +62,9 @@
                 <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}"><img class="icon2" src="/{{ friendship.requestee_icon }}" width="40" height="40"></a>
                 <p class="userid"> @{{ friendship.requestee.user_id }}</p><br>
                 <p class="username"> {{friendship.requestee_username}}</p>
-
-                <form action="{% url 'asovi_app:friend_block' friendship.requestee.pk %}" method='POST'>
+                <form action="{% url 'asovi_app:friend_list' %}" method='POST'>
                     {% csrf_token %}
+                    <input type='hidden' value="{{friendship.requestee.pk}}" name="friend_pk">
                     <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
             </div>
@@ -71,10 +72,10 @@
             <div class="list">
                 <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}"><img class="icon2" src="/{{ friendship.requestor_icon }}" width="40" height="40"></a>
                 <p class="userid"> @{{ friendship.requestor.user_id }}</p><br>
-                <p class="username"> {{ friendship.requestor_username }}</p>
-
-                <form action="{% url 'asovi_app:friend_block' friendship.requestor.pk %}" method='POST'>
+                <p class="username"> {{ friendship.requestor_username }}</p>                
+                <form action="{% url 'asovi_app:friend_list' %}" method='POST'>
                     {% csrf_token %}
+                    <input type='hidden' value="{{friendship.requestor.pk}}" name="friend_pk">
                     <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
                 <br>

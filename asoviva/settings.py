@@ -72,7 +72,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'asovi_app.apps.AsoviAppConfig',
     'webpush',
     'django.contrib.sites',

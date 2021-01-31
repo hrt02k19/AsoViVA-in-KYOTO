@@ -353,16 +353,19 @@ def friend_request_accept(request):
 
 
 def friend_block(request,pk):
-    print(request.POST)
     me = request.user
+    print(pk)
     blocked_friend = CustomUser.objects.get(pk=pk)
     block = Block(blocker=me,blocked=blocked_friend)
     block.save()
     friend = Friend.objects.get(Q(requestor=me,requestee=blocked_friend)|Q(requestor=blocked_friend,requestee=me))
     friend.delete()
-    return redirect('asovi_app:friend_list')
+    return redirect('/friend_list/')
 
 def friend_list(request,*args):
+    if request.method == 'POST':
+        blocked_pk = request.POST['friend_pk']
+        return redirect('/friend_block/' + blocked_pk)
     me = request.user
     my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).annotate(
         requestor_username=Subquery(
@@ -600,6 +603,10 @@ def post_list(request, pk):
 
 
 def my_page(request):
+    try:
+        get_object_or_404(NotificationSetting,user=request.user)
+    except:
+        NotificationSetting.objects.create(user=request.user)
     me = request.user
     friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
     params = {
@@ -869,12 +876,11 @@ def popular(request):
         data_popular=Popular(num=num,place_name=place_name)
         if Popular.objects.filter(place_name=place_name).count==0:
             data_popular.save()
-
     data=Popular.objects.all().order_by('num')[0:5]
     params={
         'data':data
     }
-
+    print(data)
     return render(request,'asovi_app/popular.html',params)
 
 def settings(request):
