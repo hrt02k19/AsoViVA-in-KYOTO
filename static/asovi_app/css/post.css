@@ -1,0 +1,143 @@
+/* ここから */
+body {
+  margin: 0;
+  /* overflow: hidden; */
+  width: 100%;
+  }
+  /* ロゴ部分 */
+  .logo {
+  height: 51px;
+  width: 373px;
+  text-align: center;
+  border: solid #707070 1px;
+  }
+  .logo p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 11px;
+    margin-bottom: 13px;
+    font-family: "Segoe UI", sans-serif;
+    color: #707070;
+  }
+/* ここまでテンプレ */
+.hidden {
+  margin:0;
+  position: relative;
+}
+/* 非表示 */
+#map {
+  display: none;
+}
+.getpos {
+  display: none;
+}
+
+/* 文字 */
+.now {
+  font-size: 10px;
+  color: #909090;
+  margin-top: -24px;
+  font-weight: 100;
+  margin-left: 40px;
+}
+form p {
+  margin-left: 33px;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #909090;
+  font-weight: 900;
+}
+/* 画像 */
+#sampleimg {
+  width: 108px;
+  height: auto;
+  margin-top: -5px;
+  margin-left: 20px;
+}
+#selectimg {
+  margin-left: 20px;
+  margin-top: 76px;
+}
+.imgenre {
+  display: flex;
+}
+/* 位置情報 */
+
+.place {
+  color: #BF6F1E;
+  font-size: 15px;
+  font-weight: 900;
+  border: none;
+  background-color: #FFFFFF;
+  margin-left: 260px;
+}
+.getpos {
+  color: #707070;
+  margin-left: 100px;
+}
+/* 投稿日時 */
+#today {
+  font-weight: 300;
+  margin-left:59px;
+  margin-bottom: -35px;
+}
+/* コメント */
+#id_body {
+  margin-left: 40px;
+  height: 63px;
+  width: 279px;
+  margin-top: -22px;
+  margin-bottom: 15px;
+}
+/* ジャンル選択 */
+.genre1, .genre2, .genre3 {
+  display: flex;
+  margin-left: 40px;
+  width: 285px;
+}
+.addgenre {
+  margin-bottom: -25px;
+}
+.genre1 {
+  margin-top: 0;
+}
+input[type="checkbox"]:checked {
+  box-shadow: 0 0 0 3px  #E4A359;
+}
+/* チェックボックスがチェックされていたらボタンにスタイルを適用 */
+.genre-input:checked + .expand-btn {
+  background-color: #E4A359;
+  color: #FFFFFF;
+}
+.genre-input { 
+  display: none;
+}
+.expand-btn {
+  width: 79px;
+    height: 36px;
+    border: solid 1px #707070;
+    margin: 1.5px 3px;
+    color: #909090;
+    padding-left: 10px;
+    padding-top: 6px;
+    font-weight: normal;
+}
+
+/* 投稿ボタん */
+.submit {
+  width: 285px;
+  height: 31px;
+  background-color: #E4A359;
+  border: none;
+  margin-left: 45px;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 0;
+  font-family: "Meiryo", sans-serif;
+  margin-top: 24px;
+   text-align: center;
+   color: #FFFFFF;
+}
+.space {
+  height: 41px;
+}
