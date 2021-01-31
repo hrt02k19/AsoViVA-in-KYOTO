@@ -24,8 +24,8 @@ from allauth.account.utils import complete_signup
 from .forms import CustomSignupForm, GenreSearchForm, LocationSearchForm, ProfileForm, PostForm, FindForm, WordSearchForm, GoodForm, SaveForm,ContactForm,EmailChangeForm,IDChangeForm, NotificationForm, SignOutForm, PlaceSearchForm
 from .models import *
 
-import datetime, json, random, string, googlemaps, sys
 
+import datetime, json, random, string, googlemaps, sys
 sys.path.append('../asoviva')
 from asoviva.local_settings import API_KEY
 
@@ -141,7 +141,6 @@ def post_view(request):
     params = {}
     # 地点変更せず戻って来た時に入力途中のフォームを表示
     params['form'] = PostForm(request.session.get('post_form_data'))
-
     if request.method == 'POST':
         if 'change_place' in request.POST:
             # 入力したデータをセッションに保存して地点変更ページへ
@@ -861,6 +860,22 @@ def save_article(request):
     }
     return render(request,'asovi_app/save_article.html',params)
 
+def popular(request):
+    Popular.objects.all().delete()
+    data_all=Post.objects.all()
+    for item in data_all:
+        num=Post.objects.filter(place_id=item.place_id).count()
+        place_name=item.place_name
+        data_popular=Popular(num=num,place_name=place_name)
+        if Popular.objects.filter(place_name=place_name).count==0:
+            data_popular.save()
+
+    data=Popular.objects.all().order_by('num')[0:5]
+    params={
+        'data':data
+    }
+
+    return render(request,'asovi_app/popular.html',params)
 
 def settings(request):
     return render(request, 'asovi_app/settings.html')
