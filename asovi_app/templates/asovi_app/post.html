@@ -6,6 +6,7 @@
 <html lang="ja">
 <head>
   <title>Test Map</title>
+  <link rel="stylesheet" href="{% static 'asovi_app/css/post.css' %}">
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <meta charset="utf-8">
@@ -23,6 +24,11 @@
 
 </head>
 <body>
+   <!-- ここから -->
+   <div class="logo">
+    <p><strong>投稿作成</strong></p> 
+</div>     
+<!-- ここまで共通 -->
   <div id="map"></div>
   
 
@@ -33,24 +39,105 @@
   
   <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng' enctype='multipart/form-data'>
     {% csrf_token %}
-    位置情報：{{ place_name }}
-    <input type="submit" name="change_place" value="地点を選択して変更">
     <br>
-    緯度：{{form.latitude}}
+    <div class="imgenre">
+      <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" id="sampleimg">
+      <input type="file" accept='image/*' id='selectimg' onchange="previewImage(this);" name='image'>
+    </div>
     <br>
-    経度：{{form.longitude}}
+    <p>位置情報</p><br>
+    <p class="now"> 現在の地点に基づいた情報です。</p>
+    {{ place_name }}
+    <br><input type="submit" name="change_place" class="place" value="地点の変更">
     <br>
-    写真<br>
-    {{form.image}}
-    <br>
+    <p>投稿日時</p>
+    <p id="today">今日の日付</p>
+    <br><br>
+    <p>コメント</p><br>
     {{form.body}}
     <br>
-    投稿のジャンル
+    <p class="addgenre">ジャンル追加</p>
     <br>
-    {{form.genre}}
-    <button type="submit" class="btn btn-secondary">投稿</button>
+    <div class="genre1">
+      {% if 1 in genre_list %}
+      <input type="checkbox" id="expand-toggle01" class="genre-input" name="interested_genre" value="1" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle01" class="genre-input" name="interested_genre" value="1">
+      {% endif %}
+      <label for="expand-toggle01" class="expand-btn">
+          食事<img src="{% static 'asovi_app/img/フォークとスプーンのお食事アイコン素材 (1).png' %}" alt="">
+      </label>
+      {% if 2 in genre_list %}
+      <input type="checkbox" id="expand-toggle02" class="genre-input" name="interested_genre" value="2" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle02" class="genre-input" name="interested_genre" value="2">
+      {% endif %}
+      <label for="expand-toggle02" class="expand-btn">
+          音楽<img src="{% static 'asovi_app/img/8分音符アイコン 1 (1).png' %}" alt="">
+      </label>
+      {% if 3 in genre_list %}
+      <input type="checkbox" id="expand-toggle03" class="genre-input" name="interested_genre" value="3" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle03" class="genre-input" name="interested_genre" value="3">
+      {% endif %}
+      <label for="expand-toggle03" class="expand-btn">
+          自然<img src="{% static 'asovi_app/img/登山アイコン4.png' %}" alt=""></label><br>
+  </div>
+
+  <div class="genre2">
+      {% if 4 in genre_list %}
+      <input type="checkbox" id="expand-toggle04" class="genre-input" name="interested_genre" value="4" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle04" class="genre-input" name="interested_genre" value="4">
+      {% endif %}
+      <label for="expand-toggle04" class="expand-btn">
+          芸術<img src="{% static 'asovi_app/img/パレットのフリーアイコン7.png' %}" alt=""></label>
+      {% if 5 in genre_list %}
+      <input type="checkbox" id="expand-toggle05" class="genre-input" name="interested_genre" value="5" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle05" class="genre-input" name="interested_genre" value="5">
+      {% endif %}
+      <label for="expand-toggle05" class="expand-btn">
+          寺社<img src="{% static 'asovi_app/img/シンプルな鳥居アイコン.png' %}" alt=""></label>
+      {% if 6 in genre_list %}
+      <input type="checkbox" id="expand-toggle06" class="genre-input" name="interested_genre" value="6" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle06" class="genre-input" name="interested_genre" value="6">
+      {% endif %}
+      <label for="expand-toggle06" class="expand-btn">
+          買物<img src="{% static 'asovi_app/img/ショッピングの無料アイコン　3.png' %}" alt=""></label><br>
+  </div>
+  
+  <div class="genre3">
+      {% if 7 in genre_list %}
+      <input type="checkbox" id="expand-toggle07" class="genre-input" name="interested_genre" value="7" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle07" class="genre-input" name="interested_genre" value="7">
+      {% endif %}
+      <label for="expand-toggle07" class="expand-btn"> 
+          屋内<img src="{% static 'asovi_app/img/家のアイコン素材.png' %}" alt=""></label>
+      {% if 8 in genre_list %}
+      <input type="checkbox" id="expand-toggle08" class="genre-input" name="interested_genre" value="8" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle08" class="genre-input" name="interested_genre" value="8">
+      {% endif %}
+      <label for="expand-toggle08" class="expand-btn">
+          屋外 <img src="{% static 'asovi_app/img/自動車の無料アイコン素材 その3 (2).png' %}" alt=""></label>
+      {% if 9 in genre_list %}
+      <input type="checkbox" id="expand-toggle09" class="genre-input" name="interested_genre" value="9" checked>
+      {% else %}
+      <input type="checkbox" id="expand-toggle09" class="genre-input" name="interested_genre" value="9">
+      {% endif %}
+      <label for="expand-toggle09" class="expand-btn">
+          運動<img src="{% static 'asovi_app/img/ダッシュのピクトグラム1.png' %}" alt=""></label>
+  </div>
+
+    <button type="submit" class="btn btn-secondary submit">投稿</button>
+    <div class="space"></div>
+    
 
   </form>
+  
   <h6>現在地取得ボタン↓</h6>
   <input type="button" value="button" onclick="getPosition();">
  
@@ -227,7 +314,30 @@
       form.longitude.value = "{{place_lng}}";
     }
 
+    // 画像選択に関する設定
+    function previewImage(obj) {
+   var fileReader = new FileReader();
+   fileReader.onload = (function(){
+     document.getElementById('sampleimg').src = fileReader.result;
+   });
+   fileReader.readAsDataURL(obj.files[0]);
+ }
   </script>
+  <!-- 投稿地点の取得 -->
+  <script>
+    var a = document.getElementById()
+  </script>
+  <!-- 投稿日時の取得 -->
+  <script>
+   const now = new Date();
+   const year = now.getFullYear();
+   const month = now.getMonth();
+   const date = now.getDate();
+
+   const output = `${year}/${month + 1}/${date}`;
+   document.getElementById('today').textContent = output;
+  </script>
+
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 </body>
 </html>
