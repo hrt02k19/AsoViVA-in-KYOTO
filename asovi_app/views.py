@@ -186,8 +186,10 @@ def post_view(request):
                 genre=Genre.objects.get(pk=8)
             elif request.POST.get('interested_genre') == '9':
                 genre=Genre.objects.get(pk=9)
-            # now=datetime.datetime.now()
-            image = request.FILES['image']
+            if request.FILES:
+                image = request.FILES['image']
+            else:
+                image = ''
             body = request.POST['body']
             lat= request.POST.get('latitude')
             lng = request.POST.get('longitude')

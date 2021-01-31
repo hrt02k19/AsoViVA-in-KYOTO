@@ -67,6 +67,14 @@ class NotificationForm(forms.ModelForm):
         }
 
 class PostForm(forms.ModelForm):
+    def __init__(self, *args, **kwd):
+        super(PostForm, self).__init__(*args, **kwd)
+        self.fields["latitude"].required = False
+        self.fields["longitude"].required = False
+
+        self.fields["latitude"].widget.attrs['placeholder'] = '地点を選択して自動入力'
+        self.fields["longitude"].widget.attrs['placeholder'] = '地点を選択して自動入力'
+
     class Meta:
         model = Post
         fields = ['image','body','latitude','longitude','genre']
