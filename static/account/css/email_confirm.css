@@ -63,3 +63,19 @@ border: solid #707070 1px;
 .deco {
   text-decoration: none;
 }
+
+form {
+  width: 100%;
+}
+
+.center {
+  display: block;
+  width: 50%;
+  margin-left: 55px;
+  margin-top: 10px;
+  color: #909090;
+  font-weight: 900;
+  font-size: 15px;
+}
+
+/* メモメモ */
