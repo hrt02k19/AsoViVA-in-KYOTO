@@ -154,7 +154,7 @@ class NotificationSetting(models.Model):
 class Post(models.Model):
     posted_by=models.ForeignKey(CustomUser,related_name='posted_by',on_delete=SET_NULL,null=True)
     image=models.ImageField(upload_to="static/asovi_app/img")
-    genre=models.ManyToManyField(Genre,related_name='post_genre',null=True,blank=True)
+    genre=models.ManyToManyField(Genre,related_name='post_genre',blank=True)
     time=models.DateTimeField(auto_now_add=True,null=True)
     body=models.TextField(max_length=300)
     latitude=models.FloatField(default=0)

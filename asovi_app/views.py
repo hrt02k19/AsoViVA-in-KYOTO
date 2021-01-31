@@ -876,12 +876,11 @@ def popular(request):
         data_popular=Popular(num=num,place_name=place_name)
         if Popular.objects.filter(place_name=place_name).count==0:
             data_popular.save()
-
     data=Popular.objects.all().order_by('num')[0:5]
     params={
         'data':data
     }
-
+    print(data)
     return render(request,'asovi_app/popular.html',params)
 
 def settings(request):
