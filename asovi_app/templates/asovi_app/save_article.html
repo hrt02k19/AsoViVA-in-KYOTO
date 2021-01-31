@@ -6,7 +6,7 @@
         <title>保存した投稿</title>
     </head>
     <body>
-        <p><a href="{% url 'mypage' %}">マイページに戻る</a></p>
+        <p><a href="{% url 'asovi_app:my_page' %}">マイページに戻る</a></p>
     
 
         {% for data in data %}
@@ -17,7 +17,7 @@
         <p>data.item.body</p>
         
 
-        {% end for %}
+        {% endfor %}
 
 
     </body>

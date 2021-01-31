@@ -10,14 +10,12 @@
 
 <body>
     <h1>マイページ</h1>
+    <a href="{% url 'asovi_app:check_event' %}">通知:{{ notification }}件</a>
+    <br>
     <a href="{% url 'asovi_app:user_profile' me.pk %}">プロフィール表示</a>
     <br>
-    <a href="{% url 'asovi_app:post_list' me.pk %}">投稿一覧</a>
-    <p>友達数：{{friend_num}}人</p>
-    <a href="{% url 'asovi_app:friend_list' %}">友達一覧</a>
-    <br>
 
-    <a href="{% url 'asovi_app:signout' %}">サインアウト</a>
+    <a href="{% url 'account_logout' %}">ログアウト</a>
 
 </body>
 

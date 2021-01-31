@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>通知確認|遊ViVA in KYOTO</title>
+</head>
+
+<body>
+    {% if new_good_num > 0 %}
+    {{ new_good_num }}件のいいね：<br>
+        {% for new_good in new_goods %}
+            <img src="/{{new.good.user_icon}}" alt="" width="30" height="30"/>
+            {{ new_good.user_username }}さんがあなたの投稿にいいねしました:<br>
+            {{ new_good.article.body|truncatechars:40 }}<br>
+        {% endfor %}
+    {% endif %}
+    {% if new_save_num > 0 %}
+    {{ new_save_num }}件の保存：<br>
+        {% for new_save in new_saves %}
+            {{ new_save.saver_username }}さんがあなたの投稿を保存しました:<br>
+            {{ new_save.item.body|truncatechars:40 }}<br>
+        {% endfor %}
+    {% endif %}
+    {% if new_reply_num > 0 %}
+    {{ new_reply_num }}件のリプライ：<br>
+        {% for new_reply in new_replies %}
+            {{ new_reply.replier_username }}さんがあなたの投稿に返信しました:<br>
+            {{ new_reply.body|truncatechars:40 }}<br>
+        {% endfor %}
+    {% endif %}
+    {% if new_friend_request_num > 0 %}
+    {{ new_friend_request_num }}件のフレンドリクエスト：<br>
+        {% for new_friend_request in new_friend_requests %}
+            <img src="/{{ new_friend_request.user_icon }}" alt="" width="30" height="30"/>
+            {{ new_friend_request.requestor_username }}さんからフォローリクエストが届きました。<br>
+        {% endfor %}
+    {% endif %}
+</body>
+
+</html>

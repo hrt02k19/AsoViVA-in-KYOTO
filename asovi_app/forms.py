@@ -1,7 +1,9 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
 
 from allauth.account.forms import SignupForm
-from .models import CustomUser, Profile, Post, Good,Contact
+from .models import *
 
 
 class CustomSignupForm(SignupForm):
@@ -23,6 +25,14 @@ class ProfileForm(forms.ModelForm):
             'username': "名前",
         }
 
+class IDChangeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['user_id']
+        labels = {
+            'user_id': '新しいユーザーID',
+        }
+
 
 class EmailChangeForm(forms.ModelForm):
     class Meta:
@@ -40,15 +50,33 @@ class EmailChangeForm(forms.ModelForm):
             email = self.cleaned_data['email']
             CustomUser.objects.filter(email=email, is_active=False).delete()
             try:
-                validate_email(email)
+                EmailValidator.validate_email(email)
             except ValidationError:
                 raise ValidationError('正しいメールアドレスを指定してください。')
             return email
 
+class NotificationForm(forms.ModelForm):
+   class Meta:
+        model = NotificationSetting
+        fields = ['good','has_saved','reply','friend']
+        labels = {
+           'good': "自分の投稿へのいいねを通知する",
+           'has_saved': "自分の投稿が保存されたことを通知する",
+           'reply': "自分の投稿への返信を通知する",
+           'friend': "自分へのフレンドリクエストを通知する"
+        }
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['image','body','place_id','genre','name']
+        fields = ['image','body','latitude','longitude','genre']
+        labels = {
+            'image': "写真",
+            'body': "",
+            'latitude': "緯度",
+            'longitude': "経度",
+            'genre': "投稿のジャンル"
+        }
 
 
 class GoodForm(forms.ModelForm):
@@ -88,7 +116,46 @@ class WordSearchForm(forms.Form):
     key_word = forms.CharField(label='検索:',max_length=50,required=False)
 
 
+class PlaceSearchForm(forms.Form):
+    types = [
+        ('none', '指定しない'),
+        ('amusement_park', '遊園地'),
+        ('aquarium', '水族館'),
+        ('art_gallery', '美術館'),
+        ('bar', 'バー'),
+        ('bowling_alley', 'ボーリング場'),
+        ('cafe', 'カフェ'),
+        ('campground', 'キャンプ場'),
+        ('lodging', '宿泊施設'),
+        ('movie_theater', '映画館'),
+        ('moseum', '博物館'),
+        ('night_club', 'ナイトクラブ'),
+        ('park', '公園'),
+        ('restaurant', 'レストラン'),
+        ('shopping_mall', 'ショッピングセンター'),
+        ('spa', '温泉'),
+        ('stadium', 'スタジアム'),
+        ('store', '店'),
+        ('tourist_attraction', '観光名所'),
+        ('zoo', '動物園'),
+    ]
+    radius = forms.IntegerField(label='検索対象の半径', max_value=50000, min_value=0, initial=1000)
+    keyword = forms.CharField(label='キーワード', max_length=200, required=False, initial='')
+    place_type = forms.MultipleChoiceField(label='カテゴリー', required=False, choices=types, widget=forms.RadioSelect())
+    lat = forms.FloatField(label='緯度', required=False, initial=34.987)
+    lng = forms.FloatField(label='経度', required=False, initial=135.759)
+
+
 class ContactForm(forms.ModelForm):
     class Meta:
         model=Contact
         fields=['content']
+
+
+class SignOutForm(forms.Form):
+    email = forms.EmailField(required=True, widget=forms.TextInput(attrs={
+        'placeholder': 'メールアドレス',
+    }))
+    password = forms.CharField(max_length=200, required=True, widget=forms.PasswordInput(attrs={
+        'placeholder': 'パスワード',
+    }))

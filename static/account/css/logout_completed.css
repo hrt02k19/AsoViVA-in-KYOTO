@@ -58,5 +58,5 @@ h2 {
 }
 .return a {
   color: #FFFFFF;
-  /* text-decoration: none; */
+  text-decoration: none !important;
 }

@@ -1,3 +1,5 @@
+{% load static %}
+
 
 <!DOCTYPE html>
 
@@ -18,31 +20,41 @@
       width: 80%;
     }
   </style>
- 
+
 </head>
 <body>
   <div id="map"></div>
-  <ul>
-    <li>lat: <span id="lat"></span></li>
-    <li>lng: <span id="lng"></span></li>
-  </ul>
   
 
 
-  <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng'>
-      {% csrf_token %}
-      {{form.as_p}}
-      <!-- {{form.body}} -->
-      <input type="submit" value="click" >
+ 
+
+ 
+  
+  <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng' enctype='multipart/form-data'>
+    {% csrf_token %}
+    位置情報：{{ place_name }}
+    <input type="submit" name="change_place" value="地点を選択して変更">
+    <br>
+    緯度：{{form.latitude}}
+    <br>
+    経度：{{form.longitude}}
+    <br>
+    写真<br>
+    {{form.image}}
+    <br>
+    {{form.body}}
+    <br>
+    投稿のジャンル
+    <br>
+    {{form.genre}}
+    <button type="submit" class="btn btn-secondary">投稿</button>
 
   </form>
-
   <h6>現在地取得ボタン↓</h6>
   <input type="button" value="button" onclick="getPosition();">
  
-  
-
-
+  <!--<input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();">-->
 
 
   <script>
@@ -62,11 +74,14 @@
                 //curLng = 135.75;
                 var form= document.getElementById('latlng')
 
+                document.getElementById('lat').textContent = lat1
+                document.getElementById('lng').textContent = lng1
+
                 form.latitude.value=curLat
                 form.longitude.value=curLng
 
             },
-            
+
 
 
             function(error) {
@@ -87,10 +102,6 @@
             }
         );
     }
-
-
-
-
 
 
     function initMap() {
@@ -174,37 +185,49 @@
       });
     }
 
-    // function getClickLatLng(lat_lng, map) {
-    //   var lat1=lat_lng.lat();
-    //   var lng1=lat_lng.lng();
+    var marker;
 
-    //   document.getElementById('lat').textContent = lat1;
-    //   document.getElementById('lng').textContent = lng1;
+    function getClickLatLng(lat_lng, map) {
+      var lat1=lat_lng.lat();
+      var lng1=lat_lng.lng();
 
-    //   var form= document.getElementById('latlng');
-    //   form.latitude.value=lat1;
-    //   form.longitude.value=lng1;
+      var form= document.getElementById('latlng');
+      form.latitude.value=lat1;
+      form.longitude.value=lng1;
 
+      if(marker != null){
+        marker.setMap(null);
+      }
 
-    //   var position = { 'lat': lat1, 'lng': lng1}
-    //   console.log(typeof(lat1));     
-    //   marker.setPosition(position);
-     
-      
+      marker = new google.maps.Marker({
+        position: lat_lng,
+        map: map
+      });
 
-        
-        
-        
-        
-        
-               
 
 
 
      
     // }
 
+    // marker = new google.maps.Marker({
+    //   position: {
+    //     'lat': {{place_lat}},
+    //     'lng': {{place_lng}}
+    //   },
+    //   map: map
+    // });
+
+    if( "{{place_lat}}" ){
+      var form = document.getElementById('latlng');
+      form.latitude.value = "{{place_lat}}";
+    }
+    if ( "{{place_lng}}" ){
+      var form = document.getElementById('latlng');
+      form.longitude.value = "{{place_lng}}";
+    }
+
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&signed_in=true&callback=initMap" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 </body>
 </html>

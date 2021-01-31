@@ -131,7 +131,7 @@ class Profile(models.Model):
     username = models.CharField(verbose_name='ユーザーネーム',max_length=50)
     icon = models.ImageField(verbose_name='アイコン',upload_to="static/asovi_app/img/",null=True,blank=True)
     introduction = models.TextField(verbose_name='紹介文',null=True,blank=True)
-    interested_genre = models.ManyToManyField(Genre,verbose_name='興味のあるジャンル')
+    interested_genre = models.ManyToManyField(Genre,verbose_name='興味のあるジャンル',blank=True)
     gender = models.IntegerField(verbose_name='性別',choices=GENDER_CHOICES,default=0,null=True,blank=True)
 
     class Meta:
@@ -140,7 +140,15 @@ class Profile(models.Model):
     def __str__(self):
         return '<UserProfile:userid=' + str(self.user.id) + ',username=' + self.username + '>'
 
+class NotificationSetting(models.Model):
+    user = models.OneToOneField(CustomUser,related_name="user_notification",on_delete=CASCADE)
+    good = models.BooleanField(verbose_name='通知設定:いいね',default=True)
+    has_saved = models.BooleanField(verbose_name='通知設定:保存',default=True)
+    reply = models.BooleanField(verbose_name='通知設定:返信',default=True)
+    friend = models.BooleanField(verbose_name='通知設定:フレンドリクエスト',default=True)
 
+    class Meta:
+        verbose_name_plural = '通知設定'
 
 # Create y
 class Post(models.Model):
@@ -148,36 +156,41 @@ class Post(models.Model):
     image=models.ImageField(upload_to="static/asovi_app/img")
     genre=models.ManyToManyField(Genre,related_name='post_genre',null=True,blank=True)
     time=models.DateTimeField(auto_now_add=True,null=True)
-    body=models.CharField(max_length=300,unique=True)
-    latitude=models.FloatField(null=True,blank=True)
-    longitude=models.FloatField(null=True,blank=True)
+    body=models.TextField(max_length=300)
+    latitude=models.FloatField(default=0)
+    longitude=models.FloatField(default=0)
+    place_id = models.CharField(max_length=100,null=True)
     like=models.IntegerField(default=0)
     place_id=models.TextField(null=True)
     place_name=models.TextField(null=True)
 
 class Save(models.Model):
-    item=models.ForeignKey(Post,on_delete=models.CASCADE)
+    item = models.ForeignKey(Post,on_delete=models.CASCADE)
     person = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-
+    pub_date = models.DateTimeField(auto_now_add=True)
+    checked = models.BooleanField(default=False)
 
 class Good(models.Model):
-    article=models.ForeignKey(Post,on_delete=models.CASCADE)
-    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    article = models.ForeignKey(Post,on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     good = models.BooleanField(default=False)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    checked = models.BooleanField(default=False)
 
 class Reply(models.Model):
     post = models.ForeignKey(Post,related_name="post_reply",on_delete=CASCADE)
     posted_by = models.ForeignKey(CustomUser,related_name="user_reply",null=True,on_delete=SET_NULL)
     body = models.TextField(max_length=300)
-    pub_date = models.DateTimeField(auto_now=True)
-
+    pub_date = models.DateTimeField(auto_now_add=True)
+    checked = models.BooleanField(default=False)
 
 class Friend(models.Model):
     requestor = models.ForeignKey(CustomUser, related_name='requestor', on_delete=CASCADE)
     requestee = models.ForeignKey(CustomUser, related_name='requestee', on_delete=CASCADE)
     friended = models.BooleanField(default=False)
-    requested_date = models.DateTimeField(default=timezone.now)
+    requested_date = models.DateTimeField(auto_now_add=True)
     friended_date = models.DateTimeField(blank=True, null=True)
+    request_checked = models.BooleanField(default=False)
 
 class Block(models.Model):
     blocker = models.ForeignKey(CustomUser,related_name="blocker",on_delete=CASCADE)
@@ -186,7 +199,7 @@ class Block(models.Model):
 
 class Contact(models.Model):
     contacter=models.ForeignKey(CustomUser,on_delete=CASCADE)
-    content=models.CharField(null=False,max_length=500)
+    content=models.TextField(null=False,max_length=500)
 
 
 class Popular(models.Model):

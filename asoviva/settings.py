@@ -74,7 +74,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'asovi_app.apps.AsoviAppConfig',
-
+    'webpush',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -163,6 +163,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+WEBPUSH_SETTINGS = {
+   "VAPID_PUBLIC_KEY": "BD5AYSzXQcTUiEyoixCrDQ_4TYm0j83voG2zYlFu2fjbxT8cv_9HEEG4RMDru36t766_gat_BGyctn5lLITuG3k",
+   "VAPID_PRIVATE_KEY": "mhnJWLrEqNmJnklC6JIz1oMeVvV_XZuw4eWGV5l8Z8E",
+   "VAPID_ADMIN_EMAIL": "admin@example.com"
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -205,7 +211,7 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_SIGNUP_REDIRECT_URL = 'asovi_app:profile_edit'  # 本登録後Profile設定ページに遷移
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 LOGIN_REDIRECT_URL = 'asovi_app:profile_edit'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'asovi_app:logout_completed'
 ACCOUNT_SESSION_REMEMBER = True

@@ -20,9 +20,6 @@
 </div>
 <!-- ここまで共通 -->
 
-<!-- <p class="hidden"><label for="username"></label><input type="search" placeholder="検索" name="username" id="username"><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></p>
-<p class="follow">フォローリクエスト</p> -->
-
 
 <form method='GET' action="{% url 'asovi_app:find_user' %}">
             <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username'  placeholder="検索">

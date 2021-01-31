@@ -16,4 +16,3 @@ db.sqlite3-journal
 static/asovi_app/img
 staticfiles/
 media/
-static/
