@@ -149,11 +149,14 @@ def post_view(request):
 
         elif 'decide_place' in request.POST:
             # 地点変更して戻ってきたとき
+            request.session.get('post_form_data')['latitude'] = request.POST.get('place_lat')
+            request.session.get('post_form_data')['longitude'] = request.POST.get('place_lng')
             params['form'] = PostForm(request.session.get('post_form_data'))
             params['place_lat'] = request.POST.get('place_lat')
             params['place_lng'] = request.POST.get('place_lng')
             params['place_name'] = request.POST.get('place_name')
-
+            # print(params['place_lat'])
+            # print(params['place_lng'])
 
         else:
             # 投稿ボタンを押したとき
@@ -161,33 +164,32 @@ def post_view(request):
             gmaps = googlemaps.Client(key=API_KEY)
             user = request.user
             genre = None
-            if request.POST['genre'] == '1':
+            if request.POST.get('interested_genre') == '1':
                 genre=Genre.objects.get(pk=1)
-            elif request.POST['genre'] == '2':
+            elif request.POST.get('interested_genre') == '2':
                 genre=Genre.objects.get(pk=2)
-            elif request.POST['genre'] == '3':
+            elif request.POST.get('interested_genre') == '3':
                 genre=Genre.objects.get(pk=3)
-            elif request.POST['genre'] == '4':
+            elif request.POST.get('interested_genre') == '4':
                 genre=Genre.objects.get(pk=4)
-            elif request.POST['genre'] == '5':
+            elif request.POST.get('interested_genre') == '5':
                 genre=Genre.objects.get(pk=5)
-            elif request.POST['genre'] == '6':
+            elif request.POST.get('interested_genre') == '6':
                 genre=Genre.objects.get(pk=6)
-            elif request.POST['genre'] == '7':
+            elif request.POST.get('interested_genre') == '7':
                 genre=Genre.objects.get(pk=7)
-            elif request.POST['genre'] == '8':
+            elif request.POST.get('interested_genre') == '8':
                 genre=Genre.objects.get(pk=8)
-            elif request.POST['genre'] == '9':
+            elif request.POST.get('interested_genre') == '9':
                 genre=Genre.objects.get(pk=9)
             # now=datetime.datetime.now()
             image = request.FILES['image']
             body = request.POST['body']
-            lat= request.POST['latitude']
-            lng = request.POST['longitude']
-
+            lat= request.POST.get('latitude')
+            lng = request.POST.get('longitude')
             place = gmaps.reverse_geocode((lat, lng), language='ja')
             place_id = place[0]['place_id']
-
+            #ユーザーが現在地ボタンを押さなかった時の挙動をどうするのか?
             new_post = Post(posted_by=user,image=image,genre=genre,body=body,latitude=lat,longitude=lng,place_id=place_id)
             new_post.save()
             return redirect('/post_completed/' + str(new_post.pk))  #投稿後に遷移するページが完成次第post/から変更する
@@ -200,32 +202,33 @@ def post_completed(request,pk):
 
 def change_place(request):
     params = {
-        'search_form': PlaceSearchForm(),
+        #'search_form': PlaceSearchForm(),
         'post_form': PostForm()
     }
-    if request.method == 'POST':
-        search_form = PlaceSearchForm(request.POST)
-        keyword = request.POST['keyword']
-        radius = request.POST['radius']
-        place_type = request.POST['place_type']
-        lat = request.POST.get('lat')
-        lng = request.POST.get('lng')
 
-        gmaps = googlemaps.Client(API_KEY)
+    # if request.method == 'POST':
+    #     search_form = PlaceSearchForm(request.POST)
+    #     keyword = request.POST['keyword']
+    #     radius = request.POST['radius']
+    #     place_type = request.POST['place_type']
+    #     lat = request.POST.get('place_lat')
+    #     lng = request.POST.get('place_lng')
 
-        if lat == None or lng == None:
-            search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, type=place_type, language='ja')
+    #     gmaps = googlemaps.Client(API_KEY)
 
-        else:
-            search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, type=place_type, language='ja')
+    #     if lat == None or lng == None:
+    #         search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, type=place_type, language='ja')
 
-        results = search_results['results']
-        results_json = json.dumps(results)
-        params = {
-            'search_form': search_form,
-            'results': results,
-            'results_json': results_json,
-        }
+    #     else:
+    #         search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, type=place_type, language='ja')
+
+    #     results = search_results['results']
+    #     results_json = json.dumps(results)
+    #     params = {
+    #         'search_form': search_form,
+    #         'results': results,
+    #         'results_json': results_json,
+    #     }
     return render(request, 'asovi_app/change_place.html', params)
 
 
@@ -285,8 +288,6 @@ def post_detail(request,pk):
     }
     return render(request,'asovi_app/post_detail.html',params)
 
-
-
 def friend_request(request, pk):
     params = {}
     if request.method == 'POST':
@@ -306,38 +307,6 @@ def friend_request(request, pk):
 
 def friend_request_accept(request):
     params = {}
-    if request.method == 'GET':
-        query = request.GET.get('search_id')
-        if query:
-            new_requests = Friend.objects.filter(
-                requestee=request.user, friended=False, requestor__user_id__icontains=query
-                ).annotate(
-                requestor_username = Subquery(
-                    Profile.objects.filter(user=OuterRef("requestor")).values('username')
-                ),
-                requestor_icon=Subquery(
-                    Profile.objects.filter(user=OuterRef("requestor")).values('icon')
-                ),
-                )
-            if not new_requests:
-                params["no_results"] = '検索された文字列にマッチするユーザーは見つかりませんでした。'
-
-        else:
-            new_requests = Friend.objects.filter(
-                friended=False, requestee=request.user
-                ).annotate(
-                requestor_username = Subquery(
-                    Profile.objects.filter(user=OuterRef("requestor")).values('username')
-                ),
-                requestor_icon=Subquery(
-                    Profile.objects.filter(user=OuterRef("requestor")).values('icon')
-                ),
-            )
-            print(new_requests)
-            if not new_requests:
-                params["no_results"] = '現在、あなたへの友達申請はありません。'
-        params["new_requests"] = new_requests
-
     if request.method == 'POST':
         new_request_pk = request.POST['friend_request_pk']
         new_request = Friend.objects.get(pk=new_request_pk)
@@ -345,10 +314,39 @@ def friend_request_accept(request):
             new_request.friended = True
             new_request.friended_date = datetime.datetime.now()
             new_request.save()
-
         elif 'reject' in request.POST:
             new_request.delete()
-
+    else:
+        query = request.GET.get('search_id')
+        if query is not None:
+            new_requests = Friend.objects.filter(
+                requestee=request.user, friended=False, requestor__user_id__icontains=query
+                ).annotate(
+                    requestor_username = Subquery(
+                        Profile.objects.filter(user=OuterRef("requestor")).values('username')
+                    ),
+                    requestor_icon=Subquery(
+                        Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+                    ),
+                )
+            if not new_requests:
+                params["no_results"] = '検索された文字列にマッチするユーザーは見つかりませんでした。'
+            params["new_requests"] = new_requests
+            return render(request, 'asovi_app/friend_request_accept.html', params)
+    new_requests = Friend.objects.filter(
+        friended=False, requestee=request.user
+        ).annotate(
+        requestor_username = Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values('username')
+        ),
+        requestor_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+        ),
+    )
+    print(new_requests)
+    if not new_requests:
+        params["no_results"] = '現在、あなたへの友達申請はありません。'
+    params["new_requests"] = new_requests
     return render(request, 'asovi_app/friend_request_accept.html', params)
 
 
@@ -366,39 +364,75 @@ def friend_list(request,*args):
     if request.method == 'POST':
         blocked_pk = request.POST['friend_pk']
         return redirect('/friend_block/' + blocked_pk)
+    params = {}
     me = request.user
-    my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).annotate(
-        requestor_username=Subquery(
-            Profile.objects.filter(user=OuterRef("requestor")).values("username")
-        ),
-        requestor_icon=Subquery(
-            Profile.objects.filter(user=OuterRef("requestor")).values("icon")
-        ),
-        requestee_username=Subquery(
+    query = request.GET.get('search_id')
+    if query is not None:
+        my_friend = Friend.objects.filter( Q(requestor=me,requestee__user_id__icontains=query) | Q(requestee=me,requestor__user_id__icontains=query)).filter(friended=True).annotate(
+            requestor_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("username")
+            ),
+            requestor_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+            ),
+            requestee_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("username")
+            ),
+            requestee_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+            ),
+        ).order_by("-friended_date")
+        my_friend_requesting = Friend.objects.filter(requestor=me,requestee__user_id__icontains=query,friended=False).annotate(
+            requestee_username=Subquery(
             Profile.objects.filter(user=OuterRef("requestee")).values("username")
-        ),
-        requestee_icon=Subquery(
-            Profile.objects.filter(user=OuterRef("requestee")).values("icon")
-        ),
-    ).order_by("-friended_date")
-    my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).annotate(
-        requestee_username=Subquery(
-            Profile.objects.filter(user=OuterRef("requestee")).values("username")
-        ),
-        requestee_icon=Subquery(
-            Profile.objects.filter(user=OuterRef("requestee")).values("icon")
-        )
-    ).order_by("-requested_date")
-    my_friend_requested = Friend.objects.filter(requestee=me,friended=False).annotate(
-        requestor_icon=Subquery(
+            ),
+            requestee_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+            )
+        ).order_by("-requested_date")
+        my_friend_requested = Friend.objects.filter(requestee=me,requestorQQ__user_id__icontains=query,friended=False).annotate(
+            requestor_icon=Subquery(
             Profile.objects.filter(user=OuterRef("requestor")).values("icon")
-        )
-    ).order_by("-requested_date")
-    my_friend_requested_num = len(my_friend_requested)
-    if my_friend_requested_num > 0:
-        my_friend_requested_top = my_friend_requested[0]
+            )
+        ).order_by("-requested_date")
+        my_friend_requested_num = len(my_friend_requested)
+        if my_friend_requested_num > 0:
+            my_friend_requested_top = my_friend_requested[0]
+        else:
+            my_friend_requested_top = None
     else:
-        my_friend_requested_top = None
+        my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).annotate(
+            requestor_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("username")
+            ),
+            requestor_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+            ),
+            requestee_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("username")
+            ),
+            requestee_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+            ),
+        ).order_by("-friended_date")
+        my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).annotate(
+            requestee_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("username")
+            ),
+            requestee_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+            )
+        ).order_by("-requested_date")
+        my_friend_requested = Friend.objects.filter(requestee=me,friended=False).annotate(
+            requestor_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+            )
+        ).order_by("-requested_date")
+        my_friend_requested_num = len(my_friend_requested)
+        if my_friend_requested_num > 0:
+            my_friend_requested_top = my_friend_requested[0]
+        else:
+            my_friend_requested_top = None
 
     params = {
         'me': me,
