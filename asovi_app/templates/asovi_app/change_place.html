@@ -25,7 +25,8 @@
 <body>
     <h1>投稿する地点を変更</h1>
     <p>検索の中心にしたい位置を地図上でクリックしてください。緯度・経度が自動入力されます。</p>
-    <form action="{% url 'asovi_app:change_place' %}" method="POST">
+    <div id="map"></div>
+    <!-- <form action="{% url 'asovi_app:change_place' %}" method="POST">
         {% csrf_token %}
         {{search_form.as_p}}
         <button type="submit">検索</button>
@@ -34,18 +35,18 @@
     <div id="map"></div>
     {% for result in results %}
     {{result.name}}
-    {{result.vicinity}}
+    {{result.vicinity}}　
+    {% endfor %}-->
     <form action="{% url 'asovi_app:post' %}" method="POST">
         {% csrf_token %}
-        <!-- 緯度と経度の情報をpost_viewに送り、表示させる -->
-        <input type="hidden" name="place_lat" value="{{result.geometry.location.lat}}">
-        <input type="hidden" name="place_lng" value="{{result.geometry.location.lng}}">
+        <!--緯度と経度の情報をpost_viewに送り、表示させる-->
+        <input type="hidden" name="place_lat" value="{{result.geometry.location.lat}}" id="id_lat">
+        <input type="hidden" name="place_lng" value="{{result.geometry.location.lng}}" id="id_lng">
         <input type="hidden" name="place_name" value="{{result.name}}">
         <input type="submit" name="decide_place" value="地点選択">
     </form>
     <br>
     <br>
-    {% endfor %}
 
     <script>
         var map;
@@ -93,6 +94,7 @@
         }
 
         function initMap() {
+            var marker;
             map = new google.maps.Map(document.getElementById('map'), {
                 center: {
                     lat: curLat,
@@ -114,34 +116,45 @@
 
                 // 座標の中心をずらす
                 map.panTo(lat_lng);
+                
+                if(marker != null){
+                    marker.setMap(null);
+                }
+                marker = new google.maps.Marker({
+                    position: {
+                        lat: lat_lng.lat(),
+                        lng: lat_lng.lng()
+                    },
+                    map: map
+                });
             }
 
             // 検索結果表示
-            if (results) {
+            // if (results) {
 
-                for (var result of results) {
-                    var resultLat = result.geometry.location.lat;
-                    var resultLng = result.geometry.location.lng;
+            //     for (var result of results) {
+            //         var resultLat = result.geometry.location.lat;
+            //         var resultLng = result.geometry.location.lng;
 
-                    markers.push(new google.maps.Marker({
-                        position: {
-                            lat: resultLat,
-                            lng: resultLng,
-                        },
-                        map: map
-                    }));
-                    infoWindows.push(new google.maps.InfoWindow({
-                        content: result.name
-                    }));
-                }
-            }
+            //         markers.push(new google.maps.Marker({
+            //             position: {
+            //                 lat: resultLat,
+            //                 lng: resultLng,
+            //             },
+            //             map: map
+            //         }));
+            //         infoWindows.push(new google.maps.InfoWindow({
+            //             content: result.name
+            //         }));
+            //     }
+            // }
 
-            let num = markers.length
-            for (let i = 0; i < num; i++) {
-                markers[i].addListener('click', function () {
-                    infoWindows[i].open(map, markers[i]);
-                });
-            }
+            // let num = markers.length
+            // for (let i = 0; i < num; i++) {
+            //     markers[i].addListener('click', function () {
+            //         infoWindows[i].open(map, markers[i]);
+            //     });
+            // }
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>

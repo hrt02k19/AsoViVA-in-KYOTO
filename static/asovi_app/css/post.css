@@ -20,6 +20,7 @@ body {
     color: #707070;
   }
 /* ここまでテンプレ */
+
 .hidden {
   margin:0;
   position: relative;
@@ -47,10 +48,12 @@ form p {
   color: #909090;
   font-weight: 900;
 }
+
 /* 画像 */
 #sampleimg {
-  width: 108px;
-  height: auto;
+  width: auto;
+  height: 108px;
+  object-fit: cover;
   margin-top: -5px;
   margin-left: 20px;
 }

@@ -41,14 +41,25 @@
     {% csrf_token %}
     <br>
     <div class="imgenre">
-      <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" id="sampleimg">
-      <input type="file" accept='image/*' id='selectimg' onchange="previewImage(this);" name='image'>
+      <img src="{% static 'asovi_app/img/cameraicon.png' %}" alt="" id="sampleimg">
+      <label id="imgselect">
+        <input type="file" accept='image/*' id='selectimg' onchange="previewImage(this);" required name='image'>
+      </label>
     </div>
     <br>
     <p>位置情報</p><br>
-    <p class="now"> 現在の地点に基づいた情報です。</p>
-    {{ place_name }}
+    <!-- <p class="now"> 現在の地点に基づいた情報です。</p> -->
+    <div id="currentPos">
+      {% if place_lat %}
+      <p>緯度：{{place_lat}}</p>
+      <p>経度：{{place_lng}}</p>
+      {% endif %}
+    </div>
+    <input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();">
+    <input type="hidden" name="latitude" step="any" required id="id_latitude">
+    <input type="hidden" name="longitude" step="any" required id="id_longitude">
     <br><input type="submit" name="change_place" class="place" value="地点の変更">
+  
     <br>
     <p>投稿日時</p>
     <p id="today">今日の日付</p>
@@ -59,75 +70,39 @@
     <p class="addgenre">ジャンル追加</p>
     <br>
     <div class="genre1">
-      {% if 1 in genre_list %}
-      <input type="checkbox" id="expand-toggle01" class="genre-input" name="interested_genre" value="1" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle01" class="genre-input" name="interested_genre" value="1">
-      {% endif %}
+      <input type="radio" id="expand-toggle01" class="genre-input" name="interested_genre" value="1">
       <label for="expand-toggle01" class="expand-btn">
           食事<img src="{% static 'asovi_app/img/フォークとスプーンのお食事アイコン素材 (1).png' %}" alt="">
       </label>
-      {% if 2 in genre_list %}
-      <input type="checkbox" id="expand-toggle02" class="genre-input" name="interested_genre" value="2" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle02" class="genre-input" name="interested_genre" value="2">
-      {% endif %}
+      <input type="radio" id="expand-toggle02" class="genre-input" name="interested_genre" value="2">
       <label for="expand-toggle02" class="expand-btn">
           音楽<img src="{% static 'asovi_app/img/8分音符アイコン 1 (1).png' %}" alt="">
       </label>
-      {% if 3 in genre_list %}
-      <input type="checkbox" id="expand-toggle03" class="genre-input" name="interested_genre" value="3" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle03" class="genre-input" name="interested_genre" value="3">
-      {% endif %}
+      <input type="radio" id="expand-toggle03" class="genre-input" name="interested_genre" value="3">
       <label for="expand-toggle03" class="expand-btn">
           自然<img src="{% static 'asovi_app/img/登山アイコン4.png' %}" alt=""></label><br>
   </div>
 
   <div class="genre2">
-      {% if 4 in genre_list %}
-      <input type="checkbox" id="expand-toggle04" class="genre-input" name="interested_genre" value="4" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle04" class="genre-input" name="interested_genre" value="4">
-      {% endif %}
+      <input type="radio" id="expand-toggle04" class="genre-input" name="interested_genre" value="4">
       <label for="expand-toggle04" class="expand-btn">
           芸術<img src="{% static 'asovi_app/img/パレットのフリーアイコン7.png' %}" alt=""></label>
-      {% if 5 in genre_list %}
-      <input type="checkbox" id="expand-toggle05" class="genre-input" name="interested_genre" value="5" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle05" class="genre-input" name="interested_genre" value="5">
-      {% endif %}
+      <input type="radio" id="expand-toggle05" class="genre-input" name="interested_genre" value="5">
       <label for="expand-toggle05" class="expand-btn">
           寺社<img src="{% static 'asovi_app/img/シンプルな鳥居アイコン.png' %}" alt=""></label>
-      {% if 6 in genre_list %}
-      <input type="checkbox" id="expand-toggle06" class="genre-input" name="interested_genre" value="6" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle06" class="genre-input" name="interested_genre" value="6">
-      {% endif %}
+      <input type="radio" id="expand-toggle06" class="genre-input" name="interested_genre" value="6">
       <label for="expand-toggle06" class="expand-btn">
           買物<img src="{% static 'asovi_app/img/ショッピングの無料アイコン　3.png' %}" alt=""></label><br>
   </div>
   
   <div class="genre3">
-      {% if 7 in genre_list %}
-      <input type="checkbox" id="expand-toggle07" class="genre-input" name="interested_genre" value="7" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle07" class="genre-input" name="interested_genre" value="7">
-      {% endif %}
+      <input type="radio" id="expand-toggle07" class="genre-input" name="interested_genre" value="7">
       <label for="expand-toggle07" class="expand-btn"> 
           屋内<img src="{% static 'asovi_app/img/家のアイコン素材.png' %}" alt=""></label>
-      {% if 8 in genre_list %}
-      <input type="checkbox" id="expand-toggle08" class="genre-input" name="interested_genre" value="8" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle08" class="genre-input" name="interested_genre" value="8">
-      {% endif %}
+      <input type="radio" id="expand-toggle08" class="genre-input" name="interested_genre" value="8">
       <label for="expand-toggle08" class="expand-btn">
           屋外 <img src="{% static 'asovi_app/img/自動車の無料アイコン素材 その3 (2).png' %}" alt=""></label>
-      {% if 9 in genre_list %}
-      <input type="checkbox" id="expand-toggle09" class="genre-input" name="interested_genre" value="9" checked>
-      {% else %}
-      <input type="checkbox" id="expand-toggle09" class="genre-input" name="interested_genre" value="9">
-      {% endif %}
+      <input type="radio" id="expand-toggle09" class="genre-input" name="interested_genre" value="9">
       <label for="expand-toggle09" class="expand-btn">
           運動<img src="{% static 'asovi_app/img/ダッシュのピクトグラム1.png' %}" alt=""></label>
   </div>
@@ -144,7 +119,7 @@
   </div>
   
  
-  <!--<input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();">-->
+  <!-- <input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();"> -->
 
 
   <script>
@@ -158,23 +133,44 @@
         navigator.geolocation.getCurrentPosition(
 
             function(position){
-                curLat = position.coords.latitude;
-                curLng = position.coords.longitude;
-                //curLat = 35.0;
-                //curLng = 135.75;
-                var form= document.getElementById('latlng')
-
-                document.getElementById('lat').textContent = lat1
-                document.getElementById('lng').textContent = lng1
-
-                form.latitude.value=curLat
-                form.longitude.value=curLng
+                //curLat = position.coords.latitude;
+                //curLng = position.coords.longitude;
+                var curLat = 35.0;
+                var curLng = 135.75;
+                //var form= document.getElementById('latlng')
+                console.log(curLat);
+                document.getElementById('id_latitude').value = curLat;
+                document.getElementById('id_longitude').value = curLng;
+                var latLngShow = document.getElementById('currentPos');
+                latLngShow.innerHTML = '';
+                var latText = document.createElement("p");
+                var lngText = document.createElement("p");
+                latText.innerText = "緯度：" + toString(curLat);
+                lngText.innerText = "経度：" + toString(curLng);
+                latLngShow.appendChild(latText);
+                latLngShow.appendChild(lngText);
+                //form.latitude.value=curLat
+                //form.longitude.value=curLng
 
             },
 
 
 
             function(error) {
+                //デバッグ用
+                curLat = 35.0;
+                curLng = 135.75;
+                document.getElementById('id_latitude').value = curLat;
+                document.getElementById('id_longitude').value = curLng;
+                var latLngShow = document.getElementById('currentPos');
+                var latText = document.createElement("p");
+                var lngText = document.createElement("p");
+                latLngShow.innerHTML = '';
+                latText.innerText = "緯度：" + curLat;
+                lngText.innerText = "経度：" + curLng;
+                latLngShow.appendChild(latText);
+                latLngShow.appendChild(lngText);
+                //ここまで
                 switch(error.code) {
                     case 1: //PERMISSION_DENIED
                     alert("位置情報の利用が許可されていません");
@@ -205,24 +201,18 @@
       var marker=new google.maps.Marker({
         position: map.getCenter(),
         map: map,
-
       });
-
-
-
 
 
       map.addListener('click', function(e) {
         // getClickLatLng(e.latLng, map);
         var lat_lng = e.latLng;
-        
-
         var lat1=lat_lng.lat();
         var lng1=lat_lng.lng();
 
         document.getElementById('lat').textContent = lat1;
         document.getElementById('lng').textContent = lng1;
-       // console.log(typeof(lat1));     
+       // console.log(typeof(lat1));
 
 
        // var form= document.getElementById('latlng');
@@ -231,7 +221,7 @@
 
 
         var position = { 'lat': lat1, 'lng': lng1};
-        //console.log(typeof(lat1));     
+        //console.log(typeof(lat1));
         marker.setPosition(position);
 
         var xhr = new XMLHttpRequest();
@@ -252,7 +242,7 @@
 
         var place_id_xhr=data.results.place_id;
         var place_name=data.results.name;
-        document.write(place_name); 
+        document.write(place_name);
 
         var form= document.getElementById('latlng');
         form.place_id.value=place_id_xhr;
@@ -325,7 +315,6 @@
         });
         fileReader.readAsDataURL(obj.files[0]);
       }
-    }
   </script>
   <!-- 投稿地点の取得 -->
   <script>
