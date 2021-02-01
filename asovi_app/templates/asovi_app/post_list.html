@@ -4,8 +4,10 @@
 <!DOCTYPE html>
 <html lang="ja">
     <head>
-        <meta charset="utf-8">
-        <title>投稿一覧｜遊ViVA in KYOTO</title>
+        <meta charset="UTF-8">
+    <title>マイページ|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/post_list.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
         <style>
             html,
             body {
@@ -47,18 +49,71 @@
             }
         </script>
     </head>
+
     <body>
+        <!-- ここから -->
+        <div class="logo">
+            <p><strong>マイページ</strong></p> 
+        </div>     
+        <!-- ここまで共通 -->
+
+         <!-- アイコン画像 -->
+        <!-- profile_editで設定したアイコンが表示されるように編集して下さい -->
+        {% if icon %}
+        <img src="/{{icon}}" alt="アイコン画像" id="sampleimg">
+        {% else %}
+        <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" id="sampleimg">
+        {% endif %}
+        <!-- ここまでアイコン -->
+
+        <!-- ここから登録情報 -->
+        <!-- 設定したものが反映されるように編集して下さい -->
+        <!-- クラス名は変更しないでください -->
+        <div class="line">
+            <div class="line1">
+                <!-- ユーザーID -->
+                <p class="userid">@aaaaaa</p>
+                <!-- 投稿数 -->
+                <p class="many">12</p>
+                <!-- 友達数  -->
+                <p class="friend">99</p>
+        </div>
+            <div class="line2">   
+                <!-- ユーザー名 -->
+                <p class="username">京大たろう</p>
+                <p class="toukou">投稿</p>
+                <p class="tomo">友達</p>
+            </div>
+        </div>
+        <!-- ここまで登録情報 -->
+
+        <br>
+        <div class="button">
+            <div class="edit">
+                <a href="#">編集</a>
+                <!-- ↑をuser_profileに飛ぶように変更して下さい -->     
+            </div>
+            <div class="logout">
+                <a href="{% url 'account_logout' %}">ログアウト</a>
+            </div>
+        </div>
+        <a href="{% url 'asovi_app:check_event' %}" class="notice">{{ notification }}件のイベント</a>
+                                                                        <!-- ↑が取得されるようにして下さい -->
+
         <div id="map"></div>
         <br>
+
+        <!-- 投稿一覧 -->
+
+        <p class="post">投稿一覧</p>
         {% for post in post_list %}
-            <img src="/{{post.image}}" alt="" width="30" height="30">
-            {{post.posted_by}}
+           <a href="{% url 'asovi_app:post_detail' post.pk %}"><img src="/{{post.image}}" alt="" width="117" height="117"></a> 
+            <!-- {{post.posted_by}}
             {{post.time}}
-            {{post.body}}
-            <a href="{% url 'asovi_app:post_detail' post.pk %}">この投稿を表示</a>
+            {{post.body}} -->
             <br>
         {% endfor %}
-        {% if user.pk == me.pk %}
+        <!-- {% if user.pk == me.pk %}
             <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
             <a href="{% url 'asovi_app:signout' %}">サインアウト</a>
 
@@ -67,7 +122,7 @@
                 {% csrf_token %}
                 <button type="submit">友達申請</button>
             </form>
-        {% endif %}
+        {% endif %} -->
 
     </body>
     <script>

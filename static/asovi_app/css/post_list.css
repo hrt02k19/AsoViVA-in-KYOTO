@@ -1,0 +1,182 @@
+/* ここから */
+body {
+  margin: 0;
+  }
+  /* ロゴ部分 */
+  .logo {
+  height: 51px;
+  width: 373px;
+  text-align: center;
+  border: solid #707070 1px;
+  }
+  .logo p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 11px;
+    margin-bottom: 13px;
+    font-family: "Segoe UI", sans-serif;
+    color: #707070;
+  }
+
+  /* ボタン */
+.btn-secondary {
+  width: 285px;
+  height: 31px;
+  background-color: #E4A359;
+  border: none;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 0;
+  font-family: "Meiryo", sans-serif;
+  margin-top: -8px;
+   margin-left: 43px;
+   margin-bottom: 47px;
+}
+/* ここまでテンプレ */
+.formarea {
+  margin-left: 48px;
+  margin-top: 10px;
+}
+label {
+  font-size: 15px;
+  font-weight: 900;
+  color: #909090;
+}
+.p1 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+.p2, .p3 {
+  margin-top: 6px;
+}
+.p2 {
+margin-bottom: 6px;
+}
+.p2 > textarea {
+  font-size: 13px;
+}
+.p3 {
+  margin-top: 0;
+  margin-bottom: -1.5px;
+}
+
+/* アイコン画像 */
+#sampleimg {
+  width: 106px;
+  height: 106px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-left: 31px;
+  margin-top: 20px;
+  border: #707070 1px solid;
+}
+
+
+/* ユーザー名 */
+#id_username {
+  background-color: #EDEDED;
+  height: 42px;
+  width: 274px;
+  border: solid #707070 1px;
+  padding: 0;
+  padding-left: 9px;
+  margin-bottom: 0;
+  font-size: 15px;
+  color: #909090;
+}
+
+/* 自己情報 */
+.line {
+  margin-left: 166px;
+  margin-top: -124px;
+}
+.line1 {
+  display: flex;
+}
+.line1 p {
+  color: #909090;
+  font-weight: 900;
+  font-size: 20px;
+}
+.many, .friend {
+  margin-left: 10px;
+}
+.username {
+  color: #909090;
+  font-weight: 900 !important;
+  font-size: 15px;
+}
+.line2 {
+  display: flex;
+  margin-top: -35px;
+}
+.line2 p {
+  color: #909090;
+  font-weight: 100;
+  font-size: 15px;
+}
+.toukou {
+    margin-left: 30px;
+}
+.tomo {
+   margin-left: 8px;
+}
+
+/* ボタン系 */
+.button {
+    display: flex;
+    margin-left: 175px;
+    margin-top: -28px;
+}
+.logout {
+  border: #707070 solid 1px;
+  width: 87.43px;
+  height: 28px;
+  margin-left: 11px;
+}
+.logout a {
+  font-size: 15px;
+  text-decoration: none;
+  color: #707070;
+  margin-left: 6px;
+  margin-top: 900px;
+}
+.edit {
+  border:#E4A359 solid 1px;
+  background-color: #E4A359;
+  width: 75px;
+  height: 28px;
+}
+.edit a {
+  font-size: 15px;
+  text-decoration: none;
+  color: #FFFFFF;
+  margin-left: 23px;
+  margin-top: 900px;
+}
+.notice {
+  text-decoration: none;
+  color: #E4A359;
+  margin-left: 267px;
+  font-size: 13px;
+  margin-top: -10px;
+}
+
+/* 地図 */
+#map {
+  width: 375px !important;
+  height: 375px !important;
+  /* border: #707070 1px solid;
+  overflow: hidden; */
+}
+
+/* 投稿一覧 */
+.post {
+  font-size: 15px;
+  font-weight: 900;
+  margin-left: 33px;
+  color: #909090;
+  margin-top: -8px;
+  margin-top: -8px;
+}

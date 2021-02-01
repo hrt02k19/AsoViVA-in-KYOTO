@@ -6,17 +6,82 @@
 <head>
     <meta charset="UTF-8">
     <title>マイページ|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/mypage.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+    
 </head>
 
 <body>
-    <h1>マイページ</h1>
-    <a href="{% url 'asovi_app:check_event' %}">通知:{{ notification }}件</a>
-    <br>
-    <a href="{% url 'asovi_app:user_profile' me.pk %}">プロフィール表示</a>
-    <br>
+    <!-- ここから -->
+    <div class="logo">
+        <p><strong>マイページ</strong></p> 
+    </div>     
+ <!-- ここまで共通 -->
+ 
+ <!-- アイコン画像 -->
+ <!-- profile_editで設定したアイコンが表示されるように編集して下さい -->
+ {% if icon %}
+ <img src="/{{icon}}" alt="アイコン画像" id="sampleimg">
+ {% else %}
+ <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" id="sampleimg">
+ {% endif %}
+ <!-- ここまでアイコン -->
 
-    <a href="{% url 'account_logout' %}">ログアウト</a>
+ <!-- ここから登録情報 -->
+ <!-- 設定したものが反映されるように編集して下さい -->
+ <!-- クラス名は変更しないでください -->
+ <div class="line">
+     <div class="line1">
+         <!-- ユーザーID -->
+         <p class="userid">@aaaaaa</p>
+         <!-- 投稿数 -->
+         <p class="many">12</p>
+         <!-- 友達数  -->
+         <p class="friend">99</p>
+    </div>
+        <div class="line2">   
+            <!-- ユーザー名 -->
+            <p class="username">京大たろう</p>
+            <p class="toukou">投稿</p>
+            <p class="tomo">友達</p>
+        </div>
+</div>
+<!-- ここまで登録情報 -->
 
+<br>
+ <div class="button">
+        <div class="edit">
+         <a href="{% url 'asovi_app:user_profile' me.pk %}">編集</a>
+         <!-- ↑をprofile_edit.htmlに飛ぶように変更して下さい -->     
+        </div>
+        <div class="logout">
+            <a href="{% url 'account_logout' %}">ログアウト</a>
+        </div>
+</div>
+    <a href="{% url 'asovi_app:check_event' %}" class="notice">{{ notification }}件のイベント</a>
+
+<div class="map">
+<!-- ↓画像を地図に差し替えて下さい -->
+<img src="{% static 'asovi_app/img/IMG_1105.JPG'%}" alt="">
+</div>
+
+<!-- 投稿一覧 -->
+<!-- 投稿一覧を作成して下さい -->
+<p class="post">投稿一覧</p>
+<!-- ここまで投稿一覧 -->
+
+
+<script>
+    // 画像選択に関する設定
+    function previewImage(obj) {
+        var fileReader = new FileReader();
+          fileReader.onload = (function(){
+          document.getElementById('sampleimg').src = fileReader.result;
+        });
+        fileReader.readAsDataURL(obj.files[0]);
+      }
+    
+</script>
 </body>
 
 </html>

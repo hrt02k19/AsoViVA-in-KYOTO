@@ -1,0 +1,95 @@
+/* ここから */
+body {
+  margin: 0;
+  }
+  /* ロゴ部分 */
+  .logo {
+  height: 51px;
+  width: 373px;
+  text-align: center;
+  border: solid #707070 1px;
+  }
+  .logo p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 11px;
+    margin-bottom: 13px;
+    font-family: "Segoe UI", sans-serif;
+    color: #707070;
+  }
+
+  /* ボタン */
+.btn-secondary {
+  width: 285px;
+  height: 31px;
+  background-color: #E4A359;
+  border: none;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 0;
+  font-family: "Meiryo", sans-serif;
+  margin-top: -8px;
+   margin-left: 43px;
+   margin-bottom: 47px;
+}
+/* ここまでテンプレ */
+
+
+/* ヘッダー */
+.header {
+  display: flex;
+}
+.kyoto {
+  margin-left: 33px;
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #909090;
+}
+.three {
+  margin-top: 20px;
+  margin-left: 225px;
+}
+/* 編集・削除タブ */
+.edi, .dele{
+  display: flex;
+}
+.edit, .delete {
+  margin: 0;
+}
+.edit {
+  color: #BF6F1E;
+}
+.delete {
+  color: #909090;
+}
+.drawer {
+  position: absolute;
+  margin-left: 286px;
+  border: solid 1px #707070;
+  z-index: 1;
+  background-color: #FFFFFF;
+  margin-top: 58px;
+  width: 88px;
+  height: 57px;
+}
+.drawer p {
+  font-size: 15px;
+  margin-left: 10px;
+}
+.hidden {
+  display: none;
+}
+.postimg {
+  position: relative;
+}
+.pen {
+  margin-top: 2px;
+}
+
+/* いいね */
+#iine {
+  margin-left: 97px;
+  margin-top: 2px;
+}
