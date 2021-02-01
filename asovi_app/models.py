@@ -162,7 +162,7 @@ class Post(models.Model):
     place_id = models.CharField(max_length=100,null=True)
     like=models.IntegerField(default=0)
     place_id=models.TextField(null=True)
-    place_name=models.TextField(null=True)
+    place_name=models.TextField(null=True,blank=True)
 
 class Save(models.Model):
     item = models.ForeignKey(Post,on_delete=models.CASCADE)

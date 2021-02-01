@@ -18,9 +18,9 @@
     </div>
     <!-- ここまで共通 -->
 
-    <form method='GET' action="{% url 'asovi_app:find_user' %}">
+    <form method='GET' action="{% url 'asovi_app:friend_list' %}">
         <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username'  placeholder="検索">
-                <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+        <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
     </form>
 
 

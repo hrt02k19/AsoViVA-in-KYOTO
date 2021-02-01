@@ -18,12 +18,12 @@
  <!-- ここまで共通 -->
 
     {% if new_requests %}
-        <p class="hidden">
+        <p>
             <!-- ここから -->
             <!-- <label for="username"></label><input type="search" placeholder="検索" name="username" id="username"> -->
             <form method='GET' action="{% url 'asovi_app:friend_request_accept' %}">
                 <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username' placeholder="検索">
-                <img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+                <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
             </form>
             <!-- ここまでを機能するように書き直して欲しいです -->
         </p>

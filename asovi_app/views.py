@@ -285,8 +285,6 @@ def post_detail(request,pk):
     }
     return render(request,'asovi_app/post_detail.html',params)
 
-
-
 def friend_request(request, pk):
     params = {}
     if request.method == 'POST':
@@ -306,38 +304,6 @@ def friend_request(request, pk):
 
 def friend_request_accept(request):
     params = {}
-    if request.method == 'GET':
-        query = request.GET.get('search_id')
-        if query:
-            new_requests = Friend.objects.filter(
-                requestee=request.user, friended=False, requestor__user_id__icontains=query
-                ).annotate(
-                requestor_username = Subquery(
-                    Profile.objects.filter(user=OuterRef("requestor")).values('username')
-                ),
-                requestor_icon=Subquery(
-                    Profile.objects.filter(user=OuterRef("requestor")).values('icon')
-                ),
-                )
-            if not new_requests:
-                params["no_results"] = '検索された文字列にマッチするユーザーは見つかりませんでした。'
-
-        else:
-            new_requests = Friend.objects.filter(
-                friended=False, requestee=request.user
-                ).annotate(
-                requestor_username = Subquery(
-                    Profile.objects.filter(user=OuterRef("requestor")).values('username')
-                ),
-                requestor_icon=Subquery(
-                    Profile.objects.filter(user=OuterRef("requestor")).values('icon')
-                ),
-            )
-            print(new_requests)
-            if not new_requests:
-                params["no_results"] = '現在、あなたへの友達申請はありません。'
-        params["new_requests"] = new_requests
-
     if request.method == 'POST':
         new_request_pk = request.POST['friend_request_pk']
         new_request = Friend.objects.get(pk=new_request_pk)
@@ -345,10 +311,39 @@ def friend_request_accept(request):
             new_request.friended = True
             new_request.friended_date = datetime.datetime.now()
             new_request.save()
-
         elif 'reject' in request.POST:
             new_request.delete()
-
+    else:
+        query = request.GET.get('search_id')
+        if query is not None:
+            new_requests = Friend.objects.filter(
+                requestee=request.user, friended=False, requestor__user_id__icontains=query
+                ).annotate(
+                    requestor_username = Subquery(
+                        Profile.objects.filter(user=OuterRef("requestor")).values('username')
+                    ),
+                    requestor_icon=Subquery(
+                        Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+                    ),
+                )
+            if not new_requests:
+                params["no_results"] = '検索された文字列にマッチするユーザーは見つかりませんでした。'
+            params["new_requests"] = new_requests
+            return render(request, 'asovi_app/friend_request_accept.html', params)
+    new_requests = Friend.objects.filter(
+        friended=False, requestee=request.user
+        ).annotate(
+        requestor_username = Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values('username')
+        ),
+        requestor_icon=Subquery(
+            Profile.objects.filter(user=OuterRef("requestor")).values('icon')
+        ),
+    )
+    print(new_requests)
+    if not new_requests:
+        params["no_results"] = '現在、あなたへの友達申請はありません。'
+    params["new_requests"] = new_requests
     return render(request, 'asovi_app/friend_request_accept.html', params)
 
 
@@ -366,39 +361,75 @@ def friend_list(request,*args):
     if request.method == 'POST':
         blocked_pk = request.POST['friend_pk']
         return redirect('/friend_block/' + blocked_pk)
+    params = {}
     me = request.user
-    my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).annotate(
-        requestor_username=Subquery(
-            Profile.objects.filter(user=OuterRef("requestor")).values("username")
-        ),
-        requestor_icon=Subquery(
-            Profile.objects.filter(user=OuterRef("requestor")).values("icon")
-        ),
-        requestee_username=Subquery(
+    query = request.GET.get('search_id')
+    if query is not None:
+        my_friend = Friend.objects.filter( Q(requestor=me,requestee__user_id__icontains=query) | Q(requestee=me,requestor__user_id__icontains=query)).filter(friended=True).annotate(
+            requestor_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("username")
+            ),
+            requestor_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+            ),
+            requestee_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("username")
+            ),
+            requestee_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+            ),
+        ).order_by("-friended_date")
+        my_friend_requesting = Friend.objects.filter(requestor=me,requestee__user_id__icontains=query,friended=False).annotate(
+            requestee_username=Subquery(
             Profile.objects.filter(user=OuterRef("requestee")).values("username")
-        ),
-        requestee_icon=Subquery(
-            Profile.objects.filter(user=OuterRef("requestee")).values("icon")
-        ),
-    ).order_by("-friended_date")
-    my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).annotate(
-        requestee_username=Subquery(
-            Profile.objects.filter(user=OuterRef("requestee")).values("username")
-        ),
-        requestee_icon=Subquery(
-            Profile.objects.filter(user=OuterRef("requestee")).values("icon")
-        )
-    ).order_by("-requested_date")
-    my_friend_requested = Friend.objects.filter(requestee=me,friended=False).annotate(
-        requestor_icon=Subquery(
+            ),
+            requestee_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+            )
+        ).order_by("-requested_date")
+        my_friend_requested = Friend.objects.filter(requestee=me,requestorQQ__user_id__icontains=query,friended=False).annotate(
+            requestor_icon=Subquery(
             Profile.objects.filter(user=OuterRef("requestor")).values("icon")
-        )
-    ).order_by("-requested_date")
-    my_friend_requested_num = len(my_friend_requested)
-    if my_friend_requested_num > 0:
-        my_friend_requested_top = my_friend_requested[0]
+            )
+        ).order_by("-requested_date")
+        my_friend_requested_num = len(my_friend_requested)
+        if my_friend_requested_num > 0:
+            my_friend_requested_top = my_friend_requested[0]
+        else:
+            my_friend_requested_top = None
     else:
-        my_friend_requested_top = None
+        my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).annotate(
+            requestor_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("username")
+            ),
+            requestor_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+            ),
+            requestee_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("username")
+            ),
+            requestee_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+            ),
+        ).order_by("-friended_date")
+        my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).annotate(
+            requestee_username=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("username")
+            ),
+            requestee_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestee")).values("icon")
+            )
+        ).order_by("-requested_date")
+        my_friend_requested = Friend.objects.filter(requestee=me,friended=False).annotate(
+            requestor_icon=Subquery(
+                Profile.objects.filter(user=OuterRef("requestor")).values("icon")
+            )
+        ).order_by("-requested_date")
+        my_friend_requested_num = len(my_friend_requested)
+        if my_friend_requested_num > 0:
+            my_friend_requested_top = my_friend_requested[0]
+        else:
+            my_friend_requested_top = None
 
     params = {
         'me': me,
