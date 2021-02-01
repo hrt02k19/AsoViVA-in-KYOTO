@@ -5,20 +5,84 @@
     <head>
         <meta charset="UTF-8">
         <title>投稿詳細|遊ViVA in KYOTO</title>
-        <link rel="stylesheet" href="{% static 'asovi_app/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'asovi_app/css/post_detail.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
     </head>
     <body>
-        <img src="/{{ post.image }}">
+        <!-- ここから -->
+        <div class="logo">
+            <p><strong>投稿</strong></p> 
+        </div>     
+        <!-- ここまで共通 -->
+
+        <div class="header">
+            <p class="kyoto">京都大学</p>
+            <img src="{% static 'asovi_app/img/三点リーダー.png'%}" alt="" width="20" height="20" class="three" id="three">
+                <div class="drawer" id="drawer">
+                    <div class="edi">
+                    <a href="{% url 'asovi_app:post' %}">
+                        <p class="edit">編集　<img src="{% static 'asovi_app/img/鉛筆.png'%}" alt=""　width="20" height="20" class="pen"></p>
+                    </a>
+                    </div>
+                    <div class="dele">
+                    <!-- <a href="投稿削除完了画面へ遷移"> -->
+                            <p class="delete">削除　<img src="{% static 'asovi_app/img/ゴミ箱.png'%}" alt=""　width="20" height="20" class="dust"></p>
+                    <!-- </a> -->
+                    </div>
+                </div>
+        </div>
+
+        <img src="/{{ post.image }}" width="375px" height="250px" class='postimg'>
         {{ post.time }}
+
+        <!-- いいねボタン -->
+        <!-- いいね情報の集積？機能をつけて下さい -->
+        <img src="{% static 'asovi_app/img/いいね.png'%}" alt="" width="73" height="100%" id="iine">
         <br>
         {{ post.body|linebreaksbr }}
         <br>
         <hr>
         {% for reply in replies %}
-            {{ reply.pub_date }}
+        <!-- リプライボックスを追加して下さい -->
+
+        <!-- ↓リプライヤーのユーザーIDを追加して下さい     -->
+        @aaaaaa
+        {{ reply.pub_date }}
             <br>
             {{ reply.body }}
             <br>
         {% endfor %}
+
+        <script>
+            // いいねの挙動
+            const iines =["{% static 'asovi_app/img/いいね.png'%}", "{% static 'asovi_app/img/いいねb.png'%}"];
+            let current = 0;
+
+            function changeImage(num) {
+                if (current + num === 1) {
+                    current += num;
+                    document.getElementById('iine').src = iines[current]
+                }
+                else {
+                    current = current - num;
+                    document.getElementById('iine').src = iines[current]
+                };
+            };
+
+
+           document.getElementById('iine').onclick = function() {
+               changeImage(1);
+           };
+
+        //    ドロワーの表示非表示切り替え
+        var trigger = document.getElementById('three');
+            if(trigger){
+            trigger.addEventListener('click', function(){
+                var target = document.getElementById('drawer');
+                target.classList.toggle('hidden');
+            }, false);
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     </body>
 </html>
