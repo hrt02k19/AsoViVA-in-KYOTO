@@ -75,6 +75,9 @@ form p {
   color: #707070;
   margin-left: 100px;
 }
+.whereIam {
+  display: none;
+}
 /* 投稿日時 */
 #today {
   font-weight: 300;
