@@ -103,8 +103,8 @@ def profile_edit(request):
     # print(generate_genre_list(obj))
     # obj = get_object_or_404(Profile, user=request.user)
     if request.method == 'POST':
-        print(request.POST)
-        print(request.FILES)
+        #print(request.POST)
+        #print(request.FILES)
         profile = ProfileForm(request.POST, instance=obj)
         if profile.is_valid():
             profile.save()
@@ -287,6 +287,11 @@ def post_detail(request,pk):
         'replies': replies
     }
     return render(request,'asovi_app/post_detail.html',params)
+
+def post_delete(request,pk):
+    post = Post.objects.get(pk=pk)
+    post.delete()
+    return render(request,'asovi_app/post_delete.html')
 
 def friend_request(request, pk):
     params = {}

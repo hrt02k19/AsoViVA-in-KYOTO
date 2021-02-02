@@ -25,9 +25,9 @@
                     </a>
                     </div>
                     <div class="dele">
-                    <!-- <a href="投稿削除完了画面へ遷移"> -->
-                            <p class="delete">削除　<img src="{% static 'asovi_app/img/ゴミ箱.png'%}" alt=""　width="20" height="20" class="dust"></p>
-                    <!-- </a> -->
+                    <a href="{% url 'asovi_app:post_delete' post.pk %}">
+                        <p class="delete">削除　<img src="{% static 'asovi_app/img/ゴミ箱.png'%}" alt=""　width="20" height="20" class="dust"></p>
+                    </a>
                     </div>
                 </div>
         </div>
