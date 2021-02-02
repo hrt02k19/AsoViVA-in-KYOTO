@@ -12,6 +12,7 @@ urlpatterns = [
     path('change_place/', views.change_place, name='change_place'),
     path('post_detail/<int:pk>/',views.post_detail,name='post_detail'),
     path('post_list/<int:pk>/', views.post_list, name='post_list'),
+    path('post_delete/<int:pk>/', views.post_delete, name='post_delete'),
     path('user_profile/<int:pk>/', views.user_profile, name='user_profile'),
     path('friend_request/<int:pk>/', views.friend_request, name='friend_request'),
     path('friend_request_accept/', views.friend_request_accept, name='friend_request_accept'),

@@ -26,9 +26,7 @@ body {
   position: relative;
 }
 /* 非表示 */
-#map {
-  display: none;
-}
+
 .getpos {
   display: none;
 }
