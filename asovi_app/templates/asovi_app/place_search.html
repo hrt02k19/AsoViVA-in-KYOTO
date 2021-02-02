@@ -53,8 +53,8 @@
         {{form.as_p}}
         <button type="submit">検索</button>
     </form>
-    <p>検索結果</p>
     <div id="map"></div>
+    <p>検索結果</p>
     {% for result in results %}
     <a href="{% url 'asovi_app:place_detail' result.place_id %}">{{result.name}}</a>
     {{result.vicinity}}
@@ -63,17 +63,29 @@
 
     <script>
         var map;
-        var markers = [];
-        var infoWindows = [];
-        var results = JSON.parse('{{results_json|escapejs}}');
+        var place_markers = [];
+        var infoWindows_places = [];
+        var post_markers = [];
+        var infoWindows_posts = [];
 
+        var posts = JSON.parse('{{ posts_json|escapejs }}'||"null");
+        var results = JSON.parse('{{results_json|escapejs}}'||"null");
+
+        if(myLat && myLng){
+            var center = {
+                lat: myLat,
+                lng: myLng,
+            }
+        } else {
+            var center = {
+                lat: 35.0030,
+                lng: 135.7674
+            }
+        }
         function initMap(){
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {
-                    lat: myLat,
-                    lng: myLng,
-                },
-                zoom: 11
+                center: center,
+                zoom: 13
             });
 
             // クリックイベントを追加
@@ -91,34 +103,70 @@
                 map.panTo(lat_lng);
             }
 
-            if (results != null){
+            if(posts){
+                for(var post of posts){
+                    var postLat = post.fields.latitude;
+                    var postLng = post.fields.longitude;
+
+                    post_markers.push(new google.maps.Marker({
+                        position: {
+                            lat: postLat,
+                            lng: postLng,
+                        },
+                        map: map,
+                        icon: {
+                            url: '/' + post.fields.image,
+                            scaledSize: new google.maps.Size(40, 40)
+                        },
+                        optimized: false
+                    }));
+
+                    infoWindows_posts.push(new google.maps.InfoWindow({
+                        content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"70\">' + '<h2>' + post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + '<button type="submit" name="good" value="good" onclick="gooded()" id="good">{{good_button}}</button></form>' + '<span>' + post.fields.like + 'いいね</span>'
+                    }));
+                }
+            }
+
+            let post_num = post_markers.length
+            for (let i = 0; i < post_num; i++){
+                post_markers[i].addListener('click', function(){
+                    infoWindows_posts[i].open(map, post_markers[i]);
+                });
+
+            }
+
+            if (results){
 
                 for (var result of results){
                     var resultLat = result.geometry.location.lat;
                     var resultLng = result.geometry.location.lng;
 
-                    markers.push(new google.maps.Marker({
+                    place_markers.push(new google.maps.Marker({
                         position: {
                             lat: resultLat,
                             lng: resultLng,
                         },
                         map: map
                     }));
-                    infoWindows.push(new google.maps.InfoWindow({
+                    infoWindows_places.push(new google.maps.InfoWindow({
                         content: result.name
                     }));
                 }
             }
 
-            let num = markers.length
-            for (let i = 0; i < num; i++){
-                markers[i].addListener('click', function(){
-                    infoWindows[i].open(map, markers[i]);
+            let place_num = place_markers.length
+            for (let i = 0; i < place_num; i++){
+                place_markers[i].addListener('click', function(){
+                    infoWindows_places[i].open(map, place_markers[i]);
                 });
             }
         }
+
+        function gooded(){
+            window.alert('いいねしました');
+        }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 
 </body>
 

@@ -159,7 +159,6 @@ class Post(models.Model):
     body=models.TextField(max_length=300)
     latitude=models.FloatField()
     longitude=models.FloatField()
-    place_id = models.CharField(max_length=100,null=True)
     like=models.IntegerField(default=0)
     place_id=models.TextField(null=True)
     place_name=models.TextField(null=True,blank=True)
