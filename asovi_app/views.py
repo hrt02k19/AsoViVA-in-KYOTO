@@ -132,7 +132,7 @@ def profile_edit(request):
         params['form']=ProfileForm(instance=obj)
         params['icon']=obj.icon
         params['genre_list']=generate_genre_list(obj)
-        return redirect('/my_page/')
+        return redirect('/post_list/' + str(request.user.pk))
     return render(request, 'asovi_app/profile_edit.html', params)
 
 
@@ -197,7 +197,7 @@ def post_view(request):
     return render(request,'asovi_app/post.html',params)
 
 def post_completed(request,pk):
-    return render(request, 'asovi_app/post_completed.html', {'post_pk': pk})
+    return render(request, 'asovi_app/post_completed.html', {'post_pk': pk,'user':request.user})
 
 
 def change_place(request):
@@ -291,7 +291,7 @@ def post_detail(request,pk):
 def post_delete(request,pk):
     post = Post.objects.get(pk=pk)
     post.delete()
-    return render(request,'asovi_app/post_delete.html')
+    return render(request,'asovi_app/post_delete.html',{'user':request.user})
 
 def friend_request(request, pk):
     params = {}
@@ -629,15 +629,15 @@ def user_profile(request, pk):
     return render(request, 'asovi_app/user_profile.html', params)
 
 
-def post_list(request, pk):
-    user = CustomUser.objects.get(pk=pk)
-    post_list = Post.objects.filter(posted_by=user).order_by("-time")
-    post_list_json = serializers.serialize('json', post_list)
-    params = {
-        'post_list': post_list,
-        'post_list_json': post_list_json,
-    }
-    return render(request, 'asovi_app/post_list.html', params)
+# def post_list(request, pk):
+#     user = CustomUser.objects.get(pk=pk)
+#     post_list = Post.objects.filter(posted_by=user).order_by("-time")
+#     post_list_json = serializers.serialize('json', post_list)
+#     params = {
+#         'post_list': post_list,
+#         'post_list_json': post_list_json,
+#     }
+#     return render(request, 'asovi_app/post_list.html', params)
 
 
 def my_page(request):
@@ -666,6 +666,31 @@ def my_page(request):
     }
     return render(request, 'asovi_app/mypage.html', params)
 
+def post_list(request,pk):
+    try:
+        get_object_or_404(NotificationSetting,user=request.user)
+    except:
+        NotificationSetting.objects.create(user=request.user)
+    me = CustomUser.objects.get(pk=pk)
+    my_profile = Profile.objects.get(user=me)
+    friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
+    post = Post.objects.filter(posted_by=me).order_by("-time")
+    post_num = post.count()
+    post10 = post[0:10]
+    posts_json = serializers.serialize('json',post)
+    genre_json = serializers.serialize('json',Genre.objects.all().order_by('pk'))
+    params = {
+        'me': me,
+        'profile': my_profile,
+        'notification': count_new_events(me),
+        'posts': post,
+        'post10': post10,
+        'friend_num': friend_num,
+        'post_num': post_num,
+        'posts_json': posts_json,
+        'genre_json': genre_json,
+    }
+    return render(request, 'asovi_app/post_list.html', params)
 
 def change_id(request):
     me = CustomUser.objects.get(email=request.user)
@@ -914,6 +939,7 @@ def save_article(request):
     data=Save.objects.filter(person=person)
     params={
         'data':data,
+        'user':person
     }
     return render(request,'asovi_app/save_article.html',params)
 
