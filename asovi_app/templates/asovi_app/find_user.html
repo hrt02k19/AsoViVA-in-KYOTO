@@ -27,22 +27,24 @@
 
     </form>
     <div class="found_user_list">
-    <p class="results">検索結果</p>
+        <p class="results">検索結果</p>
         {% for found_user in object_list %}
-        <div class="list">
-            <img class="icon" src="/{{request.requestor_icon}}">
-            <table>
-            <tr>
-                <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}" class="userid">@{{found_user.user_id}}</a></td>
-                <tr></tr>
-                <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}" class="username">{{found_user.username}}</a></td>
-            </tr>
-        </table>
-        <!-- ここから -->
-        <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
-            {% csrf_token %}
-            <input type="submit" value="追加" class="request">
-        <!-- ここまで、友達検索仕様に修正して欲しいです -->
+            <div class="list">
+                <img class="icon" src="/{{request.requestor_icon}}">
+                <table>
+                    <tr>
+                        <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}" class="userid">@{{found_user.user_id}}</a></td>
+                        <tr></tr>
+                        <td><a href="{% url 'asovi_app:user_profile' found_user.pk %}" class="username">{{found_user.username}}</a></td>
+                    </tr>
+                </table>
+                <!-- ここから -->
+                <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="追加" class="request">
+                </form>
+                <!-- ここまで、友達検索仕様に修正して欲しいです -->
+            </div>
         {% endfor %}
     </div>
 
