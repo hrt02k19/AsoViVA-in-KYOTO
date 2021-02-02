@@ -6,11 +6,21 @@
 <head>
     <meta charset="UTF-8">
     <title>アカウント削除完了|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/signout_completed.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 <body>
+    <!-- ここから -->
+    <div class="logo">
+        <p><strong>アカウント削除</strong></p>
+    </div>
+    <!-- ここまで共通 -->
+
     <h1>アカウント削除完了</h1>
     <p>あなたのアカウントを削除しました。</p>
-    <a href="{% url 'account_login' %}">ログインページに戻る</a>
+    <div class="return">
+        <a href="{% url 'account_login' %}"><p>ログインページに戻る</p></a>
+    </div>
 
 </body>
 

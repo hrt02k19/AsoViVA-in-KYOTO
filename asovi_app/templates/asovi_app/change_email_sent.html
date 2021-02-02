@@ -7,11 +7,21 @@
 <head>
     <meta charset="UTF-8">
     <title>マイページ|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/change_email_sent.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 
 <body>
-    <p>メールアドレス変更用リンクをメールにて送信しました。</p>
-    <a href="{% url 'asovi_app:user_profile' user.pk %}">マイページに戻る</a>
+     <!-- ここから -->
+     <div class="logo">
+        <p><strong>メールアドレス変更</strong></p>
+    </div>
+    <!-- ここまで共通 -->
+
+    <h1>送信完了</h1>
+    <p class="sent">メールアドレス変更用リンクをメールにて<br>送信しました。</p>
+    <a href="{% url 'asovi_app:user_profile' user.pk %}" ><p class="mypage">マイページに戻る</p></a>
+    <a href="#" ><p class="home">ホームに戻る</p></a>
 
 </body>
 

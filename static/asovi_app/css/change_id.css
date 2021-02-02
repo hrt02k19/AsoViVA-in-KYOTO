@@ -1,0 +1,64 @@
+/* ここから */
+body {
+  margin: 0;
+  width: 100%;
+}
+/* ロゴ部分 */
+.logo {
+  height: 51px;
+  width: 373px;
+  text-align: center;
+  border: solid #707070 1px;
+}
+.logo p {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 11px;
+  margin-bottom: 13px;
+  font-family: "Segoe UI", sans-serif;
+  color: #707070;
+}
+/* ここまでテンプレ */
+ 
+/* 文字 */
+h1{
+  margin-left: 33px;
+  color: #909090;
+  font-size: 15px;
+  margin-top: 62px;
+  margin-bottom: 0;
+}
+
+/* form */
+label {
+  display: none;
+}
+#id_user_id{
+  background-color: #EDEDED;
+  border: solid 1px #707070;
+  width: 263px;
+  height: 22px;
+  font-size: 15px;
+  color: #909090;
+  padding: 10px;
+  margin-left: 45px;
+  margin-top: 19px;
+  margin-bottom: -7px;
+}
+
+/* ボタン */
+.next {
+  width: 285px;
+  height: 31px;
+  background-color: #E4A359;
+  border: none;
+  margin-left: 45px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 900;
+  text-align: center;
+  padding-top: 4px;
+  padding-bottom: 27px;
+  font-family: "Meiryo", sans-serif;
+  margin-top: 31px
+}

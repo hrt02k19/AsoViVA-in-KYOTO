@@ -1,0 +1,90 @@
+/* ここから */
+body {
+  margin: 0;
+  /* overflow: hidden; */
+  width: 100%;
+  }
+  /* ロゴ部分 */
+  .logo {
+  height: 51px;
+  width: 373px;
+  text-align: center;
+  border: solid #707070 1px;
+  }
+  .logo p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 11px;
+    margin-bottom: 13px;
+    font-family: "Segoe UI", sans-serif;
+    color: #707070;
+  }
+/* ここまでテンプレ */
+ 
+/* 文字 */
+h1{
+  margin-left: 33px;
+  color: #909090;
+  font-size: 15px;
+  margin-top: 62px;
+  margin-bottom: 0;
+}
+
+/* form部分 */
+label {
+  display: none;
+}
+#id_email {
+  background-color: #EDEDED;
+  height: 40px;
+  width: 273px;
+  border: solid #707070 1px;
+  margin-left: 45px;
+  padding-left: 8px;
+  font-size: 15px;
+  color: #707070;
+}
+#id_password {
+  background-color: #EDEDED;
+  height: 40px;
+  width: 273px;
+  border: solid #707070 1px;
+  margin-top: -10px;
+  margin-left: 45px;
+  padding-left: 8px;
+  padding-bottom: 0;
+  margin-bottom: -5px;
+  font-size: 15px;
+  color: #707070;
+}
+
+/* ボタン */
+.delete {
+  width: 285px;
+  height: 31px;
+  background-color: #E4A359;
+  border: none;
+  margin-left: 45px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 0;
+  font-family: "Meiryo", sans-serif;
+  margin-top: 29px;
+}
+.settings a {
+  text-decoration: none;
+}
+.settings p {
+  width: 285px;
+  height: 31px;
+  border: none;
+  margin-left: 45px;
+  color: #909090;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 0;
+  font-family: "Meiryo", sans-serif;
+  margin-top: 8px;
+  text-align: center;
+}

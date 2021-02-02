@@ -1,5 +1,5 @@
 /* ここから */
-body {
+ body {
   margin: 0;
   overflow: hidden;
   }
@@ -33,25 +33,43 @@ body {
   font-size: 15px;
 }
 /* ボタン */
-.return {
+.mypage p {
     width: 285px;
-    height: 33px;
+    height: 26px;
     background-color: #E4A359;
     border: none;
+    margin-top: 44px;
     margin-left: 45px;
     font-size: 15px;
     font-weight: 900;
     padding: 0;
     font-family: "Meiryo", sans-serif;
-    margin-top: 44px;
     text-align: center;
+    padding-top: 5px;
 }
-.return a{
+.mypage a{
     padding-top: 4px;
     padding-bottom: 4px;
     color: #FFFFFF;
     text-decoration: none;
 }
-.return p {
-  padding-top: 5px;
+.home p{
+   width: 285px;
+    height: 26px;
+    background-color: #ffffff;
+    border: none;
+    margin-top: -10px;
+    margin-left: 45px;
+    font-size: 15px;
+    font-weight: 900;
+    padding: 0;
+    font-family: "Meiryo", sans-serif;
+    text-align: center;
+    padding-top: 5px;
+}
+.home a{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  color: #909090;
+  text-decoration: none;
 }
