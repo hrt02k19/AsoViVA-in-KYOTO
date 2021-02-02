@@ -6,14 +6,22 @@
 <head>
     <meta charset="UTF-8">
     <title>ユーザーID変更|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/change_id.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 
 <body>
+    <!-- ここから -->
+    <div class="logo">
+        <p><strong>パスワード再設定</strong></p>
+    </div>
+    <!-- ここまで共通 -->
+
     <h1>ユーザーID変更</h1>
     <form action="{% url 'asovi_app:change_id' %}" method="POST">
         {% csrf_token %}
-        {{ form }}
-        <button type="submit">変更</button>
+        <input type="text" name="user_id" maxlength="50" required="" id="id_user_id" placeholder="新しいユーザーID">
+        <button type="submit" class="next">次へ</button>
     </form>
 
     <div>

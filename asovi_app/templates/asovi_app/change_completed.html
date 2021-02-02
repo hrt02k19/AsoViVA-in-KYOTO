@@ -13,13 +13,17 @@
 
 <body>
     <div class="logo">
-        <p><strong>変更完了</strong></p>
+        <p><strong>{{ change_what }}変更</strong></p>
     </div>
 
-    <p class="top">{{ change_what }}変更完了</p>
+    <p class="top">変更完了</p>
     <p class="comp">{{ change_what }}を変更しました。</p>
-    <div class="return">
+    <div class="mypage">
         <a href="{% url 'asovi_app:my_page' %}"><p>マイページに戻る</p></a>
+    </div>
+    <div class="home">
+        <!-- ↓ホームに遷移して下さい -->
+        <a href="#"><p>ホームに戻る</p></a>
     </div>
 
 

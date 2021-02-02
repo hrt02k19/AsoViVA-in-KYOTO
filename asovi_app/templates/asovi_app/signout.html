@@ -5,17 +5,26 @@
 <head>
     <meta charset="UTF-8">
     <title>アカウント削除|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/signout.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 <body>
-    <h1>アカウント削除</h1>
-    <p>アカウントを削除する</p>
+         <!-- ここから -->
+         <div class="logo">
+            <p><strong>メールアドレス変更</strong></p>
+        </div>
+        <!-- ここまで共通 -->
+
+    <h1>アカウントを削除する</h1>
     <form action="{% url 'asovi_app:signout' %}" method="POST">
         {% csrf_token %}
         {{form.as_p}}
-        <button type="submit">削除する</button>
+        <button type="submit" class="delete">削除する</button>
     </form>
     {{ msg }}
-    <a href="{% url 'asovi_app:settings' %}">設定に戻る</a>
+        <div class="settings">       
+            <a href="{% url 'asovi_app:settings' %}"><p>設定に戻る</p></a>
+        </div>
 </body>
 
 </html>

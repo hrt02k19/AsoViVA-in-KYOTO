@@ -5,15 +5,23 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>マイページ|遊ViVA in KYOTO</title>
+    <title>メールアドレス変更|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/change_email.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 
 <body>
+     <!-- ここから -->
+     <div class="logo">
+        <p><strong>メールアドレス変更</strong></p>
+    </div>
+    <!-- ここまで共通 -->
+
     <h1>メールアドレス変更</h1>
     <form action="{% url 'asovi_app:change_email' %}" method="POST">
         {% csrf_token %}
         {{ form }}
-        <button type="submit">次へ</button>
+        <button type="submit" class="next">次へ</button>
     </form>
 
 
