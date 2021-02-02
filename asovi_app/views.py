@@ -395,7 +395,7 @@ def friend_list(request,*args):
                 Profile.objects.filter(user=OuterRef("requestee")).values("icon")
             )
         ).order_by("-requested_date")
-        my_friend_requested = Friend.objects.filter(requestee=me,requestorQQ__user_id__icontains=query,friended=False).annotate(
+        my_friend_requested = Friend.objects.filter(requestee=me, friended=False).annotate(
             requestor_icon=Subquery(
             Profile.objects.filter(user=OuterRef("requestor")).values("icon")
             )

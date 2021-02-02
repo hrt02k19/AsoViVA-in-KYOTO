@@ -1,170 +1,188 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="ja">
+
     <head>
         <meta charset="UTF-8">
-    <title>マイページ|遊ViVA in KYOTO</title>
-    <link rel="stylesheet" href="{% static 'asovi_app/css/post_list.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
-        <style>
-            html,
-            body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-
-            #map {
-                height: 80%;
-                width: 80%;
-            }
-        </style>
-        <script>
-            var myLat;
-            var myLng;
-            if ( !navigator.geolocation) {
-                window.alert('この端末では位置情報を取得できません');
-            } else {
-                
-                navigator.geolocation.getCurrentPosition(success, error);
-
-                function success(position){
-                    myLat = position.coords.latitude;
-                    myLng = position.coords.longitude;
-                }
-
-                function error(position){
-                    var errorMessage = {
-                        0:"原因不明のエラーが発生しました。",
-                        1: "位置情報取得が許可されませんでした。",
-                        2: "位置情報が取得できませんでした。",
-                        3: "タイムアウトしました。",
-                    };
-                    window.alert(errorMessage[error.code]);
-                    myLat=35;
-                    myLng=136;
-                }
-            }
-        </script>
+        <title>マイページ|遊ViVA in KYOTO</title>
+        <link rel="stylesheet" href="{% static 'asovi_app/css/mypage.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
     </head>
+    <script>
+        //geolocation apiに関する設定
+        if(!navigator.geolocation){
+            alert("この端末では位置情報が取得できません");
+        }
+        var curLat;
+        var curLng;
+        function getPosition(){
+            navigator.geolocation.getCurrentPosition(
+
+                function(position){
+                    curLat = position.coords.latitude;
+                    curLng = position.coords.longitude;
+                    //curLat = 35.0;
+                    //curLng = 135.75;
+                },
+
+                function(error) {
+                    switch(error.code) {
+                        case 1: //PERMISSION_DENIED
+                        alert("位置情報の利用が許可されていません");
+                        break;
+                        case 2: //POSITION_UNAVAILABLE
+                        alert("現在位置が取得できませんでした");
+                        break;
+                        case 3: //TIMEOUT
+                        alert("タイムアウトになりました");
+                        break;
+                        default:
+                        alert("その他のエラー(エラーコード:"+error.code+")");
+                        break;
+                    }
+                }
+            );
+        }
+    </script>
 
     <body>
         <!-- ここから -->
         <div class="logo">
             <p><strong>マイページ</strong></p> 
         </div>     
-        <!-- ここまで共通 -->
-
-         <!-- アイコン画像 -->
-        <!-- profile_editで設定したアイコンが表示されるように編集して下さい -->
-        {% if icon %}
+    <!-- ここまで共通 -->
+    
+    <!-- アイコン画像 -->
+    <!-- profile_editで設定したアイコンが表示されるように編集して下さい -->
+    {% if icon %}
         <img src="/{{icon}}" alt="アイコン画像" id="sampleimg">
-        {% else %}
+    {% else %}
         <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" id="sampleimg">
-        {% endif %}
-        <!-- ここまでアイコン -->
+    {% endif %}
+    <!-- ここまでアイコン -->
 
-        <!-- ここから登録情報 -->
-        <!-- 設定したものが反映されるように編集して下さい -->
-        <!-- クラス名は変更しないでください -->
-        <div class="line">
-            <div class="line1">
-                <!-- ユーザーID -->
-                <p class="userid">@aaaaaa</p>
-                <!-- 投稿数 -->
-                <p class="many">12</p>
-                <!-- 友達数  -->
-                <p class="friend">99</p>
+    <!-- ここから登録情報 -->
+    <!-- 設定したものが反映されるように編集して下さい -->
+    <!-- クラス名は変更しないでください -->
+    <div class="line">
+        div class="line1">
+            <!-- ユーザーID -->
+            <p class="userid">@{{user.user_id}}</p>
+            <!-- 投稿数 -->
+            <p class="many">{{ post_num }}</p>
+            <!-- 友達数  -->
+            <p class="friend">{{ friend_num }}</p>
         </div>
             <div class="line2">   
                 <!-- ユーザー名 -->
-                <p class="username">京大たろう</p>
+                <p class="username">{{ profile.username }}</p>
                 <p class="toukou">投稿</p>
                 <p class="tomo">友達</p>
             </div>
-        </div>
-        <!-- ここまで登録情報 -->
+    </div>
+    <!-- ここまで登録情報 -->
 
-        <br>
+    <br>
         <div class="button">
             <div class="edit">
-                <a href="{% url 'asovi_app:profile_edit' %}">編集</a>     
+            <a href="{% url 'asovi_app:profile_edit' %}">編集</a>
+            <!-- ↑をprofile_edit.htmlに飛ぶように変更して下さい -->     
             </div>
             <div class="logout">
                 <a href="{% url 'account_logout' %}">ログアウト</a>
             </div>
         </div>
         <a href="{% url 'asovi_app:check_event' %}" class="notice">{{ notification }}件のイベント</a>
-                                                                        <!-- ↑が取得されるようにして下さい -->
 
-        <div id="map"></div>
-        <br>
+        <div id="map" class="map">
+            <!-- ↓画像を地図に差し替えて下さい -->
+            <!-- <img src="{% static 'asovi_app/img/IMG_1105.JPG'%}" alt=""> -->
+        </div>
+        <script>
+            var map;
+            var markers = [];
+            var infoWindows = [];
+            var posts = JSON.parse('{{ posts_json|escapejs }}');
+            var genre_list = JSON.parse('{{ genre_json|escapejs }}');
+            curLat=34.70;
+            curLng=135.50;
+            //console.log(radius);
+            //console.log(posts);
+            var center = {
+                lat: curLat,
+                lng: curLng
+            };
+            //地図の作成
+            function initMap(){
+                map = new google.maps.Map(document.getElementById('map'),{
+                    center: center,
+                    zoom: 13
+                });
+                for( var post of posts ){
+                    //console.log(post.fields.genre)
+                    var postLat = post.fields.latitude;
+                    var postLng = post.fields.longitude;
+                    
+                    console.log(post);
+                    //マーカーを投稿の位置に刺す
+                    markers.push(new google.maps.Marker({
+                        position: {
+                            lat: post.fields.latitude,
+                            lng: post.fields.longitude
+                        },
+                        map: map
+                    }));
+                    //マーカーをクリックした時に出る吹き出し
+                    if( post.fields.genre != null ){
+                        infoWindows.push(new google.maps.InfoWindow({
+                            content : "<div id='content'>" + genre_list[post.fields.genre-1].fields.name + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
+                        }));
+                    }else{
+                        infoWindows.push(new google.maps.InfoWindow({
+                            content : "<div id='content'>" + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
+                        }));
+                    };
+                    // marker.addListener('click', function() { // マーカーをクリックしたとき
+                    //     infoWindow.open(map, marker); // 吹き出しの表示
+                    // });
+                };
+                console.log(markers);
+                let num = markers.length;
+                for(let i=0; i<num; i++){
+                    markers[i].addListener('click', function(){
+                        infoWindows[i].open(map,markers[i]);
+                    });
+                }
+            };
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 
-        <!-- 投稿一覧 -->
+    <!-- 投稿一覧 -->
+    <!-- 投稿一覧を作成して下さい -->
+        <p class="post">投稿一覧(最新の10件)</p>
+            {% for post in post10 %}
+                <p>
+                    <img src="/{{post.image}}" height="30" alt="">
+                    {{post.body}}
+                    {{post.time}}
+                </p>
+            {% endfor %}
+    <!-- ここまで投稿一覧 -->
 
-        <p class="post">投稿一覧</p>
-        {% for post in post_list %}
-           <a href="{% url 'asovi_app:post_detail' post.pk %}"><img src="/{{post.image}}" alt="" width="117" height="117"></a> 
-            <!-- {{post.posted_by}}
-            {{post.time}}
-            {{post.body}} -->
-            <br>
-        {% endfor %}
-        <!-- {% if user.pk == me.pk %}
-            <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
-            <a href="{% url 'asovi_app:signout' %}">サインアウト</a>
 
-        {% else %}
-            <form action="{% url 'asovi_app:friend_request' user.pk %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">友達申請</button>
-            </form>
-        {% endif %} -->
+        <script>
+            // 画像選択に関する設定
+            function previewImage(obj) {
+                var fileReader = new FileReader();
+                fileReader.onload = (function(){
+                document.getElementById('sampleimg').src = fileReader.result;
+                });
+                fileReader.readAsDataURL(obj.files[0]);
+            };
+        </script>
+
 
     </body>
-    <script>
-        var map;
-        var markers = [];
-        var infoWindows = [];
-        var post_list = JSON.parse('{{ post_list_json|escapejs }}');
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: {
-                    lat: myLat,
-                    lng: myLng,
-                },
-                zoom: 13
-            });
-
-            for (var post of post_list){
-                var postLat = post.fields.latitude;
-                var postLng = post.fields.longitude;
-                markers.push(new google.maps.Marker({
-                    position: {
-                        lat: postLat,
-                        lng: postLng,
-                    },
-                    map: map
-                }));
-
-                infoWindows.push(new google.maps.InfoWindow({
-                    content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"30\">' + '<h2>' + post.fields.body + '</h2>' + '</div>'
-                }));
-
-            }
-
-            let num = markers.length
-            for (let i = 0; i < num; i++){
-                markers[i].addListener('click', function(){
-                    infoWindows[i].open(map, markers[i]);
-                });
-            }
-
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer></script>
 </html>
-
