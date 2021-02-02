@@ -1,7 +1,6 @@
 /* ここから */
 body {
   margin: 0;
-  overflow: hidden;
   }
   /* ロゴ部分 */
   .logo {
@@ -35,6 +34,34 @@ body {
    margin-bottom: 47px;
 }
 /* ここまでテンプレ */
+
+/* アイコン画像 */
+#sampleimg {
+  width: 108px;
+  height: 108px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-left: 134px;
+  margin-top: 20px;
+}
+
+#id_icon {
+  display: none;
+}
+#selectimg {
+  display: none;
+}
+#imgselect {
+  width: 165px;
+  height: 23px;
+  font-weight: 900;
+  color: #BF6F1E;
+  font-size: 15px;
+  margin-left: 106px;
+  margin-top: 10px;
+}
+
+/* フォーム全体 */
 .formarea {
   margin-left: 48px;
   margin-top: 10px;
@@ -52,7 +79,7 @@ label {
   margin-top: 6px;
 }
 .p2 {
-margin-bottom: 6px;
+  margin-bottom: 6px;
 }
 .p2 > textarea {
   font-size: 13px;
@@ -60,31 +87,6 @@ margin-bottom: 6px;
 .p3 {
   margin-top: 0;
   margin-bottom: -1.5px;
-}
-/* アイコン画像 */
-#sampleimg {
-  width: 108px;
-  height: 108px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-left: 134px;
-  margin-top: 20px;
-}
-
-#id_icon {
-display: none;
-}
-#selectimg {
-display: none;
-}
-#imgselect {
-  width: 165px;
-  height: 23px;
-  font-weight: 900;
-  color: #BF6F1E;
-  font-size: 15px;
-  margin-left: 106px;
-  margin-top: 10px;
 }
 
 /* ユーザー名 */

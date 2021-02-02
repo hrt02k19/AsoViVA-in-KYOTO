@@ -21,11 +21,7 @@ border: solid #707070 1px;
   margin-left: 54px;
   width: 135px;
   }
-.left {
-  width: 18px;
-  color: #707070;
-  margin-left: -18px;
-}
+
  
 h1{
   margin-left: 33px;
@@ -40,26 +36,13 @@ p {
   font-size: 15px;
   margin-left: 43px;
    margin-bottom: 8px;
-  /* font-weight: 900; */
 }
+
+/* フォーム部分 */
 .letter {
   margin-top: -35px;
 }
-.agree {
-  margin-left: -12px;
-  margin-top: 38px;
-}
-.agreements {
-  padding-left: 14px;
-  padding-top: 7px;
-  height: 168px;
-  width: 269px;
-  border: solid #707070 1px;
-  margin-top: -5px;
-  margin-bottom: 10px;
-}
 
-/* form部分 */
 .signup {
   font-size: 15px;
   color: #707070;
@@ -82,7 +65,6 @@ p {
   font-size: 15px;
   color: #909090;
 }
-
 label {
   display: none;
 }
@@ -96,13 +78,6 @@ input[type="password" i] {
   margin-bottom: 0;
   font-size: 15px;
   color: #909090;
-}
-/* 利用規約欄は今のとこ消す */
-.hidden {
-  display: none;
-}
-.igotit {
-  font-weight: 100;
 }
 
 /* 次へボタン */

@@ -25,6 +25,7 @@ body {
   margin:0;
   position: relative;
 }
+
 /* 非表示 */
 #map {
   display: none;
@@ -64,8 +65,8 @@ form p {
 .imgenre {
   display: flex;
 }
-/* 位置情報 */
 
+/* 位置情報 */
 .place {
   color: #BF6F1E;
   font-size: 15px;
@@ -81,12 +82,14 @@ form p {
 .whereIam {
   display: none;
 }
+
 /* 投稿日時 */
 #today {
   font-weight: 300;
   margin-left:59px;
   margin-bottom: -35px;
 }
+
 /* コメント */
 #id_body {
   margin-left: 40px;
@@ -95,6 +98,7 @@ form p {
   margin-top: -22px;
   margin-bottom: 15px;
 }
+
 /* ジャンル選択 */
 .genre1, .genre2, .genre3 {
   display: flex;
@@ -129,7 +133,7 @@ input[type="checkbox"]:checked {
     font-weight: normal;
 }
 
-/* 投稿ボタん */
+/* 投稿ボタン */
 .submit {
   width: 285px;
   height: 31px;

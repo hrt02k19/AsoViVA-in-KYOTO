@@ -1,7 +1,7 @@
 /* ここから */
 body {
   margin: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   width: 100%;
   }
   /* ロゴ部分 */
@@ -20,6 +20,7 @@ body {
     color: #707070;
   }
 /* ここまでテンプレ */
+
 .hidden {
   margin:0;
   position: relative;
@@ -72,8 +73,9 @@ body {
 }
 /* 友達リスト内 */
 .list {
-display: flex;
+  display: flex;
   margin-top: 25px;
+  margin-bottom: -49px;
   color: #909090;
 }
 .icon {
@@ -109,6 +111,11 @@ display: flex;
   margin-top: -23px;
   width: 221px;
 }
+.username {
+  margin-left: -211px;
+  margin-top: 3px;
+  width: 207px;
+}
 /* ボタン */
 .accept {
   background-color: #E4A359;
@@ -116,9 +123,8 @@ display: flex;
   width: 50px;
   height: 30px;
   border: none;
-  margin-left: 37px;
+  margin-left: -56px;
 }
-
 .reject {
   background-color: #EDEDED;
   width: 50px;
@@ -128,14 +134,3 @@ display: flex;
     color: #909090;
   }
 
-
-.back {
-  display: none;
-}
-
-.none {
-  color: #909090;
-  font-size: 15px;
-  margin-left: 50px;
-  margin-top: 250px;
-}

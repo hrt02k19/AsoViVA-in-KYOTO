@@ -22,7 +22,7 @@ border: solid #707070 1px;
     width: 135px;
   }
 
-
+/* 文字 */
 h2, p {
   color: #909090;
   font-size: 15px;
@@ -33,9 +33,6 @@ h2 {
 .letter {
   margin-left: 33px;
 }
-
-/* form部分 */
-
 
 /* ログインページに戻る」ボタン */
 .return {
