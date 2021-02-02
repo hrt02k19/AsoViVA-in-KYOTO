@@ -40,8 +40,11 @@ body {
 .loupe {
   position: absolute;
   width: 15px;
-  margin-left: 305px;
-  margin-top: 34px;
+  margin-left: 329px;
+  margin-top: 19px;
+}
+.button {
+  margin-left: -20px;
 }
 
 /* フォロリク */

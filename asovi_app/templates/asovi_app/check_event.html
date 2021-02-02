@@ -6,38 +6,74 @@
 <head>
     <meta charset="UTF-8">
     <title>通知確認|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/check_event.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
 
 <body>
-    {% if new_good_num > 0 %}
-    {{ new_good_num }}件のいいね：<br>
-        {% for new_good in new_goods %}
-            <img src="/{{new.good.user_icon}}" alt="" width="30" height="30"/>
-            {{ new_good.user_username }}さんがあなたの投稿にいいねしました:<br>
-            {{ new_good.article.body|truncatechars:40 }}<br>
-        {% endfor %}
-    {% endif %}
-    {% if new_save_num > 0 %}
-    {{ new_save_num }}件の保存：<br>
-        {% for new_save in new_saves %}
-            {{ new_save.saver_username }}さんがあなたの投稿を保存しました:<br>
-            {{ new_save.item.body|truncatechars:40 }}<br>
-        {% endfor %}
-    {% endif %}
-    {% if new_reply_num > 0 %}
-    {{ new_reply_num }}件のリプライ：<br>
-        {% for new_reply in new_replies %}
-            {{ new_reply.replier_username }}さんがあなたの投稿に返信しました:<br>
-            {{ new_reply.body|truncatechars:40 }}<br>
+     <!-- ここから -->
+     <div class="logo">
+        <p><strong>通知</strong></p>
+    </div>
+    <!-- ここまで共通 -->
+
+    <!-- フォロリク遷移タブ -->
+    <a href="{% url 'asovi_app:friend_request_accept' %}">
+        <img class="icon" src="/{{my_friend_requested_top.requestor_icon}}">
+    </a>
+    <div class="follow">
+        <a href="{% url 'asovi_app:friend_request_accept' %}" class="bright"> <p class="req">フォローリクエスト:{{my_friend_requested_num}}件</p></a>
+        <!-- ↑通知の数が反映されるよう修正して下さい -->
+        <br>
+        <a href="{% url 'asovi_app:friend_request_accept' %}" class="aright"><i class="fas fa-arrow-right right"></i></a>
+        <br>
+        <br>
+    </div>
+
+    <!-- New以下 -->
+    <p class="new">New</p>
+
+        <!-- 以下の『_username』系は全て_useridに差し替えて下さい -->
+
+        {% if new_good_num > 0 %}
+        <!-- {{ new_good_num }}件のいいね：<br> -->
+            {% for new_good in new_goods %}
+            <img src="/{{new.good.user_icon}}" alt="" class="usericon" width="50" height="50">
+            <p class="notice">{{ new_good.user_username }}<br>があなたの投稿をいいねしました</p><br>
+            <!-- ↓投稿画像のプレビューに差し替えて実装して下さい(クラス名はそのままで) -->
+            <img src="{% static 'asovi_app/img/taro.png'%}" class="post" alt="" width="50" height="50">
+            {% endfor %}
+            {% endif %}
+            {% if new_save_num > 0 %}
+        <!-- {{ new_save_num }}件の保存：<br> -->
+            {% for new_save in new_saves %}
+            <!-- ↓画像をアイコンに差し替えて下さい(クラス名はそのままで) -->
+                <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" class="usericon" width="50" height="50">
+            <p class="notice">{{ new_save.saver_username }}<br>があなたの投稿を保存しました</p><br>
+            <!-- ↓投稿画像のプレビューに差し替えて実装して下さい(クラス名はそのままで) -->
+            <img src="{% static 'asovi_app/img/taro.png'%}" class="post" alt="" width="50" height="50">
+            {% endfor %}
+            {% endif %}
+            {% if new_reply_num > 0 %}
+        <!-- {{ new_reply_num }}件のリプライ：<br> -->
+            {% for new_reply in new_replies %}
+            <!-- ↓画像をアイコンに差し替えて下さい(クラス名はそのままで) -->
+            <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" class="usericon" width="50" height="50">
+            <p class="notice">{{ new_reply.replier_username }}<br>があなたの投稿にコメントしました<br></p>
+            <!-- ↓投稿画像のプレビューに差し替えて実装して下さい(クラス名はそのままで) -->
+            <img src="{% static 'asovi_app/img/taro.png'%}" class="post" alt="" width="50" height="50">
+                
         {% endfor %}
     {% endif %}
     {% if new_friend_request_num > 0 %}
-    {{ new_friend_request_num }}件のフレンドリクエスト：<br>
-        {% for new_friend_request in new_friend_requests %}
-            <img src="/{{ new_friend_request.user_icon }}" alt="" width="30" height="30"/>
-            {{ new_friend_request.requestor_username }}さんからフォローリクエストが届きました。<br>
-        {% endfor %}
-    {% endif %}
-</body>
-
-</html>
+    <!-- {{ new_friend_request_num }}件のフレンドリクエスト：<br> -->
+    {% for new_friend_request in new_friend_requests %}
+            <img src="/{{ new_friend_request.user_icon }}" alt="" class="usericon" width="50" height="50">
+            <p class="notice">{{ new_friend_request.requestor_username }}<br>からフォローリクエストです</p><br>
+            <!-- 追加、削除機能を実装して下さい -->
+            {% endfor %}
+            {% endif %}
+        </body>
+        
+        </html>

@@ -1,11 +1,31 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
         <title>投稿完了|遊ViVA in KYOTO</title>
+        <link rel="stylesheet" href="{% static 'asovi_app/css/post_completed.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
     </head>
+
     <body>
-        <a href="{% url 'asovi_app:post_detail' post_pk %}">投稿を見る</a><br>
-        <a href="{% url 'asovi_app:my_page' %}">マイページに戻る</a>
+        <!-- ここから -->
+    <div class="logo">
+        <p><strong>友達一覧</strong></p>
+    </div>
+    
+        <!-- ここまで共通 -->
+    <p class="top">投稿完了</p>
+    <p class="comp">あなたの投稿を公開しました。</p>
+    <div class="return">
+        <a href="{% url 'asovi_app:my_page' %}"><p>マイページに戻る</p></a>
+    </div>
+    <div class="return">
+        <a href="{% url 'asovi_app:post_detail' post_pk %}"><p>投稿を見る</p></a>
+    </div>
+    <div class="home">
+        <a href="{% url 'asovi_app:place_search' %}"><p>ホームに戻る</p></a>
+    </div>
     </body>
 </html>
