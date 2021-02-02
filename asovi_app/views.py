@@ -465,7 +465,7 @@ def place_search(request):
     posts = Post.objects.all()
     posts_json = serializers.serialize('json', posts)
     my_goods = Good.objects.filter(user=me).values('article')
-    print(my_gooded_post)
+    # print(my_gooded_post)
     # for my_good in my_goods: subqueryとOuterRefが必要
     #     print(post.pk)
     #     if my_good['article'] in post.pk:
@@ -476,7 +476,7 @@ def place_search(request):
         'me': me,
         'form': PlaceSearchForm,
         'posts_json': posts_json,
-        'good_button': good_button,
+        # 'good_button': good_button,
     }
     # else:
     if request.method == 'POST':

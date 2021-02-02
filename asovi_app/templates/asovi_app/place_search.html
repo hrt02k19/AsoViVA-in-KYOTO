@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>場所検索|遊ViVA in KYOTO</title>
+    <title>ホーム|遊ViVA in KYOTO</title>
     <link rel="stylesheet" href="{% static 'asovi_app/css/style.css' %}">
     <style>
         html,
@@ -16,8 +16,22 @@
         }
 
         #map {
-            height: 80%;
-            width: 80%;
+            height: 60%;
+            width: 70%;
+            position: absolute;
+            top: 80%;
+            left: 5%;
+        }
+
+        form {
+            display: inline;
+        }
+        #id_place_type {
+            list-style: none;
+            display: inline;
+            position: absolute;
+            top: 25%;
+            left: 75%;
         }
     </style>
     <script>
@@ -46,7 +60,17 @@
     </script>
 </head>
 <body>
-    <h1>場所検索</h1>
+    <h1>遊ViVA in KYOTO</h1>
+    <div>
+        <a href="{% url 'asovi_app:post' %}">新規投稿作成</a>
+        <a href="{% url 'asovi_app:post_map' %}">投稿検索</a>
+        <a href="{% url 'asovi_app:popular' %}">人気</a>
+        <a href="{% url 'asovi_app:friend_list' %}">友達</a>
+        <a href="{% url 'asovi_app:check_event' %}">通知</a>
+        <a href="{% url 'asovi_app:my_page' %}">マイページ</a>
+        <a href="{% url 'asovi_app:settings' %}">設定</a>
+        <a href="{% url 'account_logout' %}">ログアウト</a>
+    </div>
     <p>検索の中心にしたい位置を地図上でクリックしてください。緯度・経度が自動入力されます。</p>
     <form action="{% url 'asovi_app:place_search' %}" method="POST">
         {% csrf_token %}
@@ -60,6 +84,7 @@
     {{result.vicinity}}
     <br>
     {% endfor %}
+
 
     <script>
         var map;
@@ -122,7 +147,7 @@
                     }));
 
                     infoWindows_posts.push(new google.maps.InfoWindow({
-                        content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"70\">' + '<h2>' + post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + '<button type="submit" name="good" value="good" onclick="gooded()" id="good">{{good_button}}</button></form>' + '<span>' + post.fields.like + 'いいね</span>'
+                        content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"70\">' + '<h2>' + post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + '<button type="submit" name="good" value="good" onclick="gooded()" id="good">{{good_button}}いいね</button></form>' + '<span>' + post.fields.like + 'いいね</span>'
                     }));
                 }
             }
