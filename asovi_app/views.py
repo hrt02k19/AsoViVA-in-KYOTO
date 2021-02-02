@@ -523,7 +523,6 @@ def post_map(request):
             word_form = WordSearchForm(request.POST)
             kw = request.POST.get('key_word')
             posts = posts.filter(body__contains=kw)
-
     posts_json = serializers.serialize('json',posts)
     genre_json = serializers.serialize('json',Genre.objects.all().order_by('pk'))
 
@@ -647,11 +646,23 @@ def my_page(request):
     except:
         NotificationSetting.objects.create(user=request.user)
     me = request.user
+    my_profile = Profile.objects.get(user=me)
     friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
+    post = Post.objects.filter(posted_by=me).order_by("-time")
+    post_num = post.count()
+    post10 = post[0:10]
+    posts_json = serializers.serialize('json',post)
+    genre_json = serializers.serialize('json',Genre.objects.all().order_by('pk'))
     params = {
         'me': me,
+        'profile': my_profile,
         'notification': count_new_events(me),
+        'posts': post,
+        'post10': post10,
         'friend_num': friend_num,
+        'post_num': post_num,
+        'posts_json': posts_json,
+        'genre_json': genre_json,
     }
     return render(request, 'asovi_app/mypage.html', params)
 
