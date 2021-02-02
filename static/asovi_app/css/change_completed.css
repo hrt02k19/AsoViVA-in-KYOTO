@@ -19,10 +19,6 @@ body {
     color: #707070;
   }
 /* ここまでテンプレ */
-.hidden {
-  margin:0;
-  position: relative;
-}
 .top {
   margin-top: 62px;
   margin-left: 33px;
@@ -37,22 +33,6 @@ body {
   font-size: 15px;
 }
 /* ボタン */
-.request {
-  background-color: #E4A359;
-    color: #FFFFFF;
-    width: 50px;
-    height: 30px;
-    border: none;
-    margin-left: 115px;
-}
-
-.button {
-  margin-left: 279px;
-  position: absolute;
-  margin-top: 30px;
-  display: none;
-}
-
 .return {
     width: 285px;
     height: 33px;

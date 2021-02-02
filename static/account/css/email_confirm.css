@@ -21,17 +21,7 @@ border: solid #707070 1px;
     margin-left: 93px;
     width: 135px;
   }
-.left {
-  width: 18px;
-  color: #707070;
-}
-h2, p {
-  color: #909090;
-  font-size: 15px;
-}
-h2 {
-  margin-top: 62px;
-}
+/* ここまでロゴ */
 
 /* 本文 */
 .letter {
@@ -73,5 +63,3 @@ h2 {
 .deco {
   text-decoration: none;
 }
-
-/* メモメモ */

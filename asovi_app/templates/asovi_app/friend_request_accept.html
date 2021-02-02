@@ -18,23 +18,21 @@
  <!-- ここまで共通 -->
 
     {% if new_requests %}
-        <p>
-            <!-- ここから -->
-            <!-- <label for="username"></label><input type="search" placeholder="検索" name="username" id="username"> -->
+        <p class="hidden">
             <form method='GET' action="{% url 'asovi_app:friend_request_accept' %}">
                 <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username' placeholder="検索">
                 <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
             </form>
-            <!-- ここまでを機能するように書き直して欲しいです -->
         </p>
+
         <p class="follow">フォローリクエスト</p>
         {% for request in new_requests %}
         <div class="list">
             <img class="icon" src="/{{request.requestor_icon}}">
             <div>
-            <p class="userid">  {{request.requestor.user_id}} </p>
-            <p class="username">{{request.requestor_username}}</p>
-        </div>
+                <p class="userid">  @{{request.requestor.user_id}} </p>
+                <p class="username">{{request.requestor_username}}</p>
+            </div>
             <form action="{% url 'asovi_app:friend_request_accept' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="friend_request_pk" value="{{request.pk}}">

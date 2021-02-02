@@ -19,10 +19,7 @@ body {
     color: #707070;
   }
 /* ここまでテンプレ */
-.hidden {
-  margin:0;
-  position: relative;
-}
+
 /* 検索窓 */
 #username {
   width: 271px;

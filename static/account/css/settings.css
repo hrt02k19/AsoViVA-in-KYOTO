@@ -21,17 +21,10 @@ border: solid #707070 1px;
     margin-left: 86px;
     width: 135px;
   }
-
-
-h2, p {
+h2 {
   color: #909090;
   font-size: 15px;
-}
-h2 {
   margin-top: 62px;
-  margin-left: 33px;
-}
-.letter {
   margin-left: 33px;
 }
 
@@ -47,31 +40,6 @@ ul li a {
   margin-left: 11px;
 }
 
-
-/* ログインページに戻る」ボタン */
-.return {
-  width: 285px;
-  height: 31px;
-  background-color: #E4A359;
-  border: none;
-  margin-left: 45px;
-  font-size: 15px;
-  font-weight: 900;
-  padding: 0;
-  font-family: "Meiryo", sans-serif;
-  margin-top: 44px;
-   text-align: center;
-}
-.return p {
-  padding-top: 4px;
-    padding-bottom: 4px;
-  color: #FFFFFF;
-}
-.return a {
-  color: #FFFFFF;
-  text-decoration: none !important;
-  font-size: 15px;
-}
 /* 位置調整 */
 .tuuti {
   margin-top: 18px;

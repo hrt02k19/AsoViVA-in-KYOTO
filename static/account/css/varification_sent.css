@@ -21,11 +21,6 @@ padding-left: 8px;
     margin-left:106px;
     width: 135px;
   }
-.left {
-  width: 18px;
-  color: #707070;
-  margin-left: -18px;
-}
  
 h1{
   margin-left: 33px;
@@ -41,43 +36,6 @@ p {
   margin-left: 33px;
   margin-top: 8px;
   margin-bottom: 0;
-}
-.again a{
-  color: #BF6F1E;
-  font-weight: 900;
-  text-decoration: none;
-}
-.again {
-  margin-top: 0;
-  margin-bottom: 11px;
-}
-.letter {
-  margin-top: -35px;
-}
-.agree {
-  margin-left: -12px;
-}
-.agreements {
-  padding-left: 14px;
-  padding-top: 7px;
-  height: 168px;
-  width: 283px;
-  border: solid #707070 1px;
-  margin-top: -5px;
-}
-
-/* form部分 */
-
-label {
-  display: none;
-}
-#verify {
-background-color:#EDEDED;
-border: solid #707070 1px;
- height: 40px;
- width: 271px;
- margin-left: 45px;
- padding-left: 10px;
 }
 
 /* 次へボタン */
