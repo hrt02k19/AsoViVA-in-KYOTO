@@ -135,12 +135,13 @@
                     }));
                     //マーカーをクリックした時に出る吹き出し
                     if( post.fields.genre != null ){
+                        console.log(post.fields.image);
                         infoWindows.push(new google.maps.InfoWindow({
-                            content : "<div id='content'>" + genre_list[post.fields.genre-1].fields.name + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
+                            content : "<div id='content'>" + genre_list[post.fields.genre-1].fields.name + "<br><img src=\"../../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
                         }));
                     }else{
                         infoWindows.push(new google.maps.InfoWindow({
-                            content : "<div id='content'>" + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
+                            content : "<div id='content'>" + "<br><img src=\"../../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
                         }));
                     };
                     // marker.addListener('click', function() { // マーカーをクリックしたとき
