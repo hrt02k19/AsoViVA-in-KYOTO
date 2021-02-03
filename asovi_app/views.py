@@ -592,12 +592,36 @@ class FindUserView(generic.ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('search_id')
-
+        print(query)
         if query:
             object_list = CustomUser.objects.filter(user_id__icontains=query)
         else:
             object_list = []
+        print(object_list)
         return object_list
+    
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        me = self.request.user
+        friend_qs = Friend.objects.filter(Q(requestor=me)|Q(requestee=me))
+        friend = friend_qs.filter(friended=True)
+        friend_request = friend_qs.filter(friended=False)
+        friend_list = []
+        friend_request_list = []
+        for relation in friend:
+            if relation.requestor == me :
+                friend_list.append(relation.requestee)
+            else:
+                friend_list.append(relation.requestor)
+        for relation in friend_request:
+            if relation.requestor == me :
+                friend_request_list.append(relation.requestee)
+            else:
+                friend_request_list.append(relation.requestor)
+        print(friend_list)
+        context['friend_list'] = friend_list
+        context['friend_request_list'] = friend_request_list
+        return context
 
 
 def user_profile(request, pk):

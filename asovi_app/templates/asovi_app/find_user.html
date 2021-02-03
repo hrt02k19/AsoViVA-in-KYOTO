@@ -39,10 +39,18 @@
                     </tr>
                 </table>
                 <!-- ここから -->
-                <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
-                    {% csrf_token %}
-                    <input type="submit" value="追加" class="request">
-                </form>
+                {% if found_user in friend_list %}
+                <p>友達</p>
+                {% else %}
+                    {% if found_user in friend_request_list %}
+                    <p>リクエスト中</p>
+                    {% else %}
+                    <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="追加" class="request">
+                    </form>
+                    {% endif %}
+                {% endif %}
                 <!-- ここまで、友達検索仕様に修正して欲しいです -->
             </div>
         {% endfor %}
