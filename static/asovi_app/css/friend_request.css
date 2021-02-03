@@ -1,6 +1,7 @@
 /* ここから */
  body {
   margin: 0;
+  overflow: hidden;
   }
   /* ロゴ部分 */
   .logo {
@@ -19,19 +20,15 @@
   }
 /* ここまでテンプレ */
 
-.top {
+/* 本文 */
+.done {
   margin-top: 62px;
   margin-left: 33px;
   color: #909090;
   font-weight: 900;
   font-size: 15px;
 }
-.comp {
-  margin-top: 8px;
-  margin-left: 33px;
-  color: #909090;
-  font-size: 15px;
-}
+
 /* ボタン */
 .mypage p {
     width: 285px;

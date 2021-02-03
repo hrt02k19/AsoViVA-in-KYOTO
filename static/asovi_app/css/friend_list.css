@@ -36,12 +36,15 @@ body {
   position: absolute;
   padding-left: 10px;
   font-size: 15px;
+} 
+.button {
+margin-left: -20px
 }
 .loupe {
   position: absolute;
   width: 15px;
-  margin-left: 318px;
-  margin-top: 36px;
+  margin-left: 331px;
+  margin-top: 20px;
 }
 .follow  {
     margin-left: 24px;

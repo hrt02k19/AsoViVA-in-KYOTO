@@ -50,6 +50,9 @@ body {
 .edit {
   color: #BF6F1E;
 }
+.dele a {
+  text-decoration: none;
+}
 .delete {
   color: #909090;
 }

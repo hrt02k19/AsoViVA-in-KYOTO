@@ -48,6 +48,12 @@ form p {
   font-weight: 900;
 }
 
+/* マップ */
+.map {
+
+
+}
+
 /* 画像 */
 #sampleimg {
   width: auto;
@@ -55,23 +61,39 @@ form p {
   object-fit: cover;
   margin-top: -5px;
   margin-left: 20px;
+  border: solid 1px #707070;
 }
 #selectimg {
-  margin-left: 20px;
-  margin-top: 76px;
+  margin-left: 8px;
+  margin-top: 78px;
 }
 .imgenre {
   display: flex;
 }
 
 /* 位置情報 */
+.selectplace {
+  display: flex;
+}
+.nowhere {
+  color: #BF6F1E;
+  font-size: 15px;
+  font-weight: 900;
+  border: none;
+  background-color: #FFFFFF;
+  margin-left: 90px;
+}
+.or {
+  margin-left: 0;
+  font-weight: 300;
+  font-size: 15px;
+}
 .place {
   color: #BF6F1E;
   font-size: 15px;
   font-weight: 900;
   border: none;
   background-color: #FFFFFF;
-  margin-left: 260px;
 }
 .getpos {
   color: #707070;

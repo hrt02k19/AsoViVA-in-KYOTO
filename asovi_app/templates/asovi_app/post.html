@@ -29,7 +29,7 @@
     <p><strong>投稿作成</strong></p> 
 </div>     
 <!-- ここまで共通 -->
-  <div id="map"></div>
+  <!-- <div id="map"></div> -->
   
 
 
@@ -55,10 +55,14 @@
       <p>経度：{{place_lng}}</p>
       {% endif %}
     </div>
-    <input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();">
+
     <input type="hidden" name="latitude" step="any" required id="id_latitude">
     <input type="hidden" name="longitude" step="any" required id="id_longitude">
-    <br><input type="submit" name="change_place" class="place" value="地点の変更">
+    <div class="selectplace">
+      <input name='getpos' type="button" class="nowhere" value="現在位置を取得" onclick="getPosition();">
+      <p class="or">または</p>
+      <a href="{% url 'asovi_app:change_place' %}"><input type="submit" name="change_place" class="place" value="地点の変更"></a>
+    </div>
   
     <br>
     <p>投稿日時</p>

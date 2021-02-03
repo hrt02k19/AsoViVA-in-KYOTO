@@ -19,9 +19,8 @@
   <a href="{% url 'asovi_app:profile_edit' %}" class="deco"><p class="profile">プロフィール設定に進む</p></a>
 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
 {% csrf_token %}
-    <button type="submit" class="submit" >確認する</button>
 </form>
-<button type="submit" class="submit" href="{#% url asovi_app:ホーム画面%#}">後にする</button>
+<a href="{% url 'asovi_app:place_search' %}"><button type="submit" class="submit">後にする</button></a>
 
 {% else %}
 
