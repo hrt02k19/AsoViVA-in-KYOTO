@@ -17,7 +17,8 @@
   <a href="#"><button type="submit" class="logout">{% trans 'Sign Out' %}</button></a>
 </form>
 
-<p class="return"><a href="#ホーム画面">ホームに戻る</a></p>
-
+<div class="home">
+  <a href="{% url 'asovi_app:place_search' %}"><p>ホームに戻る</p></a>
+</div>
 
 {% endblock %}

@@ -19,7 +19,7 @@
     {% if icon %}
     <img src="/{{icon}}" alt="アイコン画像" id="sampleimg">
     {% else %}
-    <img src="{% static 'asovi_app/img/034.jpg'%}" alt="" id="sampleimg">
+    <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" id="sampleimg">
     {% endif %}
     
         <form method='POST' action="{% url 'asovi_app:profile_edit' %}" enctype='multipart/form-data'>
@@ -118,10 +118,6 @@
                     <label for="expand-toggle09" class="expand-btn">
                         運動<img src="{% static 'asovi_app/img/ダッシュのピクトグラム1.png' %}" alt=""></label>
                 </div>
-                </p>
-
-                <p class="p4"><label for="id_gender">性別</label><br>
-                {{form.gender}}
                 </p>
             </div>
 

@@ -96,16 +96,24 @@ margin-bottom: 6px;
 }
 .line1 p {
   color: #909090;
-  font-weight: 900;
-  font-size: 20px;
+    font-weight: 900;
+    font-size: 20px;
+    width: 96px;
 }
-.many, .friend {
+.userid {
+   font-size: 13px !important;
+   margin-top: 28px;
+}
+.many{
+  margin-left: 32px;
+}
+
+.friend {
   margin-left: 10px;
 }
 .username {
-  color: #909090;
   font-weight: 900 !important;
-  font-size: 15px;
+  width: 75px;
 }
 .line2 {
   display: flex;
@@ -117,10 +125,10 @@ margin-bottom: 6px;
   font-size: 15px;
 }
 .toukou {
-    margin-left: 30px;
+    margin-left: 46px;
 }
 .tomo {
-   margin-left: 8px;
+   margin-left: 14px;
 }
 
 /* ボタン系 */
@@ -172,9 +180,16 @@ margin-bottom: 6px;
 }
 
 /* 投稿一覧 */
+.posts {
+  display: flex;
+}
 .post {
   font-size: 15px;
   font-weight: 900;
   margin-left: 33px;
+  margin-bottom: 0;
   color: #909090;
+}
+.imgs {
+  margin-right: 9px;
 }

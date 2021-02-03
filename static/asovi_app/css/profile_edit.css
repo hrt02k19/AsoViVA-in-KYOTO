@@ -41,6 +41,7 @@ body {
   height: 108px;
   object-fit: cover;
   border-radius: 50%;
+  border: 1px #707070 solid;
   margin-left: 134px;
   margin-top: 20px;
 }
@@ -105,8 +106,12 @@ label {
 
 /* 自己紹介 */
 #id_introduction {
-width: 283px;
-height: 80px;
+  width: 272px;
+  height: 73px;
+  color: #909090;
+  font-size: 15px;
+  padding-left: 9px;
+  padding-top: 5px;
 }
 
 /* ジャンル選択 */
