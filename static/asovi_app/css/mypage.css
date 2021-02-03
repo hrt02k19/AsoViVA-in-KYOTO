@@ -113,6 +113,7 @@ margin-bottom: 6px;
 }
 .username {
   font-weight: 900 !important;
+  width: 75px;
 }
 .line2 {
   display: flex;
