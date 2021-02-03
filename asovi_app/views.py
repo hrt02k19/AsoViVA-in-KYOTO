@@ -462,38 +462,46 @@ def friend_list(request,*args):
 
 def place_search(request):
     me = request.user
-    posts = Post.objects.all()
-    posts_json = serializers.serialize('json', posts)
-    my_goods = Good.objects.filter(user=me).values('article')
-    # print(my_gooded_post)
-    # for my_good in my_goods: subqueryとOuterRefが必要
-    #     print(post.pk)
-    #     if my_good['article'] in post.pk:
-    #         good_button = 'いいね済み'
-    #     else:
-    #         good_button = 'いいね'
-    params = {
-        'me': me,
-        'form': PlaceSearchForm,
-        'posts_json': posts_json,
-        # 'good_button': good_button,
-    }
-    # else:
+    if request.method == 'GET':
+        posts = Post.objects.all()
+        posts_json = serializers.serialize('json', posts)
+        params = {
+            'me': me,
+            'form': PlaceSearchForm,
+            'posts_json': posts_json,
+            'good_form': GoodForm(request.session.get('good_form_data')),
+        }
     if request.method == 'POST':
-        if "good" in request.POST:
-            """いいねの場合の処理"""
-            good_form = GoodForm(request.POST)
+        good_form = GoodForm(request.POST)
+        if "good_button" in request.POST:
+            """いいねボタンの場合の処理"""
             gooded_post = Post.objects.get(pk=request.POST['post_pk'])
-            me = CustomUser.objects.get(pk=request.POST['me_pk'])
-            new_good = Good(
-                user=me,
-                good=True,
-                article=gooded_post
-            )
-            new_good.save()
-            gooded_post.like += 1
-            gooded_post.save()
+            Good.objects.filter(user=me).filter(article=gooded_post)
+            request.session['good_form_data'] = request.POST
+
+            if 'good' in request.POST:
+                """いいねしたとき"""
+                new_good = Good(
+                    user=me,
+                    good=True,
+                    article=gooded_post
+                )
+                new_good.save()
+                gooded_post.like += 1
+                gooded_post.save()
+
+            else:
+                """いいね解除したとき"""
+                stop_good = Good.objects.filter(user=me).filter(article=gooded_post).latest('pub_date')
+                stop_good.delete()
+                gooded_post.like -= 1
+                gooded_post.save()
+            params = {
+                'me': me,
+                'good_form': good_form,
+            }
             return redirect('asovi_app:place_search')
+
 
         else:
             """検索の場合の処理"""
