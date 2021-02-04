@@ -39,22 +39,32 @@
                     </tr>
                 </table>
                 <!-- ここから -->
-                {% if found_user in friend_list %}
+                {% if found_user in block_list %}
                 <form action="{% url 'asovi_app:find_user' found_user.pk %}" method="POST">
                     {% csrf_token %}
-                    <input type="submit" value="削除" class="request">
+                    <input type="hidden" name="operation" value="block">
+                    <input type="submit" value="ブロック解除" class="request">
                 </form>
                 {% else %}
-                    {% if found_user in friend_request_list %}
+                    {% if found_user in friend_list %}
                     <form action="{% url 'asovi_app:find_user' found_user.pk %}" method="POST">
                         {% csrf_token %}
-                        <input type="submit" value="リクエスト削除" class="request">
+                        <input type="hidden" name="operation" value="friend">
+                        <input type="submit" value="削除" class="request">
                     </form>
                     {% else %}
-                    <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" value="追加" class="request">
-                    </form>
+                        {% if found_user in friend_request_list %}
+                        <form action="{% url 'asovi_app:find_user' found_user.pk %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="operation" vallue="friend">
+                            <input type="submit" value="リクエスト削除" class="request">
+                        </form>
+                        {% else %}
+                        <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="追加" class="request">
+                        </form>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
                 <!-- ここまで、友達検索仕様に修正して欲しいです -->
