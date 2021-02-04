@@ -89,9 +89,11 @@
         var infoWindows_places = [];
         var post_markers = [];
         var infoWindows_posts = [];
+        var currentInfoWindow;
 
         var posts = JSON.parse('{{ posts_json|escapejs }}'||"null");
         var results = JSON.parse('{{results_json|escapejs}}'||"null");
+        var liked_list = JSON.parse('{{ liked_list_json|escapejs }}'||"null");
 
         if(myLat && myLng){
             var center = {
@@ -143,8 +145,14 @@
                         optimized: false
                     }));
 
+                    if (liked_list.some(post_data => post_data.pk == post.pk)) {
+                        var good_button = '<button type="submit" name="stop_good">いいね解除</button>'
+                    } else {
+                        var good_button = '<button type="submit" name="good">いいね</button>'
+                    }
+
                     infoWindows_posts.push(new google.maps.InfoWindow({
-                        content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"70\">' + '<h2>' + post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="good_button" value="good_button"' + '>' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + '{{good_form.as_p}}' + '<button type="submit">いいね</button>' + '</form>' + '<p>' + post.fields.like + 'いいね</p>'
+                        content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"70\">' + '<h2>' + post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="good_button" value="good_button"' + '>' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + good_button + '</form>' + '<p>' + post.fields.like + 'いいね</p>'
                     }));
                 }
             }
@@ -152,7 +160,11 @@
             let post_num = post_markers.length
             for (let i = 0; i < post_num; i++){
                 post_markers[i].addListener('click', function(){
+                    if (currentInfoWindow){
+                        currentInfoWindow.close();
+                    }
                     infoWindows_posts[i].open(map, post_markers[i]);
+                    currentInfoWindow = infoWindows_posts[i];
                 });
 
             }
@@ -179,7 +191,11 @@
             let place_num = place_markers.length
             for (let i = 0; i < place_num; i++){
                 place_markers[i].addListener('click', function(){
+                    if (currentInfoWindow) {
+                        currentInfoWindow.close();
+                    }
                     infoWindows_places[i].open(map, place_markers[i]);
+                    currentInfoWindow = infoWindows_places[i]
                 });
             }
         }

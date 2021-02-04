@@ -7,7 +7,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.db import IntegrityError
-from django.db.models import Subquery, OuterRef
+from django.db.models import Subquery, OuterRef, Count
 from django.db.models.query import EmptyQuerySet
 from django.db.models.query_utils import Q
 from django.http import HttpResponseBadRequest
@@ -465,19 +465,35 @@ def place_search(request):
     if request.method == 'GET':
         posts = Post.objects.all()
         posts_json = serializers.serialize('json', posts)
+
+        good_data = Post.objects.annotate(
+            liked = Subquery(
+                Good.objects.filter(
+                    user=me, article=OuterRef('pk'), good=True
+                    ).values('good').annotate(count=Count('pk')).values('count')
+                ),
+        )
+        good_data_json = serializers.serialize('json', good_data)
+        liked_list = []  # いいねした投稿のリスト
+        for data in good_data:
+            if data.liked != None:
+                # いいねしてある場合
+                liked_list.append(data)
+
+        liked_list_json = serializers.serialize('json', liked_list)
         params = {
             'me': me,
             'form': PlaceSearchForm,
             'posts_json': posts_json,
-            'good_form': GoodForm(request.session.get('good_form_data')),
+            'posts': posts,
+            'liked_list_json': liked_list_json,
         }
+
     if request.method == 'POST':
-        good_form = GoodForm(request.POST)
         if "good_button" in request.POST:
             """いいねボタンの場合の処理"""
             gooded_post = Post.objects.get(pk=request.POST['post_pk'])
             Good.objects.filter(user=me).filter(article=gooded_post)
-            request.session['good_form_data'] = request.POST
 
             if 'good' in request.POST:
                 """いいねしたとき"""
@@ -496,19 +512,15 @@ def place_search(request):
                 stop_good.delete()
                 gooded_post.like -= 1
                 gooded_post.save()
-            params = {
-                'me': me,
-                'good_form': good_form,
-            }
             return redirect('asovi_app:place_search')
 
 
         else:
             """検索の場合の処理"""
             form = PlaceSearchForm(request.POST)
-            keyword = request.POST['keyword']
-            radius = request.POST['radius']
-            place_type = request.POST['place_type']
+            keyword = request.POST.get('keyword')
+            radius = request.POST.get('radius')
+            place_type = request.POST.get('place_type')
             lat = request.POST.get('lat')
             lng = request.POST.get('lng')
 
