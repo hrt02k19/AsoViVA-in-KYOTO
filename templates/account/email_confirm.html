@@ -16,11 +16,11 @@
    遊ViVA in Kyotoへようこそ！
   {% endblocktrans %}</p>
 
-  <a href="{% url 'asovi_app:profile_edit' %}" class="deco"><p class="profile">プロフィール設定に進む</p></a>
 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
 {% csrf_token %}
+    <button type="submit" class="profile deco">認証を完了する</button>
+    <span class="center">*プロフィール編集画面に移ります</span>
 </form>
-<a href="{% url 'asovi_app:place_search' %}"><button type="submit" class="submit">後にする</button></a>
 
 {% else %}
 

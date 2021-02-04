@@ -67,6 +67,14 @@ class NotificationForm(forms.ModelForm):
         }
 
 class PostForm(forms.ModelForm):
+    def __init__(self, *args, **kwd):
+        super(PostForm, self).__init__(*args, **kwd)
+        self.fields["latitude"].required = False
+        self.fields["longitude"].required = False
+
+        self.fields["latitude"].widget.attrs['placeholder'] = '地点を選択して自動入力'
+        self.fields["longitude"].widget.attrs['placeholder'] = '地点を選択して自動入力'
+
     class Meta:
         model = Post
         fields = ['image','body','latitude','longitude','genre']
@@ -128,8 +136,7 @@ class PlaceSearchForm(forms.Form):
         ('campground', 'キャンプ場'),
         ('lodging', '宿泊施設'),
         ('movie_theater', '映画館'),
-        ('moseum', '博物館'),
-        ('night_club', 'ナイトクラブ'),
+        ('museum', '博物館'),
         ('park', '公園'),
         ('restaurant', 'レストラン'),
         ('shopping_mall', 'ショッピングセンター'),
