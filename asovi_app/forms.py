@@ -20,7 +20,7 @@ class ProfileNameForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['username','icon','introduction','interested_genre','gender']
+        fields = ['username','introduction']
         labels = {
             'username': "名前",
         }
