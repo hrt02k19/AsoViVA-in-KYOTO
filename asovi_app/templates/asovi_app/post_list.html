@@ -54,8 +54,8 @@
     <!-- ここまで共通 -->
     
     <!-- アイコン画像 -->
-    {% if icon %}
-        <img src="/{{icon}}" alt="アイコン画像" id="sampleimg">
+    {% if profile.icon %}
+        <img src="/{{profile.icon}}" alt="アイコン画像" id="sampleimg">
     {% else %}
         <img src="{% static 'asovi_app/img/cameraicon.png'%}" alt="" id="sampleimg">
     {% endif %}

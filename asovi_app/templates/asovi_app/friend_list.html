@@ -51,7 +51,7 @@
                 <form action="{% url 'asovi_app:friend_list' %}" method='POST'>
                     {% csrf_token %}
                     <input type='hidden' value="{{friendship.requestee.pk}}" name="friend_pk">
-                    <input type="submit" name="accept" value="追加" class="accept">
+                    <!-- <input type="submit" name="accept" value="追加" class="accept"> -->
                     <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
             </div>
@@ -63,7 +63,7 @@
                 <form action="{% url 'asovi_app:friend_list' %}" method='POST'>
                     {% csrf_token %}
                     <input type='hidden' value="{{friendship.requestor.pk}}" name="friend_pk">
-                    <input type="submit" name="accept" value="追加" class="accept">
+                    <!-- <input type="submit" name="accept" value="追加" class="accept"> -->
                     <button type="submit" class="btn btn-primary reject">削除</button>
                 </form>
                 <br>

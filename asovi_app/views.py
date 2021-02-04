@@ -106,28 +106,32 @@ def profile_edit(request):
         #print(request.POST)
         #print(request.FILES)
         profile = ProfileForm(request.POST, instance=obj)
+        print(profile)
         if profile.is_valid():
             profile.save()
         if 'icon' in request.FILES:
             obj.icon = request.FILES['icon']
             obj.save()
-        if "1" in request.POST:
+        obj.interested_genre.clear()
+        int_genre_list = request.POST.getlist('interested_genre')
+        if "1" in int_genre_list:
+            print('yes')
             obj.interested_genre.add(Genre.objects.get(pk=1))
-        if "2" in request.POST:
+        if "2" in int_genre_list:
             obj.interested_genre.add(Genre.objects.get(pk=2))
-        if "3" in request.POST:
+        if "3" in int_genre_list:
             obj.interested_genre.add(Genre.objects.get(pk=3))
-        if "4" in request.POST:
+        if "4" in int_genre_list:
             obj.interested_genre.add(Genre.objects.get(pk=4))
-        if "5" in request.POST:
+        if "5" in int_genre_list:
             obj.interested_genre.add(Genre.objects.get(pk=5))
-        if "6" in request.POST:
+        if "6" in int_genre_list:
             obj.interested_genre.add(Genre.objects.get(pk=6))
-        if "7" in request.POST:
+        if "7" in int_genre_list:
             obj.interested_genre.add(Genre.objects.get(pk=7))
-        if "8" in request.POST:
+        if "8" in int_genre_list:
             obj.interested_genre.add(Genre.objects.get(pk=8))
-        if "9" in request.POST:
+        if "9" in int_genre_list:
             obj.interested_genre.add(Genre.objects.get(pk=9))
         params['form']=ProfileForm(instance=obj)
         params['icon']=obj.icon
@@ -298,11 +302,15 @@ def friend_request(request, pk):
     if request.method == 'POST':
         requestor=CustomUser.objects.get(pk=request.user.pk)
         requestee=CustomUser.objects.get(pk=pk)
-        new_request = Friend(
-            requestor=requestor,
-            requestee=requestee,
-        )
-        new_request.save()
+        already_friend = Friend.objects.filter(Q(requestor=requestor,requestee=requestee)|Q(requestor=requestee,requestee=requestor))
+        if len(already_friend) > 0 :
+            pass
+        else:
+            new_request = Friend(
+                requestor=requestor,
+                requestee=requestee,
+            )
+            new_request.save()
 
         params = {
             'requestor': requestor,
@@ -803,7 +811,7 @@ def check_event(request):
         'new_replies': new_reply,
         'new_friend_requests': new_friend_request,
     }
-
+    print(new_friend_request.count())
     return render(request, 'asovi_app/check_event.html', params)
 
 def notification_setting(request):
