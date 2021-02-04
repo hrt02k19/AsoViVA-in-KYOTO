@@ -40,10 +40,16 @@
                 </table>
                 <!-- ここから -->
                 {% if found_user in friend_list %}
-                <p>友達</p>
+                <form action="{% url 'asovi_app:find_user' found_user.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="削除" class="request">
+                </form>
                 {% else %}
                     {% if found_user in friend_request_list %}
-                    <p>リクエスト中</p>
+                    <form action="{% url 'asovi_app:find_user' found_user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="リクエスト削除" class="request">
+                    </form>
                     {% else %}
                     <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
                         {% csrf_token %}
