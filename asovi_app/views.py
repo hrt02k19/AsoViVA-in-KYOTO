@@ -106,7 +106,6 @@ def profile_edit(request):
         #print(request.POST)
         #print(request.FILES)
         profile = ProfileForm(request.POST, instance=obj)
-        print(profile)
         if profile.is_valid():
             profile.save()
         if 'icon' in request.FILES:
@@ -374,11 +373,14 @@ def friend_block(request,pk):
     return redirect('/friend_list/')
 
 def friend_list(request,*args):
-    if request.method == 'POST':
-        blocked_pk = request.POST['friend_pk']
-        return redirect('/friend_block/' + blocked_pk)
-    params = {}
     me = request.user
+    if request.method == 'POST':
+        selected_pk = request.POST['friend_pk']
+        selected_user = CustomUser.objects.get(pk=selected_pk)
+        selected_friend = Friend.objects.get(Q(requestor=me,requestee=selected_user)|Q(requestor=selected_user,requestee=me))
+        selected_friend.delete()
+        return redirect('/friend_list/')
+    params = {}
     query = request.GET.get('search_id')
     if query is not None:
         my_friend = Friend.objects.filter( Q(requestor=me,requestee__user_id__icontains=query) | Q(requestee=me,requestor__user_id__icontains=query)).filter(friended=True).annotate(
