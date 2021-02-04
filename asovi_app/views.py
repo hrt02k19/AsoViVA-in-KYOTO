@@ -694,6 +694,14 @@ class FindUserView(generic.ListView):
         context['friend_request_list'] = friend_request_list
         return context
 
+    def post(self,request,pk):
+        me = request.user
+        selected_pk = pk
+        selected_user = CustomUser.objects.get(pk=selected_pk)
+        selected_friend = Friend.objects.get(Q(requestor=me,requestee=selected_user)|Q(requestor=selected_user,requestee=me))
+        selected_friend.delete()
+        return redirect('/find_user/')
+
 
 def user_profile(request, pk):
     me = CustomUser.objects.get(pk=request.user.pk)
