@@ -321,6 +321,11 @@ def friend_request(request, pk):
 
 def friend_request_accept(request):
     params = {}
+    me = request.user
+    block_qs = Block.objects.filter(blocker=me)
+    block_list = []
+    for block in block_qs:
+        block_list.append(block.blocked)
     if request.method == 'POST':
         new_request_pk = request.POST['friend_request_pk']
         new_request = Friend.objects.get(pk=new_request_pk)
@@ -335,7 +340,7 @@ def friend_request_accept(request):
         if query is not None:
             new_requests = Friend.objects.filter(
                 requestee=request.user, friended=False, requestor__user_id__icontains=query
-                ).annotate(
+                ).exclude(requestor__in=block_list).annotate(
                     requestor_username = Subquery(
                         Profile.objects.filter(user=OuterRef("requestor")).values('username')
                     ),
@@ -349,7 +354,7 @@ def friend_request_accept(request):
             return render(request, 'asovi_app/friend_request_accept.html', params)
     new_requests = Friend.objects.filter(
         friended=False, requestee=request.user
-        ).annotate(
+        ).exclude(requestor__in=block_list).annotate(
         requestor_username = Subquery(
             Profile.objects.filter(user=OuterRef("requestor")).values('username')
         ),
@@ -384,8 +389,12 @@ def friend_list(request,*args):
         return redirect('/friend_list/')
     params = {}
     query = request.GET.get('search_id')
+    block_qs = Block.objects.filter(blocker=me)
+    block_list = []
+    for block in block_qs:
+        block_list.append(block.blocked)
     if query is not None:
-        my_friend = Friend.objects.filter( Q(requestor=me,requestee__user_id__icontains=query) | Q(requestee=me,requestor__user_id__icontains=query)).filter(friended=True).annotate(
+        my_friend = Friend.objects.filter( Q(requestor=me,requestee__user_id__icontains=query) | Q(requestee=me,requestor__user_id__icontains=query)).filter(friended=True).exclude(Q(requestor__in=block_list)|Q(requestee__in=block_list)).annotate(
             requestor_username=Subquery(
                 Profile.objects.filter(user=OuterRef("requestor")).values("username")
             ),
@@ -399,7 +408,7 @@ def friend_list(request,*args):
                 Profile.objects.filter(user=OuterRef("requestee")).values("icon")
             ),
         ).order_by("-friended_date")
-        my_friend_requesting = Friend.objects.filter(requestor=me,requestee__user_id__icontains=query,friended=False).annotate(
+        my_friend_requesting = Friend.objects.filter(requestor=me,requestee__user_id__icontains=query,friended=False).exclude(Q(requestor__in=block_list)|Q(requestee__in=block_list)).annotate(
             requestee_username=Subquery(
             Profile.objects.filter(user=OuterRef("requestee")).values("username")
             ),
@@ -407,7 +416,7 @@ def friend_list(request,*args):
                 Profile.objects.filter(user=OuterRef("requestee")).values("icon")
             )
         ).order_by("-requested_date")
-        my_friend_requested = Friend.objects.filter(requestee=me, friended=False).annotate(
+        my_friend_requested = Friend.objects.filter(requestee=me, friended=False).exclude(Q(requestor__in=block_list)|Q(requestee__in=block_list)).annotate(
             requestor_icon=Subquery(
             Profile.objects.filter(user=OuterRef("requestor")).values("icon")
             )
@@ -418,7 +427,7 @@ def friend_list(request,*args):
         else:
             my_friend_requested_top = None
     else:
-        my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).annotate(
+        my_friend = Friend.objects.filter( Q(requestor=me) | Q(requestee=me)).filter(friended=True).exclude(Q(requestor__in=block_list)|Q(requestee__in=block_list)).annotate(
             requestor_username=Subquery(
                 Profile.objects.filter(user=OuterRef("requestor")).values("username")
             ),
@@ -432,7 +441,7 @@ def friend_list(request,*args):
                 Profile.objects.filter(user=OuterRef("requestee")).values("icon")
             ),
         ).order_by("-friended_date")
-        my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).annotate(
+        my_friend_requesting = Friend.objects.filter(requestor=me,friended=False).exclude(Q(requestor__in=block_list)|Q(requestee__in=block_list)).annotate(
             requestee_username=Subquery(
                 Profile.objects.filter(user=OuterRef("requestee")).values("username")
             ),
@@ -440,7 +449,7 @@ def friend_list(request,*args):
                 Profile.objects.filter(user=OuterRef("requestee")).values("icon")
             )
         ).order_by("-requested_date")
-        my_friend_requested = Friend.objects.filter(requestee=me,friended=False).annotate(
+        my_friend_requested = Friend.objects.filter(requestee=me,friended=False).exclude(Q(requestor__in=block_list)|Q(requestee__in=block_list)).annotate(
             requestor_icon=Subquery(
                 Profile.objects.filter(user=OuterRef("requestor")).values("icon")
             )
@@ -663,12 +672,12 @@ class FindUserView(generic.ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('search_id')
-        print(query)
+        #print(query)
         if query:
             object_list = CustomUser.objects.filter(user_id__icontains=query)
         else:
             object_list = []
-        print(object_list)
+        #print(object_list)
         return object_list
     
     def get_context_data(self,**kwargs):
@@ -677,8 +686,10 @@ class FindUserView(generic.ListView):
         friend_qs = Friend.objects.filter(Q(requestor=me)|Q(requestee=me))
         friend = friend_qs.filter(friended=True)
         friend_request = friend_qs.filter(friended=False)
+        block_qs = Block.objects.filter(blocker=me)
         friend_list = []
         friend_request_list = []
+        block_list = []
         for relation in friend:
             if relation.requestor == me :
                 friend_list.append(relation.requestee)
@@ -689,17 +700,24 @@ class FindUserView(generic.ListView):
                 friend_request_list.append(relation.requestee)
             else:
                 friend_request_list.append(relation.requestor)
+        for block in block_qs:
+            block_list.append(block.blocked)
         print(friend_list)
         context['friend_list'] = friend_list
         context['friend_request_list'] = friend_request_list
+        context['block_list'] = block_list
         return context
 
     def post(self,request,pk):
+        print(request.POST)
         me = request.user
-        selected_pk = pk
-        selected_user = CustomUser.objects.get(pk=selected_pk)
-        selected_friend = Friend.objects.get(Q(requestor=me,requestee=selected_user)|Q(requestor=selected_user,requestee=me))
-        selected_friend.delete()
+        selected_user = CustomUser.objects.get(pk=pk)
+        if request.POST.get('operation') == 'friend':
+            selected_friend = Friend.objects.get(Q(requestor=me,requestee=selected_user)|Q(requestor=selected_user,requestee=me))
+            selected_friend.delete()
+        elif request.POST.get('operation') == 'block':
+            selected_block = Block.objects.get(blocker=me,blocked=selected_user)
+            selected_block.delete()
         return redirect('/find_user/')
 
 
