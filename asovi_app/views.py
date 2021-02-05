@@ -10,6 +10,7 @@ from django.db import IntegrityError
 from django.db.models import Subquery, OuterRef, Count
 from django.db.models.query import EmptyQuerySet
 from django.db.models.query_utils import Q
+from django.forms.fields import NullBooleanField
 from django.http import HttpResponseBadRequest
 from django.template.loader import render_to_string
 from django.http.response import HttpResponse
@@ -194,8 +195,9 @@ def post_view(request):
             lng = request.POST.get('longitude')
             place = gmaps.reverse_geocode((lat, lng), language='ja')
             place_id = place[0]['place_id']
+            place_name = request.POST.get('place_name')
             #ユーザーが現在地ボタンを押さなかった時の挙動をどうするのか?
-            new_post = Post(posted_by=user,image=image,genre=genre,body=body,latitude=lat,longitude=lng,place_id=place_id)
+            new_post = Post(posted_by=user,image=image,genre=genre,body=body,latitude=lat,longitude=lng,place_id=place_id,place_name=place_name)
             new_post.save()
             return redirect('/post_completed/' + str(new_post.pk))  #投稿後に遷移するページが完成次第post/から変更する
 
@@ -207,33 +209,37 @@ def post_completed(request,pk):
 
 def change_place(request):
     params = {
-        #'search_form': PlaceSearchForm(),
-        'post_form': PostForm()
+        'search_form': PlaceSearchForm(),
+        'lat': -1000,
+        'lng': -1000,
     }
 
-    # if request.method == 'POST':
-    #     search_form = PlaceSearchForm(request.POST)
-    #     keyword = request.POST['keyword']
-    #     radius = request.POST['radius']
-    #     place_type = request.POST['place_type']
-    #     lat = request.POST.get('place_lat')
-    #     lng = request.POST.get('place_lng')
+    if request.method == 'POST':
+        print(request.POST)
+        search_form = PlaceSearchForm(request.POST)
+        keyword = request.POST['keyword']
+        radius = request.POST['radius']
+        place_type = request.POST['place_type']
+        lat = request.POST.get('lat')
+        lng = request.POST.get('lng')
 
-    #     gmaps = googlemaps.Client(API_KEY)
+        gmaps = googlemaps.Client(API_KEY)
 
-    #     if lat == None or lng == None:
-    #         search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, type=place_type, language='ja')
+        if lat == None or lng == None:
+            search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, type=place_type, language='ja')
 
-    #     else:
-    #         search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, type=place_type, language='ja')
+        else:
+            search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, type=place_type, language='ja')
 
-    #     results = search_results['results']
-    #     results_json = json.dumps(results)
-    #     params = {
-    #         'search_form': search_form,
-    #         'results': results,
-    #         'results_json': results_json,
-    #     }
+        results = search_results['results']
+        results_json = json.dumps(results)
+        params = {
+            'search_form': search_form,
+            'results': results,
+            'results_json': results_json,
+            'lat': lat,
+            'lng': lng
+        }
     return render(request, 'asovi_app/change_place.html', params)
 
 
@@ -766,6 +772,10 @@ def my_page(request):
         get_object_or_404(NotificationSetting,user=request.user)
     except:
         NotificationSetting.objects.create(user=request.user)
+    try:
+        get_object_or_404(Profile,user=request.user)
+    except:
+        Profile.objects.create(user=request.user)
     me = request.user
     my_profile = Profile.objects.get(user=me)
     friend_num = Friend.objects.filter(Q(requestor=me)|Q(requestee=me)).filter(friended=True).count()
