@@ -26,17 +26,11 @@
 <body>
    <!-- ここから -->
    <div class="logo">
-    <p><strong>投稿作成</strong></p> 
-</div>     
+    <p><strong>投稿作成</strong></p>
+</div>
 <!-- ここまで共通 -->
   <!-- <div id="map"></div> -->
-  
 
-
- 
-
- 
-  
   <form action="{% url 'asovi_app:post' %}" method="POST" id='latlng' enctype='multipart/form-data'>
     {% csrf_token %}
     <br>
@@ -65,7 +59,7 @@
       <p class="or">または</p>
       <a href="{% url 'asovi_app:change_place' %}"><input type="submit" name="change_place" class="place" value="地点の変更"></a>
     </div>
-  
+
     <br>
     <p>投稿日時</p>
     <p id="today">今日の日付</p>
@@ -100,10 +94,10 @@
       <label for="expand-toggle06" class="expand-btn">
           買物<img src="{% static 'asovi_app/img/ショッピングの無料アイコン　3.png' %}" alt=""></label><br>
   </div>
-  
+
   <div class="genre3">
       <input type="radio" id="expand-toggle07" class="genre-input" name="interested_genre" value="7">
-      <label for="expand-toggle07" class="expand-btn"> 
+      <label for="expand-toggle07" class="expand-btn">
           屋内<img src="{% static 'asovi_app/img/家のアイコン素材.png' %}" alt=""></label>
       <input type="radio" id="expand-toggle08" class="genre-input" name="interested_genre" value="8">
       <label for="expand-toggle08" class="expand-btn">
@@ -115,15 +109,15 @@
 
     <button type="submit" class="btn btn-secondary submit">投稿</button>
     <div class="space"></div>
-    
+
 
   </form>
   <div class="whereIam">
     <h6>現在地取得ボタン↓</h6>
-    <input type="button" value="button" onclick="getPosition();"> 
+    <input type="button" value="button" onclick="getPosition();">
   </div>
-  
- 
+
+
   <!-- <input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();"> -->
 
 
@@ -138,24 +132,21 @@
         navigator.geolocation.getCurrentPosition(
 
             function(position){
-                //curLat = position.coords.latitude;
-                //curLng = position.coords.longitude;
-                var curLat = 35.0;
-                var curLng = 135.75;
+                curLat = position.coords.latitude;
+                curLng = position.coords.longitude;
+                // var curLat = 35.0;
+                // var curLng = 135.75;
                 //var form= document.getElementById('latlng')
-                console.log(curLat);
                 document.getElementById('id_latitude').value = curLat;
                 document.getElementById('id_longitude').value = curLng;
                 var latLngShow = document.getElementById('currentPos');
                 latLngShow.innerHTML = '';
                 var latText = document.createElement("p");
                 var lngText = document.createElement("p");
-                latText.innerText = "緯度：" + toString(curLat);
-                lngText.innerText = "経度：" + toString(curLng);
+                latText.innerText = "緯度：" + curLat;
+                lngText.innerText = "経度：" + curLng;
                 latLngShow.appendChild(latText);
                 latLngShow.appendChild(lngText);
-                //form.latitude.value=curLat
-                //form.longitude.value=curLng
 
             },
 
@@ -195,6 +186,7 @@
     }
 
 
+
     // function initMap() {
 
 
@@ -202,6 +194,7 @@
     //     zoom: 13,
     //     center: {lat: 35.0030, lng: 135.7674}
     //   });
+
 
     //   var marker=new google.maps.Marker({
     //     position: map.getCenter(),
@@ -238,7 +231,7 @@
     //       console.log(data)
     //     })
 
-  
+
 
     //     var lat2=data.results.geometry.location.lat;
     //     var lng2=data.results.geometry.location.lng;
@@ -253,13 +246,6 @@
     //     form.place_id.value=place_id_xhr;
     //     form.name.value=place_name
 
-        
-        
-
-        
-
-        
-        
 
 
 
@@ -292,7 +278,6 @@
 
 
 
-     
     }
 
     // marker = new google.maps.Marker({
