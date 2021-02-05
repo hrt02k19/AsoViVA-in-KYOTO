@@ -49,10 +49,10 @@
     <body>
         <!-- ここから -->
         <div class="logo">
-            <p><strong>マイページ</strong></p> 
-        </div>     
+            <p><strong>マイページ</strong></p>
+        </div>
     <!-- ここまで共通 -->
-    
+
     <!-- アイコン画像 -->
     {% if icon %}
         <img src="/{{icon}}" alt="アイコン画像" id="sampleimg">
@@ -71,7 +71,7 @@
             <!-- 友達数  -->
             <p class="friend">{{ friend_num }}</p>
         </div>
-            <div class="line2">   
+            <div class="line2">
                 <!-- ユーザー名 -->
                 <p class="username">{{ profile.username }}</p>
 
@@ -79,12 +79,12 @@
                 <p class="tomo">友達</p>
             </div>
     </div>
-    
+
 
     <br>
         <div class="button">
             <div class="edit">
-            <a href="{% url 'asovi_app:profile_edit' %}">編集</a>  
+            <a href="{% url 'asovi_app:profile_edit' %}">編集</a>
             </div>
             <div class="logout">
                 <a href="{% url 'account_logout' %}">ログアウト</a>
@@ -118,7 +118,7 @@
                     //console.log(post.fields.genre)
                     var postLat = post.fields.latitude;
                     var postLng = post.fields.longitude;
-                    
+
                     console.log(post);
                     //マーカーを投稿の位置に刺す
                     markers.push(new google.maps.Marker({
@@ -158,10 +158,7 @@
         <div class="posts">
             {% for post in post10 %}
             <p>
-                <img src="/{{post.image}}" height="117" width="117" alt="" class="imgs">
-                <!-- ↑投稿詳細への繊維が必要です -->
-                <!-- {{post.body}}
-                    {{post.time}} -->
+                <a href="{% url 'asovi_app:post_detail' post.pk %}"><img src="/{{post.image}}" height="117" width="117" alt="" class="imgs"></a>
             </p>
                 {% endfor %}
         </div>
