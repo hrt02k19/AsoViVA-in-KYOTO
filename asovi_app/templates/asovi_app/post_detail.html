@@ -16,14 +16,14 @@
         <!-- ここまで共通 -->
 
         <div class="header">
-            <p class="kyoto">京都大学</p>
+            <p class="kyoto">{{ post.place_name }}</p>
             <img src="{% static 'asovi_app/img/三点リーダー.png'%}" alt="" width="20" height="20" class="three" id="three">
                 <div class="drawer" id="drawer">
-                    <div class="edi">
+                    <!-- <div class="edi">
                     <a href="{% url 'asovi_app:post' %}">
                         <p class="edit">編集　<img src="{% static 'asovi_app/img/鉛筆.png'%}" alt=""　width="20" height="20" class="pen"></p>
                     </a>
-                    </div>
+                    </div> -->
                     <div class="dele">
                     <a href="{% url 'asovi_app:post_delete' post.pk %}">
                         <p class="delete">削除　<img src="{% static 'asovi_app/img/ゴミ箱.png'%}" alt=""　width="20" height="20" class="dust"></p>
