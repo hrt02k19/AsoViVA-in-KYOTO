@@ -158,12 +158,14 @@
         <div class="posts">
             {% for post in post10 %}
             <p>
-                <img src="/{{post.image}}" height="117" width="117" alt="" class="imgs">
+                <a href="{% url 'asovi_app:post_detail' post.pk %}">
+                    <img src="/{{post.image}}" height="117" width="117" alt="" class="imgs"/>
+                </a>
                 <!-- ↑投稿詳細への繊維が必要です -->
                 <!-- {{post.body}}
                     {{post.time}} -->
             </p>
-                {% endfor %}
+            {% endfor %}
         </div>
 
 
