@@ -69,7 +69,7 @@
             <!-- 投稿数 -->
             <p class="many">{{ post_num }}</p>
             <!-- 友達数  -->
-            <p class="friend">{{ friend_num }}</p>
+            <a href="{% url 'asovi_app:friend_list' %}"><p class="friend">{{ friend_num }}</p></a>
         </div>
             <div class="line2">
                 <!-- ユーザー名 -->

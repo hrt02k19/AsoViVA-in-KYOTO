@@ -48,12 +48,6 @@ form p {
   font-weight: 900;
 }
 
-/* マップ */
-.map {
-
-
-}
-
 /* 画像 */
 #sampleimg {
   width: auto;
@@ -66,14 +60,20 @@ form p {
 #selectimg {
   margin-left: 8px;
   margin-top: 78px;
+  width: 232px;
 }
 .imgenre {
   display: flex;
 }
 
 /* 位置情報 */
+.where {
+  margin-bottom: -20px;
+}
 .selectplace {
   display: flex;
+  margin-top: -199px;
+  margin-bottom: 143px;
 }
 .nowhere {
   color: #BF6F1E;
