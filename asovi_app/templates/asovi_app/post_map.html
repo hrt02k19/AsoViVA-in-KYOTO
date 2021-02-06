@@ -55,25 +55,14 @@
         </script>
     </head>
     <body>
-        <!-- {% for post in posts %}
-            {% if post.image %}
-            <img src="{{ post.image.url }}"/>
-            {% endif %}
-            {{ post.body|linebreaksbr }} -->
-            <!--for test-->
-            <!-- {{ post.latitude }}
-            {{ post.longitude }}
-        {% endfor %} -->
         <form action="{% url 'asovi_app:post_map' %}" method="POST">
             {% csrf_token %}
             {{ loc_form.as_p }}
-            <button type="submit" name="location_search" onclick="getPosition();">検索</button>
             <br>
             {{ genre_form.as_p }}
-            <button type="submit" name="genre_search">検索</button>
             <br>
             {{ word_form.as_table }}
-            <button type="submit" name="word_search">検索</button>
+            <button type="submit">検索</button>
         </form>
         <div id="map"></div>
         <script>
@@ -82,9 +71,9 @@
             var infoWindows = [];
             var posts = JSON.parse('{{ posts_json|escapejs }}');
             var genre_list = JSON.parse('{{ genre_json|escapejs }}');
-            var radius = {{ radius }};
-            curLat=34.70;
-            curLng=135.50;
+            var radius = "{{ radius }}";
+            var curLat=34.70;
+            var curLng=135.50;
             //console.log(radius);
             //console.log(posts);
             var center = {
@@ -130,7 +119,7 @@
                         map: map
                     }));
                     //マーカーをクリックした時に出る吹き出し
-                    if( post.fields.genre != null ){
+                    if( !post.fields.genre ){
                         infoWindows.push(new google.maps.InfoWindow({
                             content : "<div id='content'>" + genre_list[post.fields.genre-1].fields.name + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
                         }));

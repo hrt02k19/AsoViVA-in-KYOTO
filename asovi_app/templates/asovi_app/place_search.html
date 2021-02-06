@@ -23,13 +23,7 @@
         form {
             display: inline;
         }
-        #id_place_type {
-            list-style: none;
-            display: inline;
-            position: absolute;
-            top: 25%;
-            left: 75%;
-        }
+
     </style>
     <script>
         var myLat;
@@ -60,7 +54,6 @@
     <h1>遊ViVA in KYOTO</h1>
     <div>
         <a href="{% url 'asovi_app:post' %}">新規投稿作成</a>
-        <a href="{% url 'asovi_app:post_map' %}">投稿検索</a>
         <a href="{% url 'asovi_app:popular' %}">人気</a>
         <a href="{% url 'asovi_app:friend_list' %}">友達</a>
         <a href="{% url 'asovi_app:check_event' %}">通知</a>
@@ -68,13 +61,13 @@
         <a href="{% url 'asovi_app:settings' %}">設定</a>
         <a href="{% url 'account_logout' %}">ログアウト</a>
     </div>
-    <p>検索の中心にしたい位置を地図上でクリックしてください。緯度・経度が自動入力されます。</p>
-    <form action="{% url 'asovi_app:place_search' %}" method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">検索</button>
-    </form>
     <div id="map"></div>
+    <button type="button" id="place_search">場所を検索</button>
+    <button type="button" id="post_search">投稿を検索</button>
+
+    <form action="{% url 'asovi_app:place_search' %}" method="POST" id="form_box">
+    </form>
+
     <p>検索結果</p>
     {% for result in results %}
     <a href="{% url 'asovi_app:place_detail' result.place_id %}">{{result.name}}</a>
@@ -90,7 +83,10 @@
         var post_markers = [];
         var infoWindows_posts = [];
         var currentInfoWindow;
+        var formBox;
 
+        var radius = '{{ radius }}';
+        var genre_list = JSON.parse('{{ genre_json|escapejs }}'||"null");
         var posts = JSON.parse('{{ posts_json|escapejs }}'||"null");
         var results = JSON.parse('{{results_json|escapejs}}'||"null");
         var liked_list = JSON.parse('{{ liked_list_json|escapejs }}'||"null");
@@ -111,7 +107,6 @@
                 center: center,
                 zoom: 13
             });
-
             // クリックイベントを追加
             map.addListener('click', function (e) {
                 getClickLatLng(e.latLng, map);
@@ -126,11 +121,29 @@
                 // 座標の中心をずらす
                 map.panTo(lat_lng);
             }
-
             if(posts){
                 for(var post of posts){
                     var postLat = post.fields.latitude;
                     var postLng = post.fields.longitude;
+
+                    //エリア検索時に範囲外の点を削除
+                    if (radius > 0) {
+                        var sqDist = Math.pow((postLat - curLat) * 110940.5844, 2.0) + Math.pow((postLng - curLng) * 91287.7885, 2.0)
+                        switch (radius > 0) {
+                            case 1:
+                                if (sqDist > 40000.0) continue;
+                                break;
+                            case 2:
+                                if (sqDist > 250000.0) continue;
+                                break;
+                            case 3:
+                                if (sqDist > 1000000.0) continue;
+                                break;
+                            case 4:
+                                if (sqDist > 4000000.0) continue;
+                                break;
+                        }
+                    };
 
                     post_markers.push(new google.maps.Marker({
                         position: {
@@ -144,19 +157,19 @@
                         },
                         optimized: false
                     }));
-
-                    if (liked_list.some(post_data => post_data.pk == post.pk)) {
+                    if (liked_list && liked_list.some(post_data => post_data.pk == post.pk)) {
                         var good_button = '<button type="submit" name="stop_good">いいね解除</button>'
                     } else {
                         var good_button = '<button type="submit" name="good">いいね</button>'
                     }
 
                     infoWindows_posts.push(new google.maps.InfoWindow({
-                        content: '<div class="content">' + '<img src=\"/' + post.fields.image + '\"  width=\"70\">' + '<h2>' + post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="good_button" value="good_button"' + '>' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + good_button + '</form>' + '<p>' + post.fields.like + 'いいね</p>'
+                        content: '<div class="content">'
+                            + '<img src=\"/' + post.fields.image + '\"  width=\"70\">'
+                            + '<h2>'+ post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="good_button" value="good_button"' + '>' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + good_button + '</form>' + '<p>' + post.fields.like + 'いいね</p>'
                     }));
                 }
             }
-
             let post_num = post_markers.length
             for (let i = 0; i < post_num; i++){
                 post_markers[i].addListener('click', function(){
@@ -169,9 +182,28 @@
 
             }
 
-            if (results){
+            // 投稿検索と場所検索の切り替え
+            document.getElementById("place_search").addEventListener('click', function(){
+                formBox = document.getElementById("form_box");
+                formBox.innerHTML = '{% csrf_token %}'
+                + '{{place_form.as_p|escapejs}}'
+                + '<button type="submit" name="place_search">検索</button>';
+                }, false);
 
-                for (var result of results){
+                document.getElementById("post_search").addEventListener('click', function(){
+                    formBox = document.getElementById("form_box");
+                formBox.innerHTML = '{% csrf_token %}'
+                    + '{{ word_form.as_p|escapejs }}'
+                    + '{{ genre_form.as_p|escapejs }}'
+                    + '{{ loc_form.as_p|escapejs }}'
+                    + '<button type="submit" name="post_search">検索</button>';
+                }, false);
+
+                // 場所検索の結果表示
+
+                if (results){
+
+                    for (var result of results){
                     var resultLat = result.geometry.location.lat;
                     var resultLng = result.geometry.location.lng;
 
@@ -200,7 +232,8 @@
             }
         }
 
-    </script>
+
+        </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 
 </body>
