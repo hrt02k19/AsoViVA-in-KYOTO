@@ -6,14 +6,23 @@
 <head>
     <meta charset="UTF-8">
     <title>お問い合わせ完了</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/contact_fin.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 
 <body>
-    <h1>問い合わせ</h1>
-    <h2>問い合わせ完了</h2>
-    <h3>お問い合わせ内容を送信しました。</h3>
-    <h3>メールの返信をお待ちください。</h3>
-    <p><a href="{% url 'asovi_app:place_search' %}">ホームに戻る</a></p>
+     <!-- ここから -->
+     <div class="logo">
+        <p><strong>問い合わせ</strong></p>
+    </div>
+        <!-- ここまで共通 -->
+
+   <div class="contents">
+       <h2>問い合わせ完了</h2>
+       <p>お問い合わせ内容を送信しました。</p>
+       <p>メールの返信をお待ちください。</p>
+   </div>
+       <p class="home"><a href="{% url 'asovi_app:place_search' %}">ホームに戻る</a></p>
     
     
 </body>
