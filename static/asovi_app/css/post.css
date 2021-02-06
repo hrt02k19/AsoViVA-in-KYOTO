@@ -72,10 +72,11 @@ form p {
 }
 .selectplace {
   display: flex;
-  margin-top: -199px;
+  margin-top: -473px;
   margin-bottom: 143px;
 }
 .nowhere {
+  height: 20px;
   color: #BF6F1E;
   font-size: 15px;
   font-weight: 900;
@@ -85,6 +86,7 @@ form p {
 }
 .or {
   margin-left: 0;
+  margin-top: 1px;
   font-weight: 300;
   font-size: 15px;
 }
