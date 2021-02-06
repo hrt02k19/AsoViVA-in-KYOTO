@@ -1,0 +1,147 @@
+body {
+  margin: 0;
+  }
+  /* ロゴ部分 */
+  .logo {
+  height: 51px;
+  width: 373px;
+  text-align: center;
+  border: solid #707070 1px;
+  }
+  .logo p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 11px;
+    margin-bottom: 13px;
+    font-family: "Segoe UI", sans-serif;
+    color: #707070;
+  }
+  .menutrigger {
+    margin-left: -166px;
+    margin-top: 18px;
+    position: absolute;
+  }
+  .gomypage {
+    width: 40px;
+    height: 40px;
+    margin-top: -47px;
+    margin-left: 132px;
+    position: absolute
+  }
+
+/* サイドメニュー */
+.sidemenu {
+  height: 100%;
+  width: 50%;
+  background-color: #FFFFFF;
+  position: absolute;
+  z-index: 2;
+  border-right: solid 1px #707070;
+  transition: .5s;
+}
+.hidden {
+  margin-left: -51%;
+  transition: .5s;
+}
+.sidemenu ul {
+  list-style: none;
+  padding-top: 9px;
+  padding-left: 0;
+}
+.sidemenu a {
+  text-decoration: none;
+  color: #909090;
+  font-size: 15px;
+}
+.sidemenu li {
+  margin-bottom: 15px;
+  margin-left: 18%;
+}
+/* 検索窓 */
+#id_keyword {
+  width: 269px;
+  height: 40px;
+  background-color: #EDEDED;
+  border: solid 1px #707070;
+  margin-left: 35px;
+  margin-top: 0px;
+  position: absolute;
+  padding-left: 12px;
+  font-size: 15px;
+  color: #909090;
+  z-index: 1;
+}
+.search {
+  margin-left: -40%;
+  margin-top: 30px;
+}
+.loupe {
+  position: absolute;
+  width: 18px;
+  margin-left: 415px;
+  margin-top: -59px;
+  z-index: 1;
+}
+.result  {
+  margin-top: 35px;
+  margin-left: 24px;
+  font-weight: 900;
+  color: #909090;
+}
+
+/* 検索条件 */
+form p {
+  color: #707070;
+}
+.explain {
+  font-size: 12px;
+  color: #707070;
+  margin-top: 3px;
+  margin-left: 5px;
+}
+label {
+  margin-left: 10px;
+}
+#id_lat {
+  margin-top: 255px;
+}
+.search2 {
+    background-color: #E4A359;
+    color: #FFFFFF;
+    font-weight: 900;
+    width: 285px;
+    height: 30px;
+    border: none;
+    margin-left: 45px;
+    margin-top: 15px;
+}
+
+/* 検索結果 */
+.list {
+  display: flex;
+  margin-top: -40px;
+  color: #707070;
+  margin-left: -28px;
+}
+.list1 {
+  width: 146px;
+}
+.results {
+  margin-top: -5px;
+  margin-left: 24px;
+  color: #909090;
+  font-size: 12px;
+}
+.results a {
+  text-decoration: none;
+  color: black;
+  font-size: 16px;
+}
+
+/* ボタン */
+.add {
+  width: 112px;
+  margin-top: 15px;
+  margin-left: 264px;
+  position: fixed;
+}

@@ -1,7 +1,6 @@
 /* ここから */
 body {
   margin: 0;
-  overflow: hidden;
   }
   /* ロゴ部分 */
   .logo {
@@ -99,6 +98,7 @@ body {
   width: 103px;
   height: 30px;
   border: none;
+  margin-left: 10px;
   margin-left: 10px;
 }
 
