@@ -25,6 +25,7 @@ body {
   display: flex;
 }
 .kyoto {
+  width: 290px;
   margin-left: 33px;
   margin-top: 20px;
   font-size: 15px;
@@ -33,7 +34,6 @@ body {
 }
 .three {
   margin-top: 20px;
-  margin-left: 225px;
 }
 
 /* 編集・削除タブ */
@@ -64,7 +64,7 @@ body {
   background-color: #FFFFFF;
   margin-top: 58px;
   width: 88px;
-  height: 57px;
+  height: 30px;
 }
 .drawer p {
   font-size: 15px;
@@ -75,6 +75,7 @@ body {
 }
 .postimg {
   position: relative;
+  margin-bottom: -10px;
 }
 .pen {
   margin-top: 2px;
@@ -82,6 +83,6 @@ body {
 
 /* いいね */
 #iine {
-  margin-left: 97px;
-  margin-top: 2px;
+  margin-left: 116px;
+  margin-top: 6px;
 }

@@ -94,6 +94,9 @@ margin-bottom: 6px;
 .line1 {
   display: flex;
 }
+.line1 a {
+  text-decoration: none;
+}
 .line1 p {
   color: #909090;
     font-weight: 900;

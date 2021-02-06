@@ -4,12 +4,25 @@
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
-        <title>投稿詳細|遊ViVA in KYOTO</title>
-        <link rel="stylesheet" href="{% static 'asovi_app/css/post_detail.css' %}">
+        <title>投稿削除|遊ViVA in KYOTO</title>
+        <link rel="stylesheet" href="{% static 'asovi_app/css/post_delete.css' %}">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
     </head>
     <body>
-        <p>投稿を削除しました。</p>
-        <a href="{% url 'asovi_app:my_page' %}">マイページへ戻る</a>
+        <!-- ここから -->
+        <div class="logo">
+            <p><strong>友達一覧</strong></p>
+        </div>
+        <!-- ここまで共通 -->
+
+        <p class="top">削除完了</p>
+        <p class="comp">投稿を削除しました。</p>
+
+        <div class="return">
+            <a href="{% url 'asovi_app:my_page' %}"><p>マイページに戻る</p></a>
+        </div>
+        <div class="home">
+            <a href="{% url 'asovi_app:place_search' %}"><p>ホームに戻る</p></a>
+        </div>
     </body>
 </html>
