@@ -16,47 +16,7 @@ body {
     font-family: "Segoe UI", sans-serif;
     color: #707070;
   }
-  .menutrigger {
-    margin-left: -166px;
-    margin-top: 18px;
-    position: absolute;
-  }
-  .gomypage {
-    width: 40px;
-    height: 40px;
-    margin-top: -47px;
-    margin-left: 132px;
-    position: absolute
-  }
 
-/* サイドメニュー */
-.sidemenu {
-  height: 100%;
-  width: 50%;
-  background-color: #FFFFFF;
-  position: absolute;
-  z-index: 2;
-  border-right: solid 1px #707070;
-  transition: .5s;
-}
-.hidden {
-  margin-left: -51%;
-  transition: .5s;
-}
-.sidemenu ul {
-  list-style: none;
-  padding-top: 9px;
-  padding-left: 0;
-}
-.sidemenu a {
-  text-decoration: none;
-  color: #909090;
-  font-size: 15px;
-}
-.sidemenu li {
-  margin-bottom: 15px;
-  margin-left: 18%;
-}
 
 /* 検索窓 */
 #id_keyword {
@@ -81,7 +41,7 @@ body {
   position: absolute;
   width: 15px;
   margin-left: 317px;
-  margin-top: -100px;
+  margin-top: -58px;
   z-index: 1;
 }
 .result  {
@@ -98,20 +58,11 @@ form p {
 .explain {
   font-size: 12px;
   color: #707070;
-  margin-top: 3px;
+  margin-top: -14px;
   margin-left: 5px;
 }
 label {
   margin-left: 10px;
-}
-.list {
-  display: flex;
-  margin-top: -22px;
-  color: #707070;
-  margin-left: -28px;
-}
-.list1 {
-  width: 146px;
 }
 #id_lat {
   margin-top: 255px;
@@ -128,23 +79,28 @@ label {
 }
 
 /* 検索結果 */
+.list {
+  display: flex;
+  margin-top: -40px;
+  color: #707070;
+  margin-left: -28px;
+}
+.list1 {
+  width: 146px;
+}
 .results {
   margin-top: -5px;
   margin-left: 24px;
   color: #909090;
-  font-size: 12px;
-}
-.results a {
-  text-decoration: none;
-  color: black;
-  font-size: 16px;
+  font-size: 15px;
 }
 
-/* ボタン */
-.add {
-  width: 112px;
-  margin-top: 15px;
-  margin-left: 264px;
-  position: fixed;
-  z-index: 3;
+input[type="submit" i] {
+  margin-left: 234px;
+  background-color: #E4A359;
+  color: #FFFFFF;
+  font-weight: 900;
+  width: 76px;
+  height: 30px;
+  border: none;
 }
