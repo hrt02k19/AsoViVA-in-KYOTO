@@ -6,14 +6,24 @@
 <head>
     <meta charset="UTF-8">
     <title>通知設定|遊ViVA in KYOTO</title>
+    <link rel="stylesheet" href="{% static 'asovi_app/css/notification_setting.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">   
 </head>
 
 <body>
-    <form action="{% url 'asovi_app:notification_setting' %}" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">変更</button>
-    </form>
+    <!-- ここから -->
+    <div class="logo">
+        <p><strong>通知設定</strong></p>
+    </div>
+     <!-- ここまで共通 -->
+
+    <div class="contents">
+        <form action="{% url 'asovi_app:notification_setting' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <a href="{% url 'asovi_app:settings' %}"><button type="submit" class="change">変更</button></a>
+        </form>
+    </div>
 </body>
 
 </html>
