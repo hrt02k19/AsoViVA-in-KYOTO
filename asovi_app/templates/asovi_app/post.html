@@ -5,7 +5,7 @@
 
 <html lang="ja">
 <head>
-  <title>Test Map</title>
+  <title>投稿作成</title>
   <link rel="stylesheet" href="{% static 'asovi_app/css/post.css' %}">
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -41,7 +41,7 @@
       </label>
     </div>
     <br>
-    <p>位置情報</p><br>
+    <p class="where">位置情報</p><br>
     <!-- <p class="now"> 現在の地点に基づいた情報です。</p> -->
     <div id="currentPos">
       {% if place_lat %}
@@ -54,18 +54,19 @@
     <input type="hidden" name="latitude" step="any" required id="id_latitude">
     <input type="hidden" name="longitude" step="any" required id="id_longitude">
     <input type="hidden" name="place_name" id="id_place_name">
-    <div class="selectplace">
-      <input name='getpos' type="button" class="nowhere" value="現在位置を取得" onclick="getPosition();">
-      <p class="or">または</p>
-      <a href="{% url 'asovi_app:change_place' %}"><input type="submit" name="change_place" class="place" value="地点の変更"></a>
-    </div>
-
+    
     <br>
     <p>投稿日時</p>
     <p id="today">今日の日付</p>
     <br><br>
     <p>コメント</p><br>
-    {{form.body}}
+    <textarea name="body" cols="40" rows="10" maxlength="300" required="" id="id_body" spellcheck="false"></textarea>
+
+    <div class="selectplace">
+      <input name='getpos' type="button" class="nowhere" value="現在位置を取得" onclick="getPosition();">
+      <p class="or">または</p>
+      <a href="{% url 'asovi_app:change_place' %}"><input type="submit" name="change_place" class="place" value="地点の変更"></a>
+    </div>
     <br>
     <p class="addgenre">ジャンル追加</p>
     <br>

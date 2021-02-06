@@ -23,7 +23,7 @@
 
 <form method='GET' action="{% url 'asovi_app:find_user' %}">
             <input type="text" name="search_id" value="{{request.GET.search_id}}" id='username'  placeholder="検索">
-                    <button type="submit" class="button">検索</button><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe">
+                    <button type="submit" class="button">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>
 
     </form>
     <div class="found_user_list">
@@ -43,7 +43,7 @@
                 <form action="{% url 'asovi_app:find_user' found_user.pk %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="operation" value="block">
-                    <input type="submit" value="ブロック解除" class="request">
+                    <input type="submit" value="ブロック解除" class="block">
                 </form>
                 {% else %}
                     {% if found_user in friend_list %}
@@ -51,13 +51,14 @@
                         {% csrf_token %}
                         <input type="hidden" name="operation" value="friend">
                         <input type="submit" value="削除" class="request">
+                        <!-- ↑上手く機能していません -->
                     </form>
                     {% else %}
                         {% if found_user in friend_request_list %}
                         <form action="{% url 'asovi_app:find_user' found_user.pk %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="operation" vallue="friend">
-                            <input type="submit" value="リクエスト削除" class="request">
+                            <input type="submit" value="リクエスト削除" class="requestdelete">
                         </form>
                         {% else %}
                         <form action="{% url 'asovi_app:friend_request' found_user.pk %}" method="POST">
