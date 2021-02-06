@@ -4,9 +4,19 @@
     <head>
         <meta charset="UTF-8">
         <title>人気</title>
+        <link rel="stylesheet" href="{% static 'asovi_app/css/popular.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">   
     </head>
     <body>
-        <h1>Ranking</h1>
+        <!-- ここから -->
+    <div class="logo">
+        <p><strong>人気</strong></p>
+    </div>
+     <!-- ここまで共通 -->
+
+        <h2>総合人気スポット</h2><img src="{% static 'asovi_app/img/fire.png' %}" alt="" class="fire">
+        <h2>食事人気スポット</h2><img src="{% static 'asovi_app/img/fire.png' %}" alt="" class="fire">
+        <h2>音楽人気スポット</h2><img src="{% static 'asovi_app/img/fire.png' %}" alt="" class="fire">
         {% for data in data %}
         <h5>{{data.id}}:{{data.place_name}}</h5>
         {% endfor %}

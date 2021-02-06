@@ -1,5 +1,4 @@
 /* ここから */
-/* ここから */
 body {
   margin: 0;
   width: 100%;
@@ -25,6 +24,20 @@ body {
   margin-left: 33px;
   margin-top: 62px;
 }
+h2 {
+  margin-top: 20px;
+  margin-left: 33px;
+  color: #909090;
+  font-weight: 900;
+  font-size: 15px;
+}
+.fire {
+  width: 20px;
+  height: 24px;
+  position: absolute;
+  margin-left: 153px;
+  margin-top: -36px;
+}
 p {
   color: #909090;
   font-size: 15px;
@@ -32,19 +45,3 @@ p {
   margin-top: 0;
 }
 
-/* ボタン */
-.change {
-  width: 285px;
-  height: 31px;
-  background-color: #E4A359;
-  border: none;
-  margin-left: 11px;
-  font-size: 15px;
-  font-weight: 900;
-  font-family: "Meiryo", sans-serif;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  margin-top: 88px;
-  text-align: center;
-  color: #FFFFFF;
-}
