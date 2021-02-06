@@ -56,17 +56,12 @@
     <input type="hidden" name="place_name" id="id_place_name">
     
     <br>
-    <p>投稿日時</p>
+    <p style="margin-top: 27px;">投稿日時</p>
     <p id="today">今日の日付</p>
     <br><br>
     <p>コメント</p><br>
     <textarea name="body" cols="40" rows="10" maxlength="300" required="" id="id_body" spellcheck="false"></textarea>
 
-    <div class="selectplace">
-      <input name='getpos' type="button" class="nowhere" value="現在位置を取得" onclick="getPosition();">
-      <p class="or">または</p>
-      <a href="{% url 'asovi_app:change_place' %}"><input type="submit" name="change_place" class="place" value="地点の変更"></a>
-    </div>
     <br>
     <p class="addgenre">ジャンル追加</p>
     <br>
@@ -74,64 +69,69 @@
       <input type="radio" id="expand-toggle01" class="genre-input" name="interested_genre" value="1">
       <label for="expand-toggle01" class="expand-btn">
           食事<img src="{% static 'asovi_app/img/フォークとスプーンのお食事アイコン素材 (1).png' %}" alt="">
-      </label>
+        </label>
       <input type="radio" id="expand-toggle02" class="genre-input" name="interested_genre" value="2">
       <label for="expand-toggle02" class="expand-btn">
-          音楽<img src="{% static 'asovi_app/img/8分音符アイコン 1 (1).png' %}" alt="">
+        音楽<img src="{% static 'asovi_app/img/8分音符アイコン 1 (1).png' %}" alt="">
       </label>
       <input type="radio" id="expand-toggle03" class="genre-input" name="interested_genre" value="3">
       <label for="expand-toggle03" class="expand-btn">
-          自然<img src="{% static 'asovi_app/img/登山アイコン4.png' %}" alt=""></label><br>
-  </div>
-
-  <div class="genre2">
-      <input type="radio" id="expand-toggle04" class="genre-input" name="interested_genre" value="4">
-      <label for="expand-toggle04" class="expand-btn">
+        自然<img src="{% static 'asovi_app/img/登山アイコン4.png' %}" alt=""></label><br>
+      </div>
+      
+      <div class="genre2">
+        <input type="radio" id="expand-toggle04" class="genre-input" name="interested_genre" value="4">
+        <label for="expand-toggle04" class="expand-btn">
           芸術<img src="{% static 'asovi_app/img/パレットのフリーアイコン7.png' %}" alt=""></label>
-      <input type="radio" id="expand-toggle05" class="genre-input" name="interested_genre" value="5">
-      <label for="expand-toggle05" class="expand-btn">
-          寺社<img src="{% static 'asovi_app/img/シンプルな鳥居アイコン.png' %}" alt=""></label>
+          <input type="radio" id="expand-toggle05" class="genre-input" name="interested_genre" value="5">
+          <label for="expand-toggle05" class="expand-btn">
+            寺社<img src="{% static 'asovi_app/img/シンプルな鳥居アイコン.png' %}" alt=""></label>
       <input type="radio" id="expand-toggle06" class="genre-input" name="interested_genre" value="6">
       <label for="expand-toggle06" class="expand-btn">
           買物<img src="{% static 'asovi_app/img/ショッピングの無料アイコン　3.png' %}" alt=""></label><br>
-  </div>
-
+        </div>
+        
   <div class="genre3">
-      <input type="radio" id="expand-toggle07" class="genre-input" name="interested_genre" value="7">
+    <input type="radio" id="expand-toggle07" class="genre-input" name="interested_genre" value="7">
       <label for="expand-toggle07" class="expand-btn">
-          屋内<img src="{% static 'asovi_app/img/家のアイコン素材.png' %}" alt=""></label>
+        屋内<img src="{% static 'asovi_app/img/家のアイコン素材.png' %}" alt=""></label>
       <input type="radio" id="expand-toggle08" class="genre-input" name="interested_genre" value="8">
       <label for="expand-toggle08" class="expand-btn">
-          屋外 <img src="{% static 'asovi_app/img/自動車の無料アイコン素材 その3 (2).png' %}" alt=""></label>
+        屋外 <img src="{% static 'asovi_app/img/自動車の無料アイコン素材 その3 (2).png' %}" alt=""></label>
       <input type="radio" id="expand-toggle09" class="genre-input" name="interested_genre" value="9">
       <label for="expand-toggle09" class="expand-btn">
-          運動<img src="{% static 'asovi_app/img/ダッシュのピクトグラム1.png' %}" alt=""></label>
-  </div>
+        運動<img src="{% static 'asovi_app/img/ダッシュのピクトグラム1.png' %}" alt=""></label>
+      </div>
 
-    <button type="submit" class="btn btn-secondary submit">投稿</button>
-    <div class="space"></div>
+      <button type="submit" class="btn btn-secondary submit">投稿</button>
+      <div class="space"></div>
+      
 
-
-  </form>
-  <div class="whereIam">
-    <h6>現在地取得ボタン↓</h6>
+    </form>
+    <!-- <div class="whereIam">
+      <h6>現在地取得ボタン↓</h6>
     <input type="button" value="button" onclick="getPosition();">
+  </div> -->
+  <div class="selectplace">
+    <input name='getpos' type="button" class="nowhere" value="現在位置を取得" onclick="getPosition();">
+    <p class="or">または</p>
+    <a href="{% url 'asovi_app:change_place' %}"><input type="submit" name="change_place" class="place" value="地点の変更"></a>
   </div>
-
-
+  
+  
   <!-- <input name='getpos' type="button" value="現在位置を取得" onclick="getPosition();"> -->
-
-
+  
+  
   <script>
     //geolocation apiに関する設定
     if(!navigator.geolocation){
-        alert("この端末では位置情報が取得できません");
+      alert("この端末では位置情報が取得できません");
     }
     var curLat;
     var curLng;
     function getPosition(){
-        navigator.geolocation.getCurrentPosition(
-
+      navigator.geolocation.getCurrentPosition(
+        
             function(position){
                 curLat = position.coords.latitude;
                 curLng = position.coords.longitude;
