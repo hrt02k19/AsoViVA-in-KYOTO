@@ -71,14 +71,14 @@
             var infoWindows = [];
             var posts = JSON.parse('{{ posts_json|escapejs }}');
             var genre_list = JSON.parse('{{ genre_json|escapejs }}');
-            var radius = "{{ radius }}";
-            var curLat=34.70;
-            var curLng=135.50;
+            var radius = {{ radius }};
+            var curLat=34.98615;
+            var curLng=135.75878;
             //console.log(radius);
-            //console.log(posts);
+            console.log(posts);
             var center = {
-                lat: 35,
-                lng: 136
+                lat: curLat,
+                lng: curLng
             };
             //地図の作成
             function initMap(){
@@ -119,7 +119,7 @@
                         map: map
                     }));
                     //マーカーをクリックした時に出る吹き出し
-                    if( !post.fields.genre ){
+                    if( post.fields.genre != null ){
                         infoWindows.push(new google.maps.InfoWindow({
                             content : "<div id='content'>" + genre_list[post.fields.genre-1].fields.name + "<br><img src=\"../" + post.fields.image + "\" width=\"200\"/><br>" + post.fields.body + "<div>"
                         }));
