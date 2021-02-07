@@ -40,8 +40,7 @@
     
     <form action="{% url 'asovi_app:change_place' %}" method="POST">
         {% csrf_token %}
-        <!-- <form action="/change_place/" method="POST">
-            {% csrf_token %} -->
+        <form action="/change_place/" method="POST">
             <!-- 検索窓 -->
             <p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p>
             <button type="submit" class="search"><img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>
@@ -51,6 +50,7 @@
 
 
     <p class="explain">検索の中心にしたい位置を地図上でクリックしてください。<br>緯度・経度が自動入力されます。</p>
+            <input type="hidden" name="csrfmiddlewaretoken" value="ajgwh9nXcVKUjYJ9ZtDHYEuG79W3Hoi2wHOoTXIDz1P8IzKGA7mIlPJ9PGo7IlSD">
             <p><label for="id_place_type_0">カテゴリー:</label> </p>
 <ul id="id_place_type">
     <div class="list">
@@ -143,7 +143,7 @@
 <p><label for="id_lng">経度:</label> <input type="number" name="lng" value="135.759" step="any" id="id_lng"></p>
 <p><label for="id_radius">検索対象の半径:</label> <input type="number" name="radius" value="1000" min="0" max="50000" required="" id="id_radius"></p>
 <button type="submit" class="search2">検索</button>
-<!-- </form> -->
+</form>
 </form>
 
 <p class="result">検索結果</p>

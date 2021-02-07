@@ -43,9 +43,6 @@
     <br>
     <p class="where">位置情報</p><br>
     <!-- <p class="now"> 現在の地点に基づいた情報です。</p> -->
-    <input type="hidden" name="latitude" step="any" required id="id_latitude">
-    <input type="hidden" name="longitude" step="any" required id="id_longitude">
-    <input type="hidden" name="place_name" id="id_place_name">
     <div id="currentPos">
       {% if place_lat %}
       <p>緯度：{{place_lat}}</p>
@@ -54,12 +51,16 @@
       {% endif %}
     </div>
 
+    <input type="hidden" name="latitude" step="any" required id="id_latitude">
+    <input type="hidden" name="longitude" step="any" required id="id_longitude">
+    <input type="hidden" name="place_name" id="id_place_name">
+    
     <br>
     <p style="margin-top: 27px;">投稿日時</p>
     <p id="today">今日の日付</p>
     <br><br>
     <p>コメント</p><br>
-    <textarea name="body" cols="40" rows="10" maxlength="300" required id="id_body" spellcheck="false">{{ body }}</textarea>
+    <textarea name="body" cols="40" rows="10" maxlength="300" required="" id="id_body" spellcheck="false"></textarea>
 
     <br>
     <p class="addgenre">ジャンル追加</p>
@@ -112,14 +113,9 @@
     <input type="button" value="button" onclick="getPosition();">
   </div> -->
   <div class="selectplace">
-    
     <input name='getpos' type="button" class="nowhere" value="現在位置を取得" onclick="getPosition();">
     <p class="or">または</p>
-    <form action="{% url 'asovi_app:post' %}" method="POST">
-      {% csrf_token %}
-      <input type="hidden" name="body" id="session_text">
-      <a href="{% url 'asovi_app:change_place' %}"><input type="submit" name="change_place" class="place" value="地点の変更" onclick="setSession();"></a>
-    </form>
+    <a href="{% url 'asovi_app:change_place' %}"><input type="submit" name="change_place" class="place" value="地点の変更"></a>
   </div>
   
   
@@ -144,7 +140,6 @@
                 //var form= document.getElementById('latlng')
                 document.getElementById('id_latitude').value = curLat;
                 document.getElementById('id_longitude').value = curLng;
-                document.getElementById('id_place_name').value = '';
                 var latLngShow = document.getElementById('currentPos');
                 latLngShow.innerHTML = '';
                 var latText = document.createElement("p");
@@ -156,13 +151,14 @@
 
             },
 
+
+
             function(error) {
                 //デバッグ用
                 curLat = 35.0;
                 curLng = 135.75;
                 document.getElementById('id_latitude').value = curLat;
                 document.getElementById('id_longitude').value = curLng;
-                document.getElementById('id_place_name').value = '';
                 var latLngShow = document.getElementById('currentPos');
                 var latText = document.createElement("p");
                 var lngText = document.createElement("p");
@@ -190,9 +186,7 @@
         );
     }
 
-    function setSession() {
-      document.getElementById('session_text').value = document.getElementById('id_body').value;
-    }
+
 
     // function initMap() {
 
@@ -303,7 +297,7 @@
         var form = document.getElementById('latlng');
         form.longitude.value = "{{place_lng}}";
       }
-      if ( "{{place_name}}" ){
+      if ( "{{place_name" ){
         var form = document.getElementById('latlng');
         form.place_name.value = "{{place_name}}";
       }
@@ -316,11 +310,12 @@
         });
         fileReader.readAsDataURL(obj.files[0]);
       }
+
   </script>
   <!-- 投稿地点の取得 -->
-  <!-- <script>
+  <script>
     var a = document.getElementById()
-  </script> -->
+  </script>
   <!-- 投稿日時の取得 -->
   <script>
    const now = new Date();

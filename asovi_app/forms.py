@@ -105,8 +105,7 @@ class LocationSearchForm(forms.Form):
         (1,'半径200m以内'),
         (2,'半径500m以内'),
         (3,'半径1km以内'),
-        (4,'半径2km以内'),
-        (0,'指定なし'),
+        (4,'半径2km以内')
     ]
     choice = forms.ChoiceField(label='検索の範囲を指定', choices=radius, widget=forms.RadioSelect(), required=False)
 
@@ -120,7 +119,6 @@ class GenreSearchForm(forms.Form):
     indoor = forms.BooleanField(label='屋内',required=False)
     outdoor = forms.BooleanField(label='屋外',required=False)
     exercise = forms.BooleanField(label='運動',required=False)
-    nullok = forms.BooleanField(label='ジャンルなし',required=False)
 
 class WordSearchForm(forms.Form):
     key_word = forms.CharField(label='検索:',max_length=50,required=False)
