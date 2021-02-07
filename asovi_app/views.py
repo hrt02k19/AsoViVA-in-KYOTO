@@ -209,7 +209,7 @@ def post_completed(request,pk):
 
 def change_place(request):
     params = {
-        'search_form': PlaceSearchForm(),
+        'search_form': PlaceSearchForm(initial={'place_type':'none'}),
         'lat': -1000,
         'lng': -1000,
     }
@@ -546,7 +546,7 @@ def post_map(request):
         'loc_form': loc_form,
         'genre_form': genre_form,
         'word_form': word_form,
-        'place_form': PlaceSearchForm(),
+        'place_form': PlaceSearchForm(initial={'place_type':'none'}),
     }
     return params
 
@@ -593,7 +593,7 @@ def place_search(request):
             'word_form': WordSearchForm(),
             'genre_form': GenreSearchForm(initial=initial_dict),
             'loc_form': LocationSearchForm(initial={'choice':0}),
-            'place_form': PlaceSearchForm(),
+            'place_form': PlaceSearchForm(initial={'place_type':'none'}),
             'posts_json': posts_json,
             'posts': posts,
             'genre_json': genre_json,
