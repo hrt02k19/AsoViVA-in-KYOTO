@@ -84,20 +84,26 @@
     </div>
 
     <!-- 検索窓 -->
-    <form action="{% url 'asovi_app:place_search' %}" method="POST">
+    <!-- <form action="{% url 'asovi_app:place_search' %}" method="POST">
         {% csrf_token %}
-        <p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>
+        <p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button> -->
         <!-- <ul class="errorlist"><li>リストを入力してください。</li></ul> -->
 
         <!-- 地図 -->
         <div id="map"></div>
         <a href="{% url 'asovi_app:post' %}"><img src="{% static 'asovi_app/img/batuicon.png' %}" alt="" class="add"></a>
+
+        <button type="button" id="place_search">場所を検索</button>
+        <button type="button" id="post_search">投稿を検索</button>
+
+        <form action="{% url 'asovi_app:place_search' %}" method="POST" id="form_box">
+        </form>
         <!-- 検索条件 -->
-        <p class="explain">検索の中心にしたい位置を地図上でクリックしてください。<br>緯度・経度が自動入力されます。</p>
-            
+        <!-- <p class="explain">検索の中心にしたい位置を地図上でクリックしてください。<br>緯度・経度が自動入力されます。</p> -->
+
         <!-- <p><label for="id_keyword">キーワード:</label> <input type="text" name="keyword" maxlength="200" id="id_keyword"></p> -->
         <!-- <ul class="errorlist"><li>キーワードを入力してください。</li></ul> -->
-        <p><label for="id_place_type_0">カテゴリー:</label> </p>
+        <!-- <p><label for="id_place_type_0">カテゴリー:</label> </p>
         <ul id="id_place_type">
             <div class="list">
                 <div class="list1">
@@ -132,7 +138,7 @@
                     映画館</label>
                     </li>
                 </div>
-    
+
                 <div class="list2">
                     <li><label for="id_place_type_10"><input type="radio" name="place_type" value="museum" id="id_place_type_10">
                     博物館</label>
@@ -159,16 +165,16 @@
                     観光名所</label>
                     </li>
                     <li><label for="id_place_type_18"><input type="radio" name="place_type" value="zoo" id="id_place_type_18">
-                    動物園</label>   
+                    動物園</label>
                     </li>
-                </div>
-            </div>
-        </ul><p></p>
-        <p><label for="id_lat">緯度:</label> <input type="number" name="lat" value="34.987" step="any" id="id_lat"></p>
+                </div> -->
+            <!-- </div> -->
+        <!-- </ul><p></p> -->
+        <!-- <p><label for="id_lat">緯度:</label> <input type="number" name="lat" value="34.987" step="any" id="id_lat"></p>
         <p><label for="id_lng">経度:</label> <input type="number" name="lng" value="135.759" step="any" id="id_lng"></p>
         <p><label for="id_radius">検索対象の半径:</label> <input type="number" name="radius" value="1000" min="0" max="50000" required="" id="id_radius"></p>
         <button type="submit" class="search2">検索</button>
-    </form>
+    </form> -->
 
 
     <p class="result">検索結果</p>
@@ -180,7 +186,7 @@
         <br><br>
         {% endfor %}
     </div>
-    
+
 
     <script>
         var map;
@@ -337,7 +343,7 @@
                 });
             }
         }
-      
+
         document.addEventListener('DOMContentLoaded', function(){
             var trigger = document.getElementById('menutrigger');
             var sidemenu = document.getElementById('menubar');
@@ -347,7 +353,7 @@
             }, false);
         }, false);
     </script>
-   
+
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
 
