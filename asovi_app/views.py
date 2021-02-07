@@ -475,16 +475,105 @@ def friend_list(request,*args):
     }
     return render(request, 'asovi_app/friend_list.html', params)
 
+def post_map(request):
+    user = request.user
+    involved_blocks = Block.objects.filter(blocker=user)
+    blocked_users = []
+    for block_obj in involved_blocks:
+            blocked_users.append(block_obj.blocked)
+    posts = Post.objects.all().exclude(posted_by__in=blocked_users)
+    loc_form = LocationSearchForm(initial={'choice': 0})
+    initial_dict = {
+        'food': True,
+        'music': True,
+        'nature': True,
+        'art': True,
+        'temple': True,
+        'shopping': True,
+        'indoor': True,
+        'outdoor': True,
+        'exercise': True,
+        'nullok': True,
+    }
+    genre_form = GenreSearchForm(initial=initial_dict)
+    word_form = WordSearchForm()
+    radius = 0
+    print(request.POST)
+    print('hello')
+    loc_form = LocationSearchForm(request.POST)
+    radius = request.POST.get('choice')
+    # genre_form = GenreSearchForm(request.POST)
+    # 現在地からの半径で検索
+    # if 'location_search' in request.POST:
+        # loc_form = LocationSearchForm(request.POST)
+        # radius = request.POST.get('choice')
+    # ジャンルで検索
+    selected_genre = []
+    if 'food' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=1))
+    if 'music' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=2))
+    if 'nature' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=3))
+    if 'art' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=4))
+    if 'temple' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=5))
+    if 'shopping' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=6))
+    if 'indoor' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=7))
+    if 'outdoor' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=8))
+    if 'exercise' in request.POST :
+        selected_genre.append(Genre.objects.get(pk=9))
+    if 'nullok' in request.POST:
+        posts = posts.filter(Q(genre__in=selected_genre)|Q(genre=None))
+    else:
+        posts = posts.filter(genre__in=selected_genre)
+    # キーーワード検索
+    word_form = WordSearchForm(request.POST)
+    kw = request.POST.get('key_word')
+    posts = posts.filter(body__contains=kw)
+    posts_json = serializers.serialize('json', posts)
+    genre_json = serializers.serialize('json', Genre.objects.all().order_by('pk'))
+    params = {
+        'me': request.user,
+        'genre_json': genre_json,
+        'posts_json': posts_json,
+        'posts': posts,
+        'radius': radius,
+        'loc_form': loc_form,
+        'genre_form': genre_form,
+        'word_form': word_form,
+        'place_form': PlaceSearchForm(),
+    }
+    return params
 
 def place_search(request):
     me = request.user
+    involved_blocks = Block.objects.filter(blocker=me)
+    blocked_users = []
+    for block_obj in involved_blocks:
+            blocked_users.append(block_obj.blocked)
+    posts = Post.objects.all().exclude(posted_by__in=blocked_users)
     params = {}
+    initial_dict = {
+        'food': True,
+        'music': True,
+        'nature': True,
+        'art': True,
+        'temple': True,
+        'shopping': True,
+        'indoor': True,
+        'outdoor': True,
+        'exercise': True,
+        'nullok': True,
+    }
     if request.method == 'GET':
         genre_json = serializers.serialize('json', Genre.objects.all().order_by('pk'))
-        posts = Post.objects.all()
         posts_json = serializers.serialize('json', posts)
-
-        good_data = Post.objects.annotate(
+        good_data = posts.annotate(
             liked = Subquery(
                 Good.objects.filter(
                     user=me, article=OuterRef('pk'), good=True
@@ -497,13 +586,13 @@ def place_search(request):
             if data.liked != None:
                 # いいねしてある場合
                 liked_list.append(data)
-
         liked_list_json = serializers.serialize('json', liked_list)
         params = {
             'me': me,
+            'radius': 0,
             'word_form': WordSearchForm(),
-            'genre_form': GenreSearchForm(),
-            'loc_form': LocationSearchForm(),
+            'genre_form': GenreSearchForm(initial=initial_dict),
+            'loc_form': LocationSearchForm(initial={'choice':0}),
             'place_form': PlaceSearchForm(),
             'posts_json': posts_json,
             'posts': posts,
@@ -512,7 +601,7 @@ def place_search(request):
         }
 
     if request.method == 'POST':
-        print(request.POST)
+        #print(request.POST)
         if "good_button" in request.POST:
             """いいねボタンの場合の処理"""
             gooded_post = Post.objects.get(pk=request.POST['post_pk'])
@@ -543,117 +632,41 @@ def place_search(request):
             if 'post_search' in request.POST:
                 params = post_map(request)
 
-            else:
-                if 'post_search' in request.POST:
-                    params = post_map(request)
+            elif 'place_search' in request.POST:
+                form = PlaceSearchForm(request.POST)
+                keyword = request.POST.get('keyword')
+                radius = request.POST.get('radius')
+                place_type = request.POST.get('place_type')
+                lat = request.POST.get('lat')
+                lng = request.POST.get('lng')
 
-                elif 'place_search' in request.POST:
-                    form = PlaceSearchForm(request.POST)
-                    keyword = request.POST.get('keyword')
-                    radius = request.POST.get('radius')
-                    place_type = request.POST.get('place_type')
-                    lat = request.POST.get('lat')
-                    lng = request.POST.get('lng')
+                gmaps = googlemaps.Client(API_KEY)
 
-                    gmaps = googlemaps.Client(API_KEY)
+                if lat == None or lng == None:
+                    search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, type=place_type, language='ja')
 
-                    if lat == None or lng == None:
-                        search_results = gmaps.places_nearby(location={'lat': 34.987, 'lng': 135.759}, radius=radius, keyword=keyword, type=place_type, language='ja')
+                else:
+                    search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, type=place_type, language='ja')
 
-                    else:
-                        search_results = gmaps.places_nearby(location={'lat': lat, 'lng': lng}, radius=radius, keyword=keyword, type=place_type, language='ja')
+                results = search_results['results']
+                posts = posts.filter(place_id__in=[result.get('place_id') for result in results])
 
-                    results = search_results['results']
-                    posts = Post.objects.filter(place_id__in=[result.get('place_id') for result in results])
-
-                    posts_json = serializers.serialize('json', posts)
-                    results_json = json.dumps(results)
-                    params = {
-                        'me': request.user,
-                        'form': form,
-                        'results': results,
-                        'results_json': results_json,
-                        'posts_json': posts_json,
-                        'word_form': WordSearchForm(),
-                        'genre_form': GenreSearchForm(),
-                        'loc_form': LocationSearchForm(),
-                        'place_form': PlaceSearchForm(),
-                    }
+                posts_json = serializers.serialize('json', posts)
+                results_json = json.dumps(results)
+                params = {
+                    'me': request.user,
+                    'radius': 0,
+                    'results': results,
+                    'results_json': results_json,
+                    'posts_json': posts_json,
+                    'word_form': WordSearchForm(),
+                    'genre_form': GenreSearchForm(initial=initial_dict),
+                    'loc_form': LocationSearchForm(initial={'choice':0}),
+                    'place_form': form,
+                }
 
     return render(request, 'asovi_app/place_search.html', params)
 
-def post_map(request):
-    user = request.user
-    involved_blocks = Block.objects.filter(blocker=user)
-    blocked_users = []
-    for block_obj in involved_blocks:
-            blocked_users.append(block_obj.blocked)
-    posts = Post.objects.all().exclude(posted_by__in=blocked_users)
-    loc_form = LocationSearchForm(initial={'choice': 0})
-    initial_dict = {
-        'food': True,
-        'music': True,
-        'nature': True,
-        'art': True,
-        'temple': True,
-        'shopping': True,
-        'indoor': True,
-        'outdoor': True,
-        'exercise': True,
-        'nullok': True,
-    }
-    genre_form = GenreSearchForm(initial=initial_dict)
-    word_form = WordSearchForm()
-    radius = 0
-    print(request.POST)
-    if request.method == 'POST':
-        loc_form = LocationSearchForm(request.POST)
-        radius = request.POST.get('choice')
-        # genre_form = GenreSearchForm(request.POST)
-        # 現在地からの半径で検索
-        # if 'location_search' in request.POST:
-            # loc_form = LocationSearchForm(request.POST)
-            # radius = request.POST.get('choice')
-        # ジャンルで検索
-        selected_genre = []
-        if 'food' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=1))
-        if 'music' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=2))
-        if 'nature' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=3))
-        if 'art' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=4))
-        if 'temple' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=5))
-        if 'shopping' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=6))
-        if 'indoor' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=7))
-        if 'outdoor' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=8))
-        if 'exercise' in request.POST :
-            selected_genre.append(Genre.objects.get(pk=9))
-        if 'nullok' in request.POST:
-            posts = posts.filter(Q(genre__in=selected_genre)|Q(genre=None))
-        else:
-            posts = posts.filter(genre__in=selected_genre)
-        # キーーワード検索
-        word_form = WordSearchForm(request.POST)
-        kw = request.POST.get('key_word')
-        posts = posts.filter(body__contains=kw)
-    posts_json = serializers.serialize('json', posts)
-    genre_json = serializers.serialize('json', Genre.objects.all().order_by('pk'))
-    params = {
-        'posts': posts,
-        'posts_json': posts_json,
-        'genre_json': genre_json,
-        'radius': radius,
-        # 'loc_form': loc_form,
-        # 'genre_form': genre_form,
-        # 'word_form': word_form
-    }
-    return params
 
 
 def place_detail(request, place_id):

@@ -92,7 +92,6 @@
         <!-- 地図 -->
         <div id="map"></div>
         <a href="{% url 'asovi_app:post' %}"><img src="{% static 'asovi_app/img/batuicon.png' %}" alt="" class="add"></a>
-
         <button type="button" id="place_search">場所を検索</button>
         <button type="button" id="post_search">投稿を検索</button>
 
@@ -197,21 +196,23 @@
         var currentInfoWindow;
         var formBox;
 
-        var radius = '{{ radius }}';
+        var radius = {{ radius }};
         var genre_list = JSON.parse('{{ genre_json|escapejs }}'||"null");
         var posts = JSON.parse('{{ posts_json|escapejs }}'||"null");
         var results = JSON.parse('{{results_json|escapejs}}'||"null");
         var liked_list = JSON.parse('{{ liked_list_json|escapejs }}'||"null");
-
+        console.log(radius)
         if(myLat && myLng){
             var center = {
                 lat: myLat,
                 lng: myLng,
             }
         } else {
+            myLat = 34.987;
+            myLng = 135.7588;
             var center = {
-                lat: 35.0030,
-                lng: 135.7674
+                lat: myLat,
+                lng: myLng
             }
         }
         function initMap(){
@@ -227,8 +228,10 @@
             function getClickLatLng(lat_lng, map) {
 
                 // 座標を表示
-                document.getElementById('id_lat').value = lat_lng.lat();
-                document.getElementById('id_lng').value = lat_lng.lng();
+                if(document.getElementById('id_lat')!=null){
+                    document.getElementById('id_lat').value = lat_lng.lat();
+                    document.getElementById('id_lng').value = lat_lng.lng();
+                }
 
                 // 座標の中心をずらす
                 map.panTo(lat_lng);
@@ -240,8 +243,8 @@
 
                     //エリア検索時に範囲外の点を削除
                     if (radius > 0) {
-                        var sqDist = Math.pow((postLat - curLat) * 110940.5844, 2.0) + Math.pow((postLng - curLng) * 91287.7885, 2.0)
-                        switch (radius > 0) {
+                        var sqDist = Math.pow((postLat - myLat) * 110940.5844, 2.0) + Math.pow((postLng - myLng) * 91287.7885, 2.0)
+                        switch (radius) {
                             case 1:
                                 if (sqDist > 40000.0) continue;
                                 break;
@@ -274,12 +277,25 @@
                     } else {
                         var good_button = '<button type="submit" name="good">いいね</button>'
                     }
-
-                    infoWindows_posts.push(new google.maps.InfoWindow({
-                        content: '<div class="content">'
+                    console.log(post.fields.genre)
+                    
+                    if( post.fields.genre != null ){
+                        infoWindows_posts.push(new google.maps.InfoWindow({
+                            content : '<div id="content">' + genre_list[post.fields.genre-1].fields.name + '<br><img src="/' + post.fields.image + '\" width=\"70\"/>' + '<h2>'+ post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="good_button" value="good_button"' + '>' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + good_button + '</form>' + '<p>' + post.fields.like + 'いいね</p>'
+                        }));
+                    }else{
+                        infoWindows_posts.push(new google.maps.InfoWindow({
+                            content : '<div class="content">'
                             + '<img src=\"/' + post.fields.image + '\"  width=\"70\">'
                             + '<h2>'+ post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="good_button" value="good_button"' + '>' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + good_button + '</form>' + '<p>' + post.fields.like + 'いいね</p>'
-                    }));
+                        }));
+                    }
+
+                    // infoWindows_posts.push(new google.maps.InfoWindow({
+                    //     content: '<div class="content">'
+                    //         + '<img src=\"/' + post.fields.image + '\"  width=\"70\">'
+                    //         + '<h2>'+ post.fields.body + '</h2>' + '</div>' + '<form action="' + '{% url "asovi_app:place_search" %}' + '" method="POST">' + '{% csrf_token %}' + '<input type="hidden" name="good_button" value="good_button"' + '>' + '<input type="hidden" name="post_pk" value=' + post.pk + '>' + '<input type="hidden" name="me_pk" value=' + '{{me.pk}}' + '>' + good_button + '</form>' + '<p>' + post.fields.like + 'いいね</p>'
+                    // }));
                 }
             }
             let post_num = post_markers.length
@@ -302,7 +318,7 @@
                 + '<button type="submit" name="place_search">検索</button>';
                 }, false);
 
-                document.getElementById("post_search").addEventListener('click', function(){
+            document.getElementById("post_search").addEventListener('click', function(){
                     formBox = document.getElementById("form_box");
                 formBox.innerHTML = '{% csrf_token %}'
                     + '{{ word_form.as_p|escapejs }}'
