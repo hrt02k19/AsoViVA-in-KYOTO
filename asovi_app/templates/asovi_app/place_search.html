@@ -108,7 +108,7 @@
          <div class="list">
              <div class="list1">
 
-                 <li><label for="id_place_type_0"><input type="radio" name="place_type" value="none" id="id_place_type_0" checked="">
+                 <li><label for="id_place_type_0"><input type="radio" name="place_type" value="none" id="id_place_type_0" >
                     指定しない</label>
                     
                 </li>
@@ -426,10 +426,29 @@
             document.getElementById("post_search").addEventListener('click', function(){
                     formBox = document.getElementById("form_box");
                 formBox.innerHTML = '{% csrf_token %}'
-                    + '{{ word_form.as_p|escapejs }}'
-                    + '{{ genre_form.as_p|escapejs }}'
-                    + '{{ loc_form.as_p|escapejs }}'
-                    + '<button type="submit" name="post_search">検索</button>';
+               +' <form action="/place_search/" method="POST" id="form_box"><input type="hidden" name="csrfmiddlewaretoken" value="asvbMQ0WqrLoxm0X8mKhdcDNlD9QpzKoLA8yqHsEYkXcBNOlPSjaLPw5neBbsTR9"><p><label for="id_key_word"></label> <input type="text" name="key_word" maxlength="50" id="id_key_word"></p>'
+            +'<div class="genre1">'
+                +'<p><input class="genre-input" type="checkbox" name="food" id="id_food" checked=""><label class="expand-btn" for="id_food">食事</label></p>'
+                + '<p><input class="genre-input" type="checkbox" name="music" id="id_music" ><label class="expand-btn" for="id_music">音楽</label></p>'
+                + '<p><input class="genre-input" type="checkbox" name="nature" id="id_nature" ><label class="expand-btn" for="id_nature">自然</label></p>'
+            +'</div>'
+            +'<div class="genre2">'
+                + '<p><input class="genre-input" type="checkbox" name="art" id="id_art" ><label class="expand-btn" for="id_art">芸術</label></p>'
+                + '<p><input class="genre-input" type="checkbox" name="temple" id="id_temple" ><label class="expand-btn" for="id_temple">寺社</label></p>'
+                + '<p><input class="genre-input" type="checkbox" name="shopping" id="id_shopping" ><label class="expand-btn" for="id_shopping">買物</label></p>'
+            +'</div>'
+            +'<div class="genre3">'
+                + '<p><input class="genre-input" type="checkbox" name="indoor" id="id_indoor" ><label class="expand-btn" for="id_indoor">屋内</label></p>'
+                + '<p><input class="genre-input" type="checkbox" name="outdoor" id="id_outdoor" ><label class="expand-btn" for="id_outdoor">屋外</label></p>'
+                + '<p><input class="genre-input" type="checkbox" name="exercise" id="id_exercise" ><label class="expand-btn" for="id_exercise">運動</label></p>'
+            +'</div>'
+                + '<p><label for="id_nullok">ジャンルなし:</label> <input type="checkbox" name="nullok" id="id_nullok" ></p>' + '<p><label for="id_choice_0">検索の範囲を指定:</label> </p>'
+                +'<ul id="id_choice"><li><label for="id_choice_0"><input type="radio" name="choice" value="1" id="id_choice_0">半径200m以内</label></li>'
+                +'<li><label for="id_choice_1"><input type="radio" name="choice" value="2" id="id_choice_1">半径500m以内</label></li>'
+                +'<li><label for="id_choice_2"><input type="radio" name="choice" value="3" id="id_choice_2">半径1km以内</label></li>'
+                +'<li><label for="id_choice_3"><input type="radio" name="choice" value="4" id="id_choice_3">半径2km以内</label></li>'
+                +'<li><label for="id_choice_4"><input type="radio" name="choice" value="0" id="id_choice_4" >指定なし</label></li></ul>'
+                +'<p></p><button type="submit" name="post_search">検索</button></form>';
                 }, false);
 
                 // 場所検索の結果表示
