@@ -100,7 +100,7 @@
         <form action="/place_search/" method="POST" id="form_box">
             <input type="hidden" name="csrfmiddlewaretoken" value="9hHkS38XsQsR0mYARhLRXb5nVf27TbrKKpkHwUAF0JEF4NMYyNkKvOYFXQusWvyv">
 
-            <p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>
+            <!-- <p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>
 
             <p class="category"><label for="id_place_type_0">カテゴリー:</label> </p>
             
@@ -194,7 +194,7 @@
     <p><label for="id_lat">緯度:</label> <input type="number" name="lat" value="34.987" step="any" id="id_lat"></p>
     <p><label for="id_lng">経度:</label> <input type="number" name="lng" value="135.759" step="any" id="id_lng"></p>
     <p><label for="id_radius">検索対象の半径:</label> <input type="number" name="radius" value="1000" min="0" max="50000" required="" id="id_radius"></p>
-    <button type="submit" name="place_search" class="search2">検索</button>
+    <button type="submit" name="place_search" class="search2">検索</button> -->
     </form>
     <!-- 場所を検索フォームおわり -->
 
@@ -419,8 +419,39 @@
             document.getElementById("place_search").addEventListener('click', function(){
                 formBox = document.getElementById("form_box");
                 formBox.innerHTML = '{% csrf_token %}'
-                + '{{place_form.as_p|escapejs}}'
-                + '<button type="submit" name="place_search">検索</button>';
+                + '<form action="/place_search/" method="POST" id="form_box"><input type="hidden" name="csrfmiddlewaretoken" value="9hHkS38XsQsR0mYARhLRXb5nVf27TbrKKpkHwUAF0JEF4NMYyNkKvOYFXQusWvyv">'
+                  +'<p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>'
+                +'<p class="category"><label for="id_place_type_0">カテゴリー:</label> </p><ul id="id_place_type">'
+                +'<div class="list">'
+                +'<div class="list1">'
+                    +'<li><label for="id_place_type_0"><input type="radio" name="place_type" value="none" id="id_place_type_0" >指定しない</label></li>'
+                    +'<li><label for="id_place_type_1"><input type="radio" name="place_type" value="amusement_park" id="id_place_type_1">遊園地</label></li>'
+                    +'<li><label for="id_place_type_2"><input type="radio" name="place_type" value="aquarium" id="id_place_type_2">水族館</label></li>'
+                    +'<li><label for="id_place_type_3"><input type="radio" name="place_type" value="art_gallery" id="id_place_type_3">美術館</label></li>'
+                    +'<li><label for="id_place_type_4"><input type="radio" name="place_type" value="bar" id="id_place_type_4">バー</label></li>'
+                    +'<li><label for="id_place_type_5"><input type="radio" name="place_type" value="bowling_alley" id="id_place_type_5">ボーリング場</label></li>'
+                    +'<li><label for="id_place_type_6"><input type="radio" name="place_type" value="cafe" id="id_place_type_6">カフェ</label></li>'
+                    +'<li><label for="id_place_type_7"><input type="radio" name="place_type" value="campground" id="id_place_type_7">キャンプ場</label></li>'
+                    +'<li><label for="id_place_type_8"><input type="radio" name="place_type" value="lodging" id="id_place_type_8">宿泊施設</label></li>'
+                    +'<li><label for="id_place_type_9"><input type="radio" name="place_type" value="movie_theater" id="id_place_type_9">映画館</label></li>'
+                +'</div>'
+                +'<div class="list2">'
+                    +'<li><label for="id_place_type_10"><input type="radio" name="place_type" value="museum" id="id_place_type_10">博物館</label></li>'
+                    +'<li><label for="id_place_type_11"><input type="radio" name="place_type" value="park" id="id_place_type_11">公園</label></li>'
+                    +'<li><label for="id_place_type_12"><input type="radio" name="place_type" value="restaurant" id="id_place_type_12">レストラン</label></li>'
+                    +'<li><label for="id_place_type_13"><input type="radio" name="place_type" value="shopping_mall" id="id_place_type_13">ショッピングセンター</label></li>'
+                    +'<li><label for="id_place_type_14"><input type="radio" name="place_type" value="spa" id="id_place_type_14">温泉</label></li>'
+                    +'<li><label for="id_place_type_15"><input type="radio" name="place_type" value="stadium" id="id_place_type_15">スタジアム</label></li>'
+                    +'<li><label for="id_place_type_16"><input type="radio" name="place_type" value="store" id="id_place_type_16">店</label></li>'
+                    +'<li><label for="id_place_type_17"><input type="radio" name="place_type" value="tourist_attraction" id="id_place_type_17">観光名所</label></li>'
+                    +'<li><label for="id_place_type_18"><input type="radio" name="place_type" value="zoo" id="id_place_type_18">動物園</label></li>'
+            +'</div>'
+            +'</div>'
+            +'</ul><p></p>'
+                +'<p><label for="id_lat">緯度:</label> <input type="number" name="lat" value="34.987" step="any" id="id_lat"></p>'
+                +'<p><label for="id_lng">経度:</label> <input type="number" name="lng" value="135.759" step="any" id="id_lng"></p>'
+                +'<p><label for="id_radius">検索対象の半径:</label> <input type="number" name="radius" value="1000" min="0" max="50000"required="" id="id_radius"></p>'
+                +'<button type="submit" name="place_search" class="search2">検索</button></form>';
                 }, false);
 
             document.getElementById("post_search").addEventListener('click', function(){
