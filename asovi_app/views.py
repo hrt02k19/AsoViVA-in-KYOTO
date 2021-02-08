@@ -1,6 +1,7 @@
 from typing import Counter
 from django.core import serializers
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
@@ -32,6 +33,11 @@ from asoviva.local_settings import API_KEY
 
 class MySignupView(SignupView):
     form_class = CustomSignupForm
+    success_url = 'asovi_app:profile_edit'
+
+    def get_success_url(self):
+        ret = self.success_url
+        return ret
 
     def form_valid(self, form):
         self.user = form.save(self.request)
@@ -49,8 +55,7 @@ class MySignupView(SignupView):
                 self.request,
                 self.user,
                 app_settings.EMAIL_VERIFICATION,
-                # self.get_success_url(),
-                success_url='asovi_app:profile_edit',
+                self.get_success_url(),
             )
         except ImmediateHttpResponse as e:
             return e.response
@@ -550,8 +555,13 @@ def post_map(request):
     }
     return params
 
+@login_required
 def place_search(request):
     me = request.user
+    try:
+        Profile.objects.get(user=me)
+    except ObjectDoesNotExist:
+        return redirect(to='asovi_app:profile_edit')
     involved_blocks = Block.objects.filter(blocker=me)
     blocked_users = []
     for block_obj in involved_blocks:
