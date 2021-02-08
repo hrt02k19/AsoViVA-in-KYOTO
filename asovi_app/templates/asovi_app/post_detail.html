@@ -23,6 +23,7 @@
       <li><a href="{% url 'asovi_app:place_search' %}">ホーム</a></li>
       <li><a href="{% url 'asovi_app:popular' %}">人気</a></li>
       <li><a href="{% url 'asovi_app:friend_list' %}">友達</a></li>
+      <li><a href="{% url 'asovi_app:find_user' %}">ユーザー検索</a></li>
       <li><a href="{% url 'asovi_app:check_event' %}">通知</a></li>
       <li><a href="{% url 'asovi_app:my_page' %}">マイページ</a></li>
       <li><a href="{% url 'asovi_app:settings' %}">設定</a></li>
@@ -73,23 +74,23 @@
 
         <script>
             // いいねの挙動
-            const iines =["{% static 'asovi_app/img/いいね.png'%}", "{% static 'asovi_app/img/いいねb.jpg'%}"];
+            const iines =["{% static 'asovi_app/img/いいね.png'%}", "{% static 'asovi_app/img/いいねb.png'%}"];
             let current = 0;
 
-            function changeImage(num) {
-                if (current + num === 1) {
-                    current += num;
-                    document.getElementById('iine').src = iines[current]
+            function changeImage() {
+                if (current === 0) {
+                    current = 1;
+                    document.getElementById('iine').src = iines[1]
                 }
                 else {
-                    current = current - num;
-                    document.getElementById('iine').src = iines[current]
+                    current = 0;
+                    document.getElementById('iine').src = iines[0]
                 };
             };
 
 
            document.getElementById('iine').onclick = function() {
-               changeImage(1);
+               changeImage();
            };
 
         //    ドロワーの表示非表示切り替え
