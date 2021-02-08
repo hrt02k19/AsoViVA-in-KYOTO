@@ -203,4 +203,5 @@ class Contact(models.Model):
 
 class Popular(models.Model):
     num=models.IntegerField()
+    place_id=models.CharField(max_length=40,null=True)
     place_name=models.TextField(null=True)
