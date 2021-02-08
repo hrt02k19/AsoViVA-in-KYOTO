@@ -141,6 +141,21 @@ label {
 }
 
 /* ボタン */
+#place_search, #post_search {
+  margin-right: 5px;
+  padding: 5px 5px;
+  width: 100px;
+  background-color: #E4A359;
+  border: none;
+  color: #FFFFFF;
+  font-weight: 900;
+}
+#place_search:hover, #post_search:hover {
+  background-color: #909090;
+}
+.checked {
+  background-color: #f1740d;
+}
 .add {
   z-index: 3;
   position: fixed;

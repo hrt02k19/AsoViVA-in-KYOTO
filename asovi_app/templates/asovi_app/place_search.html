@@ -368,6 +368,20 @@
             }, false);
         }, false);
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            var place_search = document.getElementById('place_search');
+            var post_search = document.getElementById('post_search');
+            // 選択されたボタンの背景色変更
+            place_search.addEventListener('click', function(){
+                this.classList.toggle('checked');
+            post_search.addEventListener('click', function(){
+                this.classList.toggle('checked');
+            }, false);
+        }, false);
+    }, false);
+
+    </script>
 
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRyLEAaLFtCA4-H10Ie6QOmG9Wi0yiUJk&callback=initMap" async defer></script>
