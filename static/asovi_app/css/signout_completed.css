@@ -17,6 +17,47 @@ body {
   font-size: 20px;
   font-weight: bold;
   }
+  /* ヘッダー内のトリガー及びボタン */
+  .menutrigger {
+    position: absolute;
+    margin-top: 18px;
+    margin-left: -166px;
+  }
+  .gomypage {
+    position: absolute;
+    margin-top: -47px;
+    margin-left: 132px;
+    width: 40px;
+    height: 40px;
+  }
+/* サイドメニュー */
+.sidemenu {
+  z-index: 2;
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  background-color: #FFFFFF;
+  border-right: solid 1px #707070;
+  transition: .5s;
+}
+.hide {
+  margin-left: -51%;
+  transition: .5s;
+}
+.sidemenu ul {
+  list-style: none;
+  padding-top: 9px;
+  padding-left: 0;
+}
+.sidemenu a {
+  color: #909090;
+  font-size: 15px;
+  text-decoration: none;
+}
+.sidemenu li {
+  margin-bottom: 15px;
+  margin-left: 18%;
+}
 /* ここまでテンプレ */
 
  
