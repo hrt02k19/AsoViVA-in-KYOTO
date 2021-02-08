@@ -47,9 +47,9 @@ body {
   transition: .5s;
 }
 .sidemenu ul {
-  list-style: none;
   padding-top: 9px;
   padding-left: 0;
+  list-style: none;
 }
 .sidemenu a {
   color: #909090;
@@ -168,9 +168,9 @@ label {
 margin-left: 240px;
 }
 .nullok2 {
-  margin-left: 223px;
-  margin-top: 6px;
   position: absolute;
+  margin-top: 6px;
+  margin-left: 223px;
 }
 /* 検索の範囲を指定 */
 #id_choice {

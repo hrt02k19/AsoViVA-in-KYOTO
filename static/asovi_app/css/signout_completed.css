@@ -45,9 +45,9 @@ body {
   transition: .5s;
 }
 .sidemenu ul {
-  list-style: none;
   padding-top: 9px;
   padding-left: 0;
+  list-style: none;
 }
 .sidemenu a {
   color: #909090;
