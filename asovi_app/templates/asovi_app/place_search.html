@@ -457,7 +457,7 @@
             document.getElementById("post_search").addEventListener('click', function(){
                     formBox = document.getElementById("form_box");
                 formBox.innerHTML = '{% csrf_token %}'
-               +' <form action="/place_search/" method="POST" id="form_box"><input type="hidden" name="csrfmiddlewaretoken" value="asvbMQ0WqrLoxm0X8mKhdcDNlD9QpzKoLA8yqHsEYkXcBNOlPSjaLPw5neBbsTR9"><p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>'
+               +' <form action="/place_search/" method="POST" id="form_box">{% csrf_token %}<p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>'
             +'<div class="genre1">'
                 +'<input class="genre-input" type="checkbox" name="food" id="id_food" checked=""><label class="expand-btn" for="id_food">食事<img src="{% static 'asovi_app/img/フォークとスプーンのお食事アイコン素材 (1).png' %}" alt=""></label>'
                 + '<input class="genre-input" type="checkbox" name="music" id="id_music" ><label class="expand-btn" for="id_music">音楽<img src="{% static 'asovi_app/img/8分音符アイコン 1 (1).png' %}" alt=""></label>'
