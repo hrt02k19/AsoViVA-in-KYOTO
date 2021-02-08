@@ -1,39 +1,38 @@
-/* ここから */
 body {
   margin: 0;
+  font-family: "Segoe UI", sans-serif;
   }
   /* ロゴ部分 */
   .logo {
   height: 51px;
   width: 373px;
-  text-align: center;
   border: solid #707070 1px;
+  text-align: center;
   }
   .logo p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-family: "Segoe UI", sans-serif;
-    color: #707070;
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: #707070;
+  font-size: 20px;
+  font-weight: bold;
   }
 /* ここまでテンプレ */
-
 
 /* ヘッダー */
 .header {
   display: flex;
 }
 .kyoto {
-  width: 290px;
-  margin-left: 33px;
   margin-top: 20px;
+  margin-left: 33px;
+  width: 290px;
+  color: #909090;
   font-size: 15px;
   font-weight: 900;
-  color: #909090;
 }
 .three {
   margin-top: 20px;
+  margin-bottom: 18px;
 }
 
 /* 編集・削除タブ */
@@ -60,18 +59,18 @@ body {
   margin-top: 5px;
 }
 .drawer {
-  position: absolute;
-  margin-left: 286px;
-  border: solid 1px #707070;
   z-index: 1;
-  background-color: #FFFFFF;
+  position: absolute;
   margin-top: 58px;
+  margin-left: 286px;
   width: 88px;
   height: 30px;
+  background-color: #FFFFFF;
+  border: solid 1px #707070;
 }
 .drawer p {
-  font-size: 15px;
   margin-left: 10px;
+  font-size: 15px;
 }
 .hidden {
   display: none;
@@ -86,6 +85,6 @@ body {
 
 /* いいね */
 #iine {
-  margin-left: 116px;
   margin-top: 6px;
+  margin-left: 116px;
 }

@@ -2,46 +2,46 @@
 body {
   margin: 0;
   width: 100%;
+  font-family: "Segoe UI", sans-serif;
   }
   /* ロゴ部分 */
-  .logo {
+.logo {
   height: 51px;
   width: 373px;
-  text-align: center;
   border: solid #707070 1px;
+  text-align: center;
   }
-  .logo p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-family: "Segoe UI", sans-serif;
-    color: #707070;
+.logo p {
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: #707070;
+  font-size: 20px;
+  font-weight: bold;
   }
 /* ここまでテンプレ */
 
 .contents {
-  margin-left: 33px;
   margin-top: 62px;
+  margin-left: 33px;
 }
 h2 {
   margin-top: 20px;
   margin-left: 33px;
   color: #909090;
-  font-weight: 900;
   font-size: 15px;
+  font-weight: 900;
 }
 .fire {
+  position: absolute;
+  margin-top: -36px;
+  margin-left: 153px;
   width: 20px;
   height: 24px;
-  position: absolute;
-  margin-left: 153px;
-  margin-top: -36px;
 }
 p {
+  margin-top: 0;
+  margin-bottom: 0;
   color: #909090;
   font-size: 15px;
-  margin-bottom: 0;
-  margin-top: 0;
 }
 

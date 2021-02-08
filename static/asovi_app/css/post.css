@@ -1,65 +1,52 @@
 /* ここから */
 body {
   margin: 0;
-  /* overflow: hidden; */
-  width: 100%;
+  font-family: "Segoe UI", sans-serif;
   }
   /* ロゴ部分 */
   .logo {
   height: 51px;
   width: 373px;
-  text-align: center;
   border: solid #707070 1px;
+  text-align: center;
   }
   .logo p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-family: "Segoe UI", sans-serif;
-    color: #707070;
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: #707070;
+  font-size: 20px;
+  font-weight: bold;
   }
 /* ここまでテンプレ */
 
-.hidden {
-  margin:0;
-  position: relative;
-}
-
-/* 非表示 */
-
-.getpos {
-  display: none;
-}
-
 /* 文字 */
 .now {
-  font-size: 10px;
-  color: #909090;
   margin-top: -24px;
-  font-weight: 100;
   margin-left: 40px;
+  color: #909090;
+  font-size: 10px;
+  font-weight: 100;
 }
 form p {
-  margin-left: 33px;
   margin-top: 0;
   margin-bottom: 0;
+  margin-left: 33px;
   color: #909090;
   font-weight: 900;
 }
 
 /* 画像 */
 #sampleimg {
-  width: auto;
-  height: 108px;
-  object-fit: cover;
   margin-top: -5px;
   margin-left: 20px;
+  object-fit: cover;
+  width: auto;
+  height: 108px;
   border: solid 1px #707070;
 }
 #selectimg {
-  margin-left: 8px;
   margin-top: 78px;
+  margin-left: 8px;
   width: 232px;
 }
 .imgenre {
@@ -76,49 +63,42 @@ form p {
   margin-bottom: 143px;
 }
 .nowhere {
+  margin-left: 90px;
   height: 20px;
+  background-color: #FFFFFF;
+  border: none;
   color: #BF6F1E;
   font-size: 15px;
   font-weight: 900;
-  border: none;
-  background-color: #FFFFFF;
-  margin-left: 90px;
 }
 .or {
-  margin-left: 0;
   margin-top: 1px;
-  font-weight: 300;
+  margin-left: 0;
   font-size: 15px;
+  font-weight: 300;
 }
 .place {
+  background-color: #FFFFFF;
+  border: none;
   color: #BF6F1E;
   font-size: 15px;
   font-weight: 900;
-  border: none;
-  background-color: #FFFFFF;
-}
-.getpos {
-  color: #707070;
-  margin-left: 100px;
-}
-.whereIam {
-  display: none;
 }
 
 /* 投稿日時 */
 #today {
-  font-weight: 300;
   margin-left:59px;
   margin-bottom: -35px;
+  font-weight: 300;
 }
 
 /* コメント */
 #id_body {
-  margin-left: 40px;
-  height: 63px;
-  width: 279px;
   margin-top: -22px;
   margin-bottom: 15px;
+  margin-left: 40px;
+  width: 279px;
+  height: 63px;
 }
 
 /* ジャンル選択 */
@@ -145,30 +125,29 @@ input[type="checkbox"]:checked {
   display: none;
 }
 .expand-btn {
+  margin: 1.5px 3px;
+  padding-left: 10px;
+  padding-top: 6px;
   width: 79px;
-    height: 36px;
-    border: solid 1px #707070;
-    margin: 1.5px 3px;
-    color: #909090;
-    padding-left: 10px;
-    padding-top: 6px;
-    font-weight: normal;
+  height: 36px;
+  border: solid 1px #707070;
+  color: #909090;
+  font-weight: normal;
 }
 
 /* 投稿ボタン */
 .submit {
+  margin-top: 24px;
+  margin-left: 45px;
+  padding: 0;
   width: 285px;
   height: 31px;
   background-color: #E4A359;
   border: none;
-  margin-left: 45px;
+  text-align: center;
+  color: #FFFFFF;
   font-size: 15px;
   font-weight: 900;
-  padding: 0;
-  font-family: "Meiryo", sans-serif;
-  margin-top: 24px;
-   text-align: center;
-   color: #FFFFFF;
 }
 .space {
   height: 41px;

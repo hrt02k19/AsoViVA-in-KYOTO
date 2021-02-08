@@ -1,73 +1,72 @@
 /* ここから */
 body {
   margin: 0;
-  overflow: hidden;
+  width: 100%;
+  font-family: "Segoe UI", sans-serif;
   }
   /* ロゴ部分 */
-  .logo {
+.logo {
   height: 51px;
   width: 373px;
-  text-align: center;
   border: solid #707070 1px;
+  text-align: center;
   }
-  .logo p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-family: "Segoe UI", sans-serif;
-    color: #707070;
+.logo p {
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: #707070;
+  font-size: 20px;
+  font-weight: bold;
   }
 /* ここまでテンプレ */
 
 .hidden {
-  margin:0;
   position: relative;
+  margin:0;
 }
 
 /* 検索窓 */
 #username {
+  position: absolute;
+  margin-top:  20px;
+  margin-left: 45px;
+  padding-left: 10px;
   width: 285px;
   height: 44px;
   background-color: #EDEDED;
   border: solid 1px #707070;
-  margin-left: 45px;
-  margin-top: 20px;
-  position: absolute;
-  padding-left: 10px;
   font-size: 15px;
+} 
+.button {
+  margin-left: -20px;
 }
 .loupe {
   position: absolute;
+  margin-top: 20px;
+  margin-left: 331px;
   width: 15px;
-  margin-left: 329px;
-  margin-top: 19px;
-}
-.button {
-  margin-left: -20px;
 }
 
 /* フォロリク */
 .follow  {
   margin-top: 84px;
-    margin-left: 24px;
-    font-weight: 900;
-    color: #909090;
+  margin-left: 24px;
+  color: #909090;
+  font-weight: 900;
 }
-
 .list {
   display: flex;
   margin-top: 25px;
-  color: #909090;
-  margin-left: 22px;
   margin-bottom: -26px;
+  margin-left: 22px;
+  color: #909090;
 }
 .icon {
-    width: 48px;
-    height: 48px;
-    border: solid 1px #707070;
-    border-radius: 50px;
-    margin-right: 10px;
+  margin-right: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50px;
+  border: solid 1px #707070;
 }
 .userid {
   margin-top: 0px;
@@ -75,25 +74,25 @@ body {
   font-size: 15px;
 }
 .username {
-  font-size: 13px;
   margin-top: -8px;
+  font-size: 13px;
 }
 
 /* ボタン */
 .accept {
-  background-color: #E4A359;
-  color: #FFFFFF;
   width: 50px;
   height: 30px;
+  background-color: #E4A359;
   border: none;
+  color: #FFFFFF;
 }
 
 .reject {
-background-color: #EDEDED;
-width: 50px;
-  height: 30px;
-  border: 1px solid #707070;
   margin-left: 6px;
+  width: 50px;
+  height: 30px;
+  background-color: #EDEDED;
+  border: 1px solid #707070;
   color: #909090;
 }
 
@@ -102,9 +101,9 @@ width: 50px;
 }
 
 .none {
+  margin-top: 250px;
+  margin-left: 50px;
   color: #909090;
   font-size: 15px;
-  margin-left: 50px;
-  margin-top: 250px;
 }
 

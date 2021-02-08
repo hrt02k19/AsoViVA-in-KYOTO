@@ -1,87 +1,88 @@
 body {
-margin: 0;
-}
-/* ロゴ部分 */
-.logo {
-height: 53px;
-width: 373px;
-text-align: center;
-border: solid #707070 1px;
-}
-.logo p {
+  margin: 0;
+  }
+  /* ロゴ部分 */
+  .logo {
+  height: 53px;
+  width: 373px;
+  text-align: center;
+  border: solid #707070 1px;
+  }
+  .logo p {
   font-size: 20px;
   font-weight: bold;
   margin-top: 13px;
   margin-bottom: 13px;
   font-family: "Segoe UI", sans-serif;
   color: #707070;
-}
-.logo p strong {
+  }
+  .logo p strong {
   margin-right: 103px;
-  margin-left: 54px;
+  margin-left: 56px;
   width: 135px;
   }
+  /* ここまでロゴ */
 
- 
+
 h1{
+  margin-top: 62px;
+  margin-bottom: 0;
   margin-left: 33px;
- color: #909090;
-      font-size: 15px;
-      margin-top: 62px;
-      margin-bottom: 0;
+  color: #909090;
+  font-size: 15px;
 }
 
 p {
+  margin-left: 43px;
+  margin-bottom: 8px;
   color: #909090;
   font-size: 15px;
-  margin-left: 43px;
-   margin-bottom: 8px;
 }
 
 /* フォーム部分 */
 .letter {
   margin-top: -35px;
 }
-
 .signup {
-  font-size: 15px;
-  color: #707070;
-  font-family: "Meiryo", sans-serif;
   margin-top: 43px;
+  color: #707070;
+  font-size: 15px;
 }
 .signup a {
-  margin-left: -4px;
   margin-right: 30px;
+  margin-left: -4px;
   font-weight: 900;
 }
 #id_email {
-  background-color: #EDEDED;
-  height: 44px;
-  width: 274px;
-  border: solid #707070 1px;
+  margin-bottom: 0;
   padding: 0;
   padding-left: 9px;
-  margin-bottom: 0;
-  font-size: 15px;
+  width: 274px;
+  height: 44px;
+  background-color: #EDEDED;
+  border: solid #707070 1px;
   color: #909090;
+  font-size: 15px;
 }
 label {
   display: none;
 }
 input[type="password" i] {
-  background-color: #EDEDED;
-  height: 44px;
-  width: 274px;
-  border: solid #707070 1px;
+  margin-bottom: 0;
   padding: 0;
   padding-left: 9px;
-  margin-bottom: 0;
-  font-size: 15px;
+  width: 274px;
+  height: 44px;
+  background-color: #EDEDED;
+  border: solid #707070 1px;
   color: #909090;
+  font-size: 15px;
 }
 
 /* 次へボタン */
 .submit {
+  margin-top: 29px;
+  margin-left: 43px;
   width: 285px;
   height: 31px;
   background-color: #E4A359;
@@ -89,8 +90,4 @@ input[type="password" i] {
   color: #FFFFFF;
   font-size: 15px;
   font-weight: 900;
-  padding: 0;
-  font-family: "Meiryo", sans-serif;
-  margin-top: 29px;
-   margin-left: 43px;
 }

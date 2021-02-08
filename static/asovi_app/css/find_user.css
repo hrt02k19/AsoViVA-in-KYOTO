@@ -1,74 +1,75 @@
 /* ここから */
 body {
   margin: 0;
+  width: 100%;
+  font-family: "Segoe UI", sans-serif;
   }
   /* ロゴ部分 */
-  .logo {
+.logo {
   height: 51px;
   width: 373px;
-  text-align: center;
   border: solid #707070 1px;
+  text-align: center;
   }
-  .logo p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-family: "Segoe UI", sans-serif;
-    color: #707070;
+.logo p {
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: #707070;
+  font-size: 20px;
+  font-weight: bold;
   }
 /* ここまでテンプレ */
 
 /* 検索窓 */
 #username {
+  position: absolute;
+  margin-top: 20px;
+  margin-left: 45px;
+  padding-left: 10px;
   width: 271px;
   height: 40px;
   background-color: #EDEDED;
   border: solid 1px #707070;
-  margin-left: 45px;
-  margin-top: 20px;
-  position: absolute;
-  padding-left: 10px;
   font-size: 15px;
   color: #909090;
 }
 .button {
-  margin-left: -48px;
   position: absolute;
   margin-top: 30px;
+  margin-left: -48px;
 }
 .loupe {
   position: absolute;
-  width: 15px;
-  margin-left: 319px;
   margin-top: 2px;
+  margin-left: 319px;
+  width: 15px;
 }
 .results  {
   margin-top: 84px;
-    margin-left: 24px;
-    font-weight: 900;
-    color: #909090;
+  margin-left: 24px;
+  color: #909090;
+  font-weight: 900;
 }
 
 /* 検索結果 */
 .list {
   display: flex;
   margin-top: 25px;
-  color: #909090;
   margin-left: 22px;
+  color: #909090;
 }
 .icon {
-    width: 48px;
-    height: 48px;
-    border: solid 1px #707070;
-    border-radius: 50px;
-    margin-right: 10px;
+  margin-right: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50px;
+  border: solid 1px #707070;
 }
 .userid {
+  width: 156px;
   text-decoration: none;
   color: #909090;
   font-size: 15px;
-  width: 156px;
 }
 .username {
   text-decoration: none;
@@ -77,27 +78,26 @@ body {
 }
 /* ボタン */
 .request {
-    background-color: #E4A359;
-    color: #FFFFFF;
-    width: 50px;
-    height: 30px;
-    border: none;
-    margin-left: 60px;
+  margin-left: 60px;
+  width: 50px;
+  height: 30px;
+  background-color: #E4A359;
+  border: none;
+  color: #FFFFFF;
 }
 .requestdelete {
-  background-color: #E4A359;
-  color: #FFFFFF;
   width: 115px;
   height: 30px;
+  background-color: #E4A359;
   border: none;
+  color: #FFFFFF;
 }
 .block {
-  background-color: #E4A359;
-  color: #FFFFFF;
+  margin-left: 10px;
   width: 103px;
   height: 30px;
+  background-color: #E4A359;
   border: none;
-  margin-left: 10px;
-  margin-left: 10px;
+  color: #FFFFFF;
 }
 

@@ -1,54 +1,56 @@
+/* ここから */
 body {
   margin: 0;
+  width: 100%;
+  font-family: "Segoe UI", sans-serif;
   }
   /* ロゴ部分 */
-  .logo {
+.logo {
   height: 51px;
   width: 373px;
-  text-align: center;
   border: solid #707070 1px;
+  text-align: center;
   }
-  .logo p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-family: "Segoe UI", sans-serif;
-    color: #707070;
+.logo p {
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: #707070;
+  font-size: 20px;
+  font-weight: bold;
   }
-
+/* ここまでテンプレ */
 
 /* 検索窓 */
 #id_keyword {
+  z-index: 1;
+  position: absolute;
+  margin-top: 0px;
+  margin-left: 35px;
+  padding-left: 12px;
   width: 269px;
   height: 40px;
   background-color: #EDEDED;
   border: solid 1px #707070;
-  margin-left: 35px;
-  margin-top: 0px;
-  position: absolute;
-  padding-left: 12px;
-  font-size: 15px;
   color: #909090;
-  z-index: 1;
+  font-size: 15px;
 }
 .search {
-  margin-left: -5%;
   margin-top: 30px;
+  margin-left: -5%;
   width: 0px;
 }
 .loupe {
-  position: absolute;
-  width: 15px;
-  margin-left: 317px;
-  margin-top: -58px;
   z-index: 1;
+  position: absolute;
+  margin-top: -58px;
+  margin-left: 317px;
+  width: 15px;
 }
 .result  {
   margin-top: 35px;
   margin-left: 24px;
-  font-weight: 900;
   color: #909090;
+  font-weight: 900;
 }
 
 /* 検索条件 */
@@ -56,10 +58,10 @@ form p {
   color: #707070;
 }
 .explain {
-  font-size: 12px;
-  color: #707070;
   margin-top: -14px;
   margin-left: 5px;
+  color: #707070;
+  font-size: 12px;
 }
 label {
   margin-left: 10px;
@@ -68,22 +70,22 @@ label {
   margin-top: 255px;
 }
 .search2 {
-    background-color: #E4A359;
-    color: #FFFFFF;
-    font-weight: 900;
-    width: 285px;
-    height: 30px;
-    border: none;
-    margin-left: 45px;
-    margin-top: 15px;
+  margin-top: 15px;
+  margin-left: 45px;
+  width: 285px;
+  height: 30px;
+  background-color: #E4A359;
+  border: none;
+  color: #FFFFFF;
+  font-weight: 900;
 }
 
 /* 検索結果 */
 .list {
   display: flex;
   margin-top: -40px;
-  color: #707070;
   margin-left: -28px;
+  color: #707070;
 }
 .list1 {
   width: 146px;
@@ -94,13 +96,12 @@ label {
   color: #909090;
   font-size: 15px;
 }
-
 input[type="submit" i] {
   margin-left: 234px;
-  background-color: #E4A359;
-  color: #FFFFFF;
-  font-weight: 900;
   width: 76px;
   height: 30px;
+  background-color: #E4A359;
   border: none;
+  color: #FFFFFF;
+  font-weight: 900;
 }
