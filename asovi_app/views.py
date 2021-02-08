@@ -1124,15 +1124,16 @@ def popular(request):
     data_all=Post.objects.all()
     for item in data_all:
         num=Post.objects.filter(place_id=item.place_id).count()
+        print(num)
         place_name=item.place_name
-        data_popular=Popular(num=num,place_name=place_name)
-        if Popular.objects.filter(place_name=place_name).count==0:
+        print(place_name)
+        data_popular=Popular(num=num,place_id=item.place_id,place_name=place_name)
+        if Popular.objects.filter(place_id=item.place_id).count() == 0 :
             data_popular.save()
-    data=Popular.objects.all().order_by('num')[0:5]
+    data=Popular.objects.all().order_by('-num')[0:5]
     params={
-        'data':data
+        'data': data
     }
-    print(data)
     return render(request,'asovi_app/popular.html',params)
 
 def settings(request):
