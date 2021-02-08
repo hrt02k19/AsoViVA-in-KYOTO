@@ -61,6 +61,7 @@
         <li><a href="{% url 'asovi_app:place_search' %}">ホーム</a></li>
         <li><a href="{% url 'asovi_app:popular' %}">人気</a></li>
         <li><a href="{% url 'asovi_app:friend_list' %}">友達</a></li>
+        <li><a href="{% url 'asovi_app:find_user' %}">ユーザー検索</a></li>
         <li><a href="{% url 'asovi_app:check_event' %}">通知</a></li>
         <li><a href="{% url 'asovi_app:my_page' %}">マイページ</a></li>
         <li><a href="{% url 'asovi_app:settings' %}">設定</a></li>
@@ -124,10 +125,19 @@
                 <a href="{% url 'asovi_app:profile_edit' %}">プロフィール編集</a>
 
             {% else %}
+            <table>
+                <tr><td>
+                <a href="{% url 'asovi_app:post_list' user.pk %}">
+                    <button>投稿一覧ページへ</button>
+                </a>
+                </td></tr>
+                <tr><td>
                 <form action="{% url 'asovi_app:friend_block' user.pk %}" method="POST">
                     {% csrf_token %}
                     <button type="submit">ブロック</button>
                 </form>
+                </td></tr>
+            </table>
             {% endif %}
         </table>
         <script>
