@@ -930,7 +930,7 @@ def check_event(request):
             )
         )
     if setting.friend :
-        new_friend_request = Friend.objects.filter(requestee=user, friended=False, requested_date__gte=expire_limit_time).annotate(
+        new_friend_request = Friend.objects.filter(requestee=user, friended=False).annotate(
             requestor_username = Subquery(
                 Profile.objects.filter(user=OuterRef("requestor")).values('username')
             ),
@@ -955,7 +955,7 @@ def check_event(request):
         'new_replies': new_reply,
         'new_friend_requests': new_friend_request,
     }
-    print(new_friend_request.count())
+    #print(new_friend_request.count())
     return render(request, 'asovi_app/check_event.html', params)
 
 def notification_setting(request):
