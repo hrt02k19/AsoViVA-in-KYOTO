@@ -1,0 +1,42 @@
+/* ここから */
+body {
+  margin: 0;
+  width: 100%;
+  font-family: "Segoe UI", sans-serif;
+  }
+  /* ロゴ部分 */
+  .logo {
+    margin-top: -24px;
+    width: 373px;
+    height: 51px;
+    border: solid #707070 1px;
+    text-align: center;
+  }
+  .logo p {
+    margin-top: 11px;
+    margin-bottom: 13px;
+    color: #707070;
+    font-size: 20px;
+    font-weight: bold;
+  }
+/* ここまでテンプレ */
+
+/* 地図 */
+#map {
+  width: 375px;
+  height: 375px;
+}
+
+/* ボタン */
+button {
+  margin-top: -8px;
+  margin-bottom: 47px;
+  margin-left: 43px;
+  width: 285px;
+  height: 31px;
+  background-color: #E4A359;
+  border: none;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 900;
+  }

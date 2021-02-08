@@ -1,63 +1,58 @@
 /* ここから */
 body {
   margin: 0;
-  /* overflow: hidden; */
   width: 100%;
+  font-family: "Segoe UI", sans-serif;
   }
   /* ロゴ部分 */
-  .logo {
+.logo {
   height: 51px;
   width: 373px;
-  text-align: center;
   border: solid #707070 1px;
+  text-align: center;
   }
-  .logo p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-family: "Segoe UI", sans-serif;
-    color: #707070;
+.logo p {
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: #707070;
+  font-size: 20px;
+  font-weight: bold;
   }
 /* ここまでテンプレ */
 
-.hidden {
-  margin:0;
-  position: relative;
-}
 /* 検索窓 */
 #username {
+  position: absolute;
+  margin-top:  20px;
+  margin-left: 45px;
+  padding-left: 10px;
   width: 285px;
   height: 44px;
   background-color: #EDEDED;
   border: solid 1px #707070;
-  margin-left: 45px;
-  margin-top:  20px;
-  position: absolute;
-  padding-left: 10px;
   font-size: 15px;
 } 
 .button {
-margin-left: -20px
+  margin-left: -20px
 }
 .loupe {
   position: absolute;
-  width: 15px;
-  margin-left: 331px;
   margin-top: 20px;
+  margin-left: 331px;
+  width: 15px;
 }
 .follow  {
-    margin-left: 24px;
-    font-weight: 900;
-    color: #909090;
-    display: flex;
-    position: relative;
+  display: flex;
+  position: relative;
+  margin-left: 24px;
+  color: #909090;
+  font-weight: 900;
 }
 .req {
-    margin-left: 64px;
-    font-size: 15px;
-    margin-top: -55px;
-    text-decoration: none;
+  margin-top: -55px;
+  margin-left: 64px;
+  text-decoration: none;
+  font-size: 15px;
 }
 .aright {
   margin-top: -36px;
@@ -69,9 +64,9 @@ margin-left: -20px
   color: #909090;
 }
 .right {
+  position: absolute;
   width: 20px;
   height: 20px;
-  position: absolute;
   
 }
 /* 友達リスト内 */
@@ -81,60 +76,52 @@ margin-left: -20px
   margin-bottom: -49px;
   color: #909090;
 }
-.icon {
+.icon, .icon2 {
   width: 48px;
   height: 48px;
-  border: solid 1px #707070;
-  border-radius: 50px;
   margin-right: 10px;
-  margin-top: 90px;
   margin-left: 24px;
+  border-radius: 50px;
+  border: solid 1px #707070;
+}
+.icon {
+  margin-top: 90px;
 }
 .icon2 {
-  width: 48px;
-  height: 48px;
-  border: solid 1px #707070;
-  border-radius: 50px;
-  margin-right: 10px;
   margin-top: -20px;
-  margin-left: 24px;
 }
-/* .button {
-  display: none;
-} */
 .all {
-  margin-left: 24px;
   margin-top: -37px;
+  margin-bottom: -64px;
+  margin-left: 24px;
+  color: #909090;
   font-size: 15px;
   font-weight: 900;
-  margin-bottom: -64px;
-  color: #909090;
 }
 .userid {
   margin-top: -23px;
   width: 221px;
 }
 .username {
-  margin-left: -211px;
   margin-top: 3px;
+  margin-left: -211px;
   width: 207px;
 }
 /* ボタン */
 .accept {
-  background-color: #E4A359;
-  color: #FFFFFF;
+  margin-left: -56px;
   width: 50px;
   height: 30px;
+  background-color: #E4A359;
   border: none;
-  margin-left: -56px;
-  margin-left: -56px;
+  color: #FFFFFF;
 }
 .reject {
-  background-color: #EDEDED;
+  margin-left: 6px;
   width: 50px;
-    height: 30px;
-    border: 1px solid #707070;
-    margin-left: 6px;
-    color: #909090;
+  height: 30px;
+  background-color: #EDEDED;
+  border: 1px solid #707070;
+  color: #909090;
   }
 

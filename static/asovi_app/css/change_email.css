@@ -1,33 +1,33 @@
 /* ここから */
 body {
   margin: 0;
-  /* overflow: hidden; */
   width: 100%;
+  font-family: "Segoe UI", sans-serif;
   }
   /* ロゴ部分 */
-  .logo {
+.logo {
   height: 51px;
   width: 373px;
-  text-align: center;
   border: solid #707070 1px;
+  text-align: center;
   }
-  .logo p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-family: "Segoe UI", sans-serif;
-    color: #707070;
+.logo p {
+  margin-top: 11px;
+  margin-bottom: 13px;
+  color: #707070;
+  font-size: 20px;
+  font-weight: bold;
   }
 /* ここまでテンプレ */
  
+ 
 /* 文字 */
 h1{
+  margin-top: 62px;
+  margin-bottom: 0;
   margin-left: 33px;
   color: #909090;
   font-size: 15px;
-  margin-top: 62px;
-  margin-bottom: 0;
 }
 
 /* フォーム部分 */
@@ -35,21 +35,23 @@ label {
   display: none;
 }
 #id_email.form-control {
-  background-color: #EDEDED;
-  height: 42px;
-  width: 274px;
-  border: solid #707070 1px;
+  margin-top: 19px;
+  margin-bottom: 28px;
+  margin-left: 45px;
   padding: 0;
   padding-left: 9px;
-  margin-top: 19px;
-  margin-left: 45px;
-  margin-bottom: 28px;
+  height: 42px;
+  width: 274px;
+  background-color: #EDEDED;
+  border: solid #707070 1px;
   font-size: 15px;
   color: #909090;
 }
 
 /* ボタン */
 .next {
+  margin-left: 45px;
+  margin-bottom: 11px;
   width: 285px;
   height: 31px;
   background-color: #E4A359;
@@ -57,9 +59,5 @@ label {
   color: #FFFFFF;
   font-size: 15px;
   font-weight: 900;
-  padding: 0;
-  font-family: "Meiryo", sans-serif;
-  margin-left: 45px;
-  margin-bottom: 11px;
 }
 

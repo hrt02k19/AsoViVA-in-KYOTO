@@ -1,8 +1,10 @@
+{% load static%}
 <!DOCTYPE html>
 <html lang="ja">
     <head>
         <meta charset="utf-8">
         <title>{{profile.username}}さんのプロフィール｜遊ViVA in KYOTO</title>
+        <link rel="stylesheet" href="{% static 'asovi_app/css/user_profile.css' %}">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 
         <style>
@@ -12,44 +14,6 @@
                 margin: 0;
                 padding: 0;
             }
-
-            #map {
-                height: 375px;
-                width: 375px;
-            }
-             /* ロゴ部分 */
-            .logo {
-            height: 51px;
-            width: 373px;
-            text-align: center;
-            border: solid #707070 1px;
-            margin-top: -24px;
-            }
-            .logo p {
-                font-size: 20px;
-                font-weight: bold;
-                margin-top: 11px;
-                margin-bottom: 13px;
-                font-family: "Segoe UI", sans-serif;
-                color: #707070;
-            }
-
-            /* ボタン */
-            .btn-secondary {
-            width: 285px;
-            height: 31px;
-            background-color: #E4A359;
-            border: none;
-            color: #FFFFFF;
-            font-size: 15px;
-            font-weight: 900;
-            padding: 0;
-            font-family: "Meiryo", sans-serif;
-            margin-top: -8px;
-            margin-left: 43px;
-            margin-bottom: 47px;
-            }
-            /* ここまでテンプレ */
         </style>
         
         <script>

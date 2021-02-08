@@ -18,8 +18,8 @@
 
 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
 {% csrf_token %}
-    <button type="submit" class="profile deco">認証を完了する</button>
-    <span class="center">*プロフィール編集画面に移ります</span>
+    <button type="submit" class="profile">認証を完了する</button>
+    <span class="tellyou">*プロフィール編集画面に移ります</span>
 </form>
 
 {% else %}
