@@ -418,9 +418,8 @@
             // 投稿検索と場所検索の切り替え
             document.getElementById("place_search").addEventListener('click', function(){
                 formBox = document.getElementById("form_box");
-                formBox.innerHTML = '{% csrf_token %}'
-                + '<form action="/place_search/" method="POST" id="form_box"><input type="hidden" name="csrfmiddlewaretoken" value="9hHkS38XsQsR0mYARhLRXb5nVf27TbrKKpkHwUAF0JEF4NMYyNkKvOYFXQusWvyv">'
-                  +'<p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>'
+                formBox.innerHTML = '<form action="/place_search/" method="POST" id="form_box">{% csrf_token %}'
+                +'<p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>'
                 +'<p class="category"><label for="id_place_type_0">カテゴリー:</label> </p><ul id="id_place_type">'
                 +'<div class="list">'
                 +'<div class="list1">'
@@ -456,24 +455,24 @@
 
             document.getElementById("post_search").addEventListener('click', function(){
                     formBox = document.getElementById("form_box");
-                formBox.innerHTML = '{% csrf_token %}'
-               +' <form action="/place_search/" method="POST" id="form_box"><input type="hidden" name="csrfmiddlewaretoken" value="asvbMQ0WqrLoxm0X8mKhdcDNlD9QpzKoLA8yqHsEYkXcBNOlPSjaLPw5neBbsTR9"><p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>'
+                formBox.innerHTML = 
+               '<form action="/place_search/" method="POST" id="form_box">{% csrf_token %}<p><label for="id_keyword"></label> <input type="text" name="keyword" maxlength="200" id="id_keyword" placeholder="検索"></p> <button type="submit" class="search">検索<img src="{% static 'asovi_app/img/loupe.png' %}" alt="" class="loupe"></button>'
             +'<div class="genre1">'
                 +'<input class="genre-input" type="checkbox" name="food" id="id_food" checked=""><label class="expand-btn" for="id_food">食事<img src="{% static 'asovi_app/img/フォークとスプーンのお食事アイコン素材 (1).png' %}" alt=""></label>'
-                + '<input class="genre-input" type="checkbox" name="music" id="id_music" ><label class="expand-btn" for="id_music">音楽<img src="{% static 'asovi_app/img/8分音符アイコン 1 (1).png' %}" alt=""></label>'
-                + '<input class="genre-input" type="checkbox" name="nature" id="id_nature" ><label class="expand-btn" for="id_nature">自然<img src="{% static 'asovi_app/img/登山アイコン4.png' %}" alt=""></label>'
+                + '<input class="genre-input" type="checkbox" name="music" id="id_music" checked=""><label class="expand-btn" for="id_music">音楽<img src="{% static 'asovi_app/img/8分音符アイコン 1 (1).png' %}" alt=""></label>'
+                + '<input class="genre-input" type="checkbox" name="nature" id="id_nature" checked=""><label class="expand-btn" for="id_nature">自然<img src="{% static 'asovi_app/img/登山アイコン4.png' %}" alt=""></label>'
             +'</div>'
             +'<div class="genre2">'
-                + '<input class="genre-input" type="checkbox" name="art" id="id_art" ><label class="expand-btn" for="id_art">芸術<img src="{% static 'asovi_app/img/パレットのフリーアイコン7.png' %}" alt=""></label>'
-                + '<input class="genre-input" type="checkbox" name="temple" id="id_temple" ><label class="expand-btn" for="id_temple">寺社<img src="{% static 'asovi_app/img/シンプルな鳥居アイコン.png' %}" alt=""></label>'
-                + '<input class="genre-input" type="checkbox" name="shopping" id="id_shopping" ><label class="expand-btn" for="id_shopping">買物<img src="{% static 'asovi_app/img/ショッピングの無料アイコン　3.png' %}" alt=""></label>'
+                + '<input class="genre-input" type="checkbox" name="art" id="id_art" checked=""><label class="expand-btn" for="id_art">芸術<img src="{% static 'asovi_app/img/パレットのフリーアイコン7.png' %}" alt=""></label>'
+                + '<input class="genre-input" type="checkbox" name="temple" id="id_temple" checked=""><label class="expand-btn" for="id_temple">寺社<img src="{% static 'asovi_app/img/シンプルな鳥居アイコン.png' %}" alt=""></label>'
+                + '<input class="genre-input" type="checkbox" name="shopping" id="id_shopping" checked=""><label class="expand-btn" for="id_shopping">買物<img src="{% static 'asovi_app/img/ショッピングの無料アイコン　3.png' %}" alt=""></label>'
             +'</div>'
             +'<div class="genre3">'
-                + '<input class="genre-input" type="checkbox" name="indoor" id="id_indoor" ><label class="expand-btn" for="id_indoor">屋内<img src="{% static 'asovi_app/img/家のアイコン素材.png' %}" alt=""></label>'
-                + '<input class="genre-input" type="checkbox" name="outdoor" id="id_outdoor" ><label class="expand-btn" for="id_outdoor">屋外<img src="{% static 'asovi_app/img/自動車の無料アイコン素材 その3 (2).png' %}" alt=""></label>'
-                + '<input class="genre-input" type="checkbox" name="exercise" id="id_exercise" ><label class="expand-btn" for="id_exercise">運動<img src="{% static 'asovi_app/img/ダッシュのピクトグラム1.png' %}" alt=""></label>'
+                + '<input class="genre-input" type="checkbox" name="indoor" id="id_indoor" checked=""><label class="expand-btn" for="id_indoor">屋内<img src="{% static 'asovi_app/img/家のアイコン素材.png' %}" alt=""></label>'
+                + '<input class="genre-input" type="checkbox" name="outdoor" id="id_outdoor" checked=""><label class="expand-btn" for="id_outdoor">屋外<img src="{% static 'asovi_app/img/自動車の無料アイコン素材 その3 (2).png' %}" alt=""></label>'
+                + '<input class="genre-input" type="checkbox" name="exercise" id="id_exercise" checked=""><label class="expand-btn" for="id_exercise">運動<img src="{% static 'asovi_app/img/ダッシュのピクトグラム1.png' %}" alt=""></label>'
             +'</div>'
-                + '<p><input type="checkbox" name="nullok" id="id_nullok" class="nullok2"><label for="id_nullok" class="nullok">ジャンルなし</label> </p>' 
+                + '<p><input type="checkbox" name="nullok" id="id_nullok" class="nullok2" checked=""><label for="id_nullok" class="nullok">ジャンルなし</label> </p>' 
                 + '<p><label for="id_choice_0">検索の範囲を指定:</label> </p>'
                 +'<ul id="id_choice"><li><label for="id_choice_0"><input type="radio" name="choice" value="1" id="id_choice_0">半径200m以内</label></li>'
                 +'<li><label for="id_choice_1"><input type="radio" name="choice" value="2" id="id_choice_1">半径500m以内</label></li>'
