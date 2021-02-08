@@ -533,7 +533,7 @@ def post_map(request):
         posts = posts.filter(genre__in=selected_genre)
     # キーーワード検索
     word_form = WordSearchForm(request.POST)
-    kw = request.POST.get('key_word')
+    kw = request.POST.get('keyword')
     posts = posts.filter(body__contains=kw)
     posts_json = serializers.serialize('json', posts)
     genre_json = serializers.serialize('json', Genre.objects.all().order_by('pk'))
