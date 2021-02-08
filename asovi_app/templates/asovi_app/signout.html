@@ -9,11 +9,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
 </head>
 <body>
-         <!-- ここから -->
-         <div class="logo">
-            <p><strong>メールアドレス変更</strong></p>
-        </div>
-        <!-- ここまで共通 -->
+   <!-- ここから -->
+   <div class="logo">
+    <img src="{% static 'asovi_app/img/menuicon.png'%}" alt="" width="18" height="18" class="menutrigger" id="menutrigger">
+    <p><strong>メールアドレス変更</strong></p>
+    <a href="{% url 'asovi_app:my_page' %}"><img src="{% static 'asovi_app/img/mypageicon.png'%}" alt=""  class="gomypage"></a>
+  </div>
+  
+  <!-- サイドメニュー -->
+  <div class="sidemenu hide" id="menubar">
+    <ul>
+      <!-- <li><a href="{% url 'asovi_app:post' %}">新規投稿作成</a></li> -->
+      <li><a href="{% url 'asovi_app:place_search' %}">ホーム</a></li>
+      <li><a href="{% url 'asovi_app:popular' %}">人気</a></li>
+      <li><a href="{% url 'asovi_app:friend_list' %}">友達</a></li>
+      <li><a href="{% url 'asovi_app:check_event' %}">通知</a></li>
+      <li><a href="{% url 'asovi_app:my_page' %}">マイページ</a></li>
+      <li><a href="{% url 'asovi_app:settings' %}">設定</a></li>
+      <li><a href="{% url 'account_logout' %}">ログアウト</a></li>
+    </ul>
+  </div>
+  <!-- ここまで共通 -->
 
     <h1>アカウントを削除する</h1>
     <form action="{% url 'asovi_app:signout' %}" method="POST">
@@ -25,6 +41,17 @@
         <div class="settings">       
             <a href="{% url 'asovi_app:settings' %}"><p>設定に戻る</p></a>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function(){
+              var trigger = document.getElementById('menutrigger');
+              var sidemenu = document.getElementById('menubar');
+              // クリックするとサイドバーの開閉
+              trigger.addEventListener('click', function(){
+                  sidemenu.classList.toggle('hide');
+              }, false);
+            }, false);
+          </script>
 </body>
 
 </html>

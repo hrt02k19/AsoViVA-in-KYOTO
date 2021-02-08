@@ -69,10 +69,10 @@
     <!-- ここまで共通 -->
 
     <!-- サイドメニュー -->
-    <div class="sidemenu hidden" id="menubar">
+    <div class="sidemenu hide" id="menubar">
         <ul>
             <!-- <li><a href="{% url 'asovi_app:post' %}">新規投稿作成</a></li> -->
-            <li><a href="{% url 'asovi_app:post_map' %}">投稿検索</a></li>
+            <li><a href="{% url 'asovi_app:place_search' %}">ホーム</a></li>
             <li><a href="{% url 'asovi_app:popular' %}">人気</a></li>
             <li><a href="{% url 'asovi_app:friend_list' %}">友達</a></li>
             <li><a href="{% url 'asovi_app:check_event' %}">通知</a></li>
@@ -479,7 +479,7 @@
                 +'<li><label for="id_choice_1"><input type="radio" name="choice" value="2" id="id_choice_1">半径500m以内</label></li>'
                 +'<li><label for="id_choice_2"><input type="radio" name="choice" value="3" id="id_choice_2">半径1km以内</label></li>'
                 +'<li><label for="id_choice_3"><input type="radio" name="choice" value="4" id="id_choice_3">半径2km以内</label></li>'
-                +'<li><label for="id_choice_4"><input type="radio" name="choice" value="0" id="id_choice_4" >指定なし</label></li></ul>'
+                +'<li><label for="id_choice_4"><input type="radio" name="choice" value="0" id="id_choice_4" checked="">指定なし</label></li></ul>'
                 +'<p></p><button type="submit" name="post_search" class="search2">検索</button></form>';
                 }, false);
 
@@ -521,7 +521,7 @@
             var sidemenu = document.getElementById('menubar');
             // クリックするとサイドバーの開閉
             trigger.addEventListener('click', function(){
-                sidemenu.classList.toggle('hidden');
+                sidemenu.classList.toggle('hide');
             }, false);
         }, false);
     </script>
