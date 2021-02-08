@@ -141,7 +141,7 @@ def profile_edit(request):
         params['form']=ProfileForm(instance=obj)
         params['icon']=obj.icon
         params['genre_list']=generate_genre_list(obj)
-        return redirect('/post_list/' + str(request.user.pk))
+        return redirect('/my_page/')
     return render(request, 'asovi_app/profile_edit.html', params)
 
 
