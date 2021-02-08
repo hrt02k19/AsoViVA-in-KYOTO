@@ -1,17 +1,5 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>{% block head_title %}ベース{% endblock %}</title>
-    {% block extra_head %}
-    {% endblock %}
-    <link href="{% static 'account/css/base.css' %}" type="text/css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
-  </head>
 
-  <body>
-       <!-- ここから -->
+   <!-- ここから -->
    <div class="logo">
     <img src="{% static 'asovi_app/img/menuicon.png'%}" alt="" width="18" height="18" class="menutrigger" id="menutrigger">
     <p><strong></strong></p>
@@ -33,38 +21,7 @@
   </div>
   <!-- ここまで共通 -->
 
-    {% block body %}
-
-    {% if messages %}
-    <div>
-      <strong>Messages:</strong>
-      <ul>
-        {% for message in messages %}
-        <li>{{message}}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-
-    <div>
-      <strong>Menu:</strong>
-      <ul>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'account_email' %}">Change E-mail</a></li>
-        <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
-        {% else %}
-        <li><a href="{% url 'account_login' %}">Sign In</a></li>
-        <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
-        {% endif %}
-      </ul>
-    </div>
-    {% block content %}
-    {% endblock %}
-    {% endblock %}
-    {% block extra_body %}
-    {% endblock %}
-
-    <script>
+<script>
   document.addEventListener('DOMContentLoaded', function(){
     var trigger = document.getElementById('menutrigger');
     var sidemenu = document.getElementById('menubar');
@@ -74,5 +31,52 @@
     }, false);
   }, false);
 </script>
-  </body>
-</html>
+
+<style>
+  /* ヘッダー内のトリガー及びボタン */
+    .menutrigger {
+    position: absolute;
+    margin-top: 18px;
+    margin-left: -166px;
+  }
+  .gomypage {
+    position: absolute;
+    margin-top: -47px;
+    margin-left: 132px;
+    width: 40px;
+    height: 40px;
+  }
+
+/* サイドメニュー */
+.sidemenu {
+  z-index: 2;
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  background-color: #FFFFFF;
+  border-right: solid 1px #707070;
+  transition: .5s;
+}
+.hide {
+  margin-left: -51%;
+  transition: .5s;
+}
+.sidemenu ul {
+  list-style: none;
+  padding-top: 9px;
+  padding-left: 0;
+}
+.sidemenu a {
+  color: #909090;
+  font-size: 15px;
+  text-decoration: none;
+}
+.sidemenu li {
+  margin-bottom: 15px;
+  margin-left: 18%;
+}
+/* ここまでテンプレ */
+</style>
+
+
+

@@ -1,3 +1,4 @@
+/* ここからテンプレ */
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
@@ -16,6 +17,8 @@ body {
     font-size: 20px;
     font-weight: bold;
   }
+
+  /* ヘッダー内のトリガー及びボタン */
   .menutrigger {
     position: absolute;
     margin-top: 18px;
@@ -39,14 +42,14 @@ body {
   border-right: solid 1px #707070;
   transition: .5s;
 }
-.hidden {
+.hide {
   margin-left: -51%;
   transition: .5s;
 }
 .sidemenu ul {
-  list-style: none;
   padding-top: 9px;
   padding-left: 0;
+  list-style: none;
 }
 .sidemenu a {
   color: #909090;
@@ -57,6 +60,8 @@ body {
   margin-bottom: 15px;
   margin-left: 18%;
 }
+/* ここまでテンプレ */
+
 /* ボタンの補足 */
 .choice {
   position: absolute;
@@ -163,9 +168,9 @@ label {
 margin-left: 240px;
 }
 .nullok2 {
-  margin-left: 223px;
-  margin-top: 6px;
   position: absolute;
+  margin-top: 6px;
+  margin-left: 223px;
 }
 /* 検索の範囲を指定 */
 #id_choice {
