@@ -47,7 +47,7 @@
             <div class="list">
                 <a href="{% url 'asovi_app:user_profile' friendship.requestee.pk %}"><img class="icon2" src="/{{ friendship.requestee_icon }}" width="40" height="40"></a>
                 <p class="userid"> @{{ friendship.requestee.user_id }}</p><br>
-                <p class="username"> {{friendship.requestee_username}}</p>
+                <p class="username"> {{friendship.requestee_username|truncatechars:12}}</p>
                 <form action="{% url 'asovi_app:friend_list' %}" method='POST'>
                     {% csrf_token %}
                     <input type='hidden' value="{{friendship.requestee.pk}}" name="friend_pk">
@@ -59,7 +59,7 @@
             <div class="list">
                 <a href="{% url 'asovi_app:user_profile' friendship.requestor.pk %}"><img class="icon2" src="/{{ friendship.requestor_icon }}" width="40" height="40"></a>
                 <p class="userid"> @{{ friendship.requestor.user_id }}</p><br>
-                <p class="username"> {{ friendship.requestor_username }}</p>                
+                <p class="username"> {{ friendship.requestor_username|truncatechars:12 }}</p>                
                 <form action="{% url 'asovi_app:friend_list' %}" method='POST'>
                     {% csrf_token %}
                     <input type='hidden' value="{{friendship.requestor.pk}}" name="friend_pk">
